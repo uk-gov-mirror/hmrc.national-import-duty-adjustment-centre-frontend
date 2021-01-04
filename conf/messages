@@ -1,0 +1,3 @@
+service.name = national-import-duty-adjustment-centre-frontend
+service.homePageUrl = /national-import-duty-adjustment-centre-frontend
+service.text = This is your new service
