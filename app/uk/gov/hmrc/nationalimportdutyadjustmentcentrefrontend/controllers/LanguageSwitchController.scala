@@ -25,8 +25,12 @@ import com.google.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LanguageSwitchController @Inject()(configuration: Configuration, appConfig: AppConfig, languageUtils: LanguageUtils, cc: ControllerComponents)
-    extends LanguageController(configuration, languageUtils, cc) {
+class LanguageSwitchController @Inject() (
+  configuration: Configuration,
+  appConfig: AppConfig,
+  languageUtils: LanguageUtils,
+  cc: ControllerComponents
+) extends LanguageController(configuration, languageUtils, cc) {
   import appConfig._
 
   override def fallbackURL: String =
@@ -34,7 +38,7 @@ class LanguageSwitchController @Inject()(configuration: Configuration, appConfig
 
   override protected def languageMap: Map[String, Lang] =
     if (appConfig.welshLanguageSupportEnabled)
-      Map(en -> Lang(en), cy -> Lang(cy))
+      Map(en    -> Lang(en), cy -> Lang(cy))
     else Map(en -> Lang(en))
 
 }

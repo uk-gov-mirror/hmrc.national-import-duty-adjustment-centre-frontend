@@ -31,11 +31,11 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.HelloWo
 class HelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
   private val fakeRequest = FakeRequest("GET", "/")
 
-  private val env = Environment.simple()
+  private val env           = Environment.simple()
   private val configuration = Configuration.load(env)
 
   private val serviceConfig = new ServicesConfig(configuration)
-  private val appConfig = new AppConfig(configuration, serviceConfig)
+  private val appConfig     = new AppConfig(configuration, serviceConfig)
 
   val helloWorldPage: HelloWorldPage = app.injector.instanceOf[HelloWorldPage]
 

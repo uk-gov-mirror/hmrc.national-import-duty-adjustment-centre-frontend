@@ -1,7 +1,7 @@
 
-# national-import-duty-adjustment-centre-frontend
+# National Import Duty Adjustment Centre Frontend
 
-This is a placeholder README.md for a new repository
+
 
 ### License
 
