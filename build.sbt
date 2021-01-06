@@ -5,6 +5,8 @@ val appName = "national-import-duty-adjustment-centre-frontend"
 
 val silencerVersion = "1.7.0"
 
+PlayKeys.devSettings := Seq("play.server.http.port" -> "8490")
+
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .settings(
