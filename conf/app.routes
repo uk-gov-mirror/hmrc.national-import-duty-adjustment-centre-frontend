@@ -1,7 +1,9 @@
 # microservice specific routes
 
-->         /govuk-frontend          govuk.Routes
-->         /hmrc-frontend           hmrcfrontend.Routes
-GET        /hello-world             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.HelloWorldController.helloWorld
-GET        /language/:lang          uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
-GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)
+->         /govuk-frontend                     govuk.Routes
+->         /hmrc-frontend                      hmrcfrontend.Routes
+GET        /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.onPageLoad
+GET        /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
+GET        /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
+GET        /language/:lang                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /assets/*file                       controllers.Assets.versioned(path = "/public", file: Asset)

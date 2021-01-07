@@ -14,17 +14,11 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.LanguageSwitchController._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcLanguageSelect
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.LanguageSelect
+@this(layout: Layout)
 
-@this(hmrcLanguageSelect: HmrcLanguageSelect)
+@()(implicit request: Request[_], messages: Messages)
 
-@()(implicit messages: Messages)
-@hmrcLanguageSelect(LanguageSelect(
-    if (messages.lang.code == "cy") Cy else En,
-    (En, switchToLanguage("en").url),
-    (Cy, switchToLanguage("cy").url)
-))
+    @layout(pageTitle = Some(messages("unauthorised.title"))) {
 
+        @components.heading(messages("unauthorised.title"))
+    }

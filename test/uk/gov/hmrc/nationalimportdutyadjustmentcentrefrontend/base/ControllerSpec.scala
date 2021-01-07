@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
-@this(layout: Layout)
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+trait ControllerSpec extends UnitSpec with MockitoSugar with FakeIdentifierActions with BeforeAndAfterEach {
 
-@layout(pageTitle = Some("national-import-duty-adjustment-centre-frontend")) {
-    <h1 class="govuk-heading-xl">national-import-duty-adjustment-centre-frontend</h1>
-    <p class="govuk-body">@{messages("service.text")}</p>
+  val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 }

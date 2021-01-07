@@ -32,4 +32,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val cy: String            = "cy"
   val defaultLanguage: Lang = Lang(en)
 
+  lazy val loginUrl: String         = config.get[String]("urls.login")
+  lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
+
 }

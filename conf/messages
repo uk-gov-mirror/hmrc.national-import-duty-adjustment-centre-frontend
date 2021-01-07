@@ -1,3 +1,10 @@
-service.name = national-import-duty-adjustment-centre-frontend
-service.homePageUrl = /national-import-duty-adjustment-centre-frontend
-service.text = This is your new service
+service.name = National Import Duty Adjustment Centre
+service.homePageUrl = /national-import-duty-adjustment-centre
+
+start_page.title = Welcome
+start_page.guidance = This is your new service.
+
+session_expired.title = For your security, this service has been reset
+session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
+
+unauthorised.title = You can’t access this service with this account

@@ -14,17 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.LanguageSwitchController._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcLanguageSelect
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.LanguageSelect
+@(content: String)
 
-@this(hmrcLanguageSelect: HmrcLanguageSelect)
-
-@()(implicit messages: Messages)
-@hmrcLanguageSelect(LanguageSelect(
-    if (messages.lang.code == "cy") Cy else En,
-    (En, switchToLanguage("en").url),
-    (Cy, switchToLanguage("cy").url)
-))
-
+<h1 class="govuk-heading-xl">@{Text(content).asHtml}</h1>
