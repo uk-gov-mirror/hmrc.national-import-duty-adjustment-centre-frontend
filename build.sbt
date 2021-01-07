@@ -35,6 +35,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(scoverageSettings)
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   coverageExcludedPackages := List(
