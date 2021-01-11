@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-@this(layout: Layout)
+import play.api.libs.json.JsPath
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 
-@()(implicit request: Request[_], messages: Messages)
+case object ClaimTypePage extends QuestionPage[ClaimType] {
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
+  override def path: JsPath = JsPath \ toString
 
-        @components.heading(messages("unauthorised.title"))
-    }
+  override def toString: String = "claimType"
+}

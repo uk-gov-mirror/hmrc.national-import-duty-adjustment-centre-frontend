@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(layout: Layout)
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-@()(implicit request: Request[_], messages: Messages)
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.queries.{Gettable, Settable}
 
-    @layout(pageTitle = Some(messages("start_page.title"))) {
-
-        @components.heading(messages("start_page.title"))
-        @components.paragraph(messages("start_page.guidance"))
-    }
+trait QuestionPage[A] extends Gettable[A] with Settable[A]

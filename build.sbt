@@ -1,3 +1,4 @@
+import play.sbt.routes.RoutesKeys
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
@@ -13,9 +14,11 @@ lazy val microservice = Project(appName, file("."))
     majorVersion                     := 0,
     scalaVersion                     := "2.12.12",
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
+    RoutesKeys.routesImport += "uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._",
     TwirlKeys.templateImports ++= Seq(
       "uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig",
       "uk.gov.hmrc.govukfrontend.views.html.components._",
+      "uk.gov.hmrc.govukfrontend.views.html.layouts._",
       "uk.gov.hmrc.govukfrontend.views.html.helpers._",
       "uk.gov.hmrc.hmrcfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
@@ -46,7 +49,7 @@ lazy val scoverageSettings: Seq[Setting[_]] = Seq(
     ".*(BuildInfo|Routes|Options|LanguageSwitchController|LanguageSelect).*",
     "logger.*\\(.*\\)"
   ).mkString(";"),
-  coverageMinimum := 82.5,
+  coverageMinimum := 80,
   coverageFailOnMinimum := true,
   coverageHighlighting := true,
   parallelExecution in Test := false

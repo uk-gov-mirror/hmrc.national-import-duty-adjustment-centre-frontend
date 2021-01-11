@@ -25,7 +25,7 @@ class ErrorHandlerSpec extends UnitViewSpec {
   val errorPage            = instanceOf[ErrorTemplate]
   val appConfig: AppConfig = instanceOf[AppConfig]
 
-  val errorHandler = new ErrorHandler(errorPage, stubMessagesApi())(appConfig)
+  val errorHandler = new ErrorHandler(errorPage, realMessagesApi)(appConfig)
 
   "ErrorHandler" should {
 

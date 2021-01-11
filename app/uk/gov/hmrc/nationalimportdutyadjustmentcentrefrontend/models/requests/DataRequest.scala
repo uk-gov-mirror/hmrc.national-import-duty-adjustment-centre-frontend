@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests
 
-@this(layout: Layout)
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 
-@()(implicit request: Request[_], messages: Messages)
+case class OptionalDataRequest[A](request: Request[A], internalId: String, userAnswers: Option[UserAnswers])
+    extends WrappedRequest[A](request)
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
-
-        @components.heading(messages("unauthorised.title"))
-    }
+case class DataRequest[A](request: Request[A], internalId: String, userAnswers: UserAnswers)
+    extends WrappedRequest[A](request)

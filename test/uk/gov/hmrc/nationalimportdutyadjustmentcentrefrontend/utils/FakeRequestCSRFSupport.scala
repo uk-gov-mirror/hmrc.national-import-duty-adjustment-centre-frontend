@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils
 
-@this(layout: Layout)
+import play.api.mvc.Request
+import play.api.test.{CSRFTokenHelper, FakeRequest}
 
-@()(implicit request: Request[_], messages: Messages)
+object FakeRequestCSRFSupport {
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
+  implicit class CSRFFakeRequest[A](request: FakeRequest[A]) {
+    def withCSRFToken: Request[A] = CSRFTokenHelper.addCSRFToken(request)
+  }
 
-        @components.heading(messages("unauthorised.title"))
-    }
+}

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.queries
 
-@this(layout: Layout)
+import play.api.libs.json.JsPath
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 
-@()(implicit request: Request[_], messages: Messages)
+import scala.util.{Success, Try}
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
+sealed trait Query {
 
-        @components.heading(messages("unauthorised.title"))
-    }
+  def path: JsPath
+}
+
+trait Gettable[A] extends Query
+
+trait Settable[A] extends Query {
+
+  def cleanup(value: Option[A], userAnswers: UserAnswers): Try[UserAnswers] =
+    Success(userAnswers)
+
+}

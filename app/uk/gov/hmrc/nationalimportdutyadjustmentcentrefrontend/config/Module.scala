@@ -19,12 +19,18 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{
   AuthenticatedIdentifierAction,
+  DataRetrievalAction,
+  DataRetrievalActionImpl,
   IdentifierAction
 }
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.{DefaultSessionRepository, SessionRepository}
 
 class Module extends AbstractModule {
 
-  override def configure(): Unit =
+  override def configure(): Unit = {
+    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
+    bind(classOf[SessionRepository]).to(classOf[DefaultSessionRepository]).asEagerSingleton()
+  }
 
 }

@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.Future
-
 @Singleton
-class StartController @Inject() (mcc: MessagesControllerComponents, identify: IdentifierAction)
-    extends FrontendController(mcc) with I18nSupport {
+class CheckYourAnswersController @Inject() (
+  mcc: MessagesControllerComponents,
+  identify: IdentifierAction,
+  checkYourAnswersPage: CheckYourAnswersPage
+) extends FrontendController(mcc) with I18nSupport {
 
   val onPageLoad: Action[AnyContent] = identify { implicit request =>
-    Redirect(controllers.makeclaim.routes.ClaimTypeController.onPageLoad())
+    Ok(checkYourAnswersPage())
   }
 
 }
