@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
-import org.scalatest.OptionValues
+import org.scalatest.{Assertion, OptionValues}
 import play.api.data.{Form, FormError}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 
 trait FormSpec extends UnitSpec with OptionValues {
 
-  def checkForError(form: Form[_], data: Map[String, String], expectedErrors: Seq[FormError]) =
+  def checkForError(form: Form[_], data: Map[String, String], expectedErrors: Seq[FormError]): Assertion =
     form.bind(data).fold(
       formWithErrors => {
         for (error <- expectedErrors)
@@ -34,5 +34,5 @@ trait FormSpec extends UnitSpec with OptionValues {
 
   def error(key: String, value: String, args: Any*) = Seq(FormError(key, value, args))
 
-  lazy val emptyForm = Map[String, String]()
+  lazy val emptyForm: Map[String, String] = Map[String, String]()
 }

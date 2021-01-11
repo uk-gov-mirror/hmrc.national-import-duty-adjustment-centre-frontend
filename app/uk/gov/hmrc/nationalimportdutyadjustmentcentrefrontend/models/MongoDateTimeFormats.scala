@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import java.time.{Instant, LocalDateTime, ZoneOffset}
 
-import play.api.libs.json.{__, JsValue, Json, Reads, Writes}
+import play.api.libs.json.{__, Json, Reads, Writes}
 
 trait MongoDateTimeFormats {
 
@@ -28,12 +28,8 @@ trait MongoDateTimeFormats {
         LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneOffset.UTC)
     }
 
-  implicit val localDateTimeWrite: Writes[LocalDateTime] = new Writes[LocalDateTime] {
-
-    def writes(dateTime: LocalDateTime): JsValue =
-      Json.obj("$date" -> dateTime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
-
-  }
+  implicit val localDateTimeWrite: Writes[LocalDateTime] = (dateTime: LocalDateTime) =>
+    Json.obj("$date" -> dateTime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
 
 }
 

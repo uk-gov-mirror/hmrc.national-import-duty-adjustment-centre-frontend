@@ -54,7 +54,7 @@ trait ControllerSpec extends UnitSpec with MockitoSugar with FakeIdentifierActio
     super.afterEach()
   }
 
-  def withEmptyCache: Unit = withCachedData(None)
+  def withEmptyCache(): Unit = withCachedData(None)
 
   def withCachedData(answers: Option[UserAnswers]): Unit =
     when(sessionRepository.get(anyString())).thenReturn(Future.successful(answers))

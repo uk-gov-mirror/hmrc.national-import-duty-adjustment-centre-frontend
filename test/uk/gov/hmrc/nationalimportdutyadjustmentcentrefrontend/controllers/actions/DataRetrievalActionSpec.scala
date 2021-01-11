@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actio
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
@@ -34,7 +35,7 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
 
-  val fakeRequest = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "Data Retrieval Action" when {
 
@@ -46,7 +47,7 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
         when(sessionRepository.get("id")) thenReturn Future(None)
         val action = new Harness(sessionRepository)
 
-        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, "id"))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "id"))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isEmpty mustBe true
@@ -63,7 +64,7 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
         when(sessionRepository.get("id")) thenReturn Future(Some(answers))
         val action = new Harness(sessionRepository)
 
-        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, "id"))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "id"))
 
         whenReady(futureResult) { result =>
           result.userAnswers mustBe Some(answers)

@@ -16,14 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 
-import play.api.test.Helpers.stubMessagesApi
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ErrorTemplate
 
 class ErrorHandlerSpec extends UnitViewSpec {
 
-  val errorPage            = instanceOf[ErrorTemplate]
-  val appConfig: AppConfig = instanceOf[AppConfig]
+  val errorPage: ErrorTemplate = instanceOf[ErrorTemplate]
+  val appConfig: AppConfig     = instanceOf[AppConfig]
 
   val errorHandler = new ErrorHandler(errorPage, realMessagesApi)(appConfig)
 

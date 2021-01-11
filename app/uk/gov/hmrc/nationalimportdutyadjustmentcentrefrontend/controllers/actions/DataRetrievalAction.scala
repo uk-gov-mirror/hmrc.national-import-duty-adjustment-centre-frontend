@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actio
 
 import javax.inject.Inject
 import play.api.mvc.ActionTransformer
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{IdentifierRequest, OptionalDataRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -30,7 +31,8 @@ class DataRetrievalActionImpl @Inject() (val sessionRepository: SessionRepositor
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier =
+      HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     sessionRepository.get(request.identifier).map {
       case None =>

@@ -24,7 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
   IdentifierAction
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
@@ -43,7 +43,7 @@ class ClaimTypeController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(ClaimTypePage) match {
@@ -63,7 +63,7 @@ class ClaimTypeController @Inject() (
             request.userAnswers.getOrElse(UserAnswers(request.internalId)) set (ClaimTypePage, value)
           )
           _ <- sessionRepository.set(updatedAnswers)
-        } yield Redirect(routes.CheckYourAnswersController.onPageLoad) // TODO create navigator
+        } yield Redirect(routes.CheckYourAnswersController.onPageLoad()) // TODO create navigator
     )
   }
 
