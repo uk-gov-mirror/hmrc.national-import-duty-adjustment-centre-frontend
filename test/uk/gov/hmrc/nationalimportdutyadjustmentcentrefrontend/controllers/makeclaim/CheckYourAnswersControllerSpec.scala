@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
@@ -22,12 +22,12 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.UnauthorisedPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class UnauthorisedControllerSpec extends ControllerSpec {
+class CheckYourAnswersControllerSpec extends ControllerSpec {
 
-  val page: UnauthorisedPage = mock[UnauthorisedPage]
+  val page: CheckYourAnswersPage = mock[CheckYourAnswersPage]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -39,13 +39,14 @@ class UnauthorisedControllerSpec extends ControllerSpec {
     super.afterEach()
   }
 
-  private val controller = new UnauthorisedController(stubMessagesControllerComponents(), page)
+  private val controller =
+    new CheckYourAnswersController(stubMessagesControllerComponents(), fakeAuthorisedIdentifierAction, page)
 
   "GET" should {
-    "return OK" in {
-      val result = controller.onPageLoad(fakeGetRequest)
+
+    "return OK when user is authorised" in {
+      val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
     }
-
   }
 }

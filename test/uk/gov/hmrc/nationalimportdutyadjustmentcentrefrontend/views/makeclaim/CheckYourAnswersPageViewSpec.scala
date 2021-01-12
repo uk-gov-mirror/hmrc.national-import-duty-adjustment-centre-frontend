@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.StartPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 
-class StartPageViewSpec extends UnitViewSpec {
+class CheckYourAnswersPageViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[StartPage]
+  private val page = instanceOf[CheckYourAnswersPage]
 
   private val view: Html = page()
 
-  "StartPage" should {
+  "CheckYourAnswersPage" should {
 
     "have correct title" in {
-      view.title() mustBe messages("start_page.title")
+      view.title() must startWith(messages("check_answers.title"))
     }
 
     "have correct heading" in {
-      view.getElementsByTag("h1").text() mustBe messages("start_page.title")
+      view.getElementsByTag("h1").text() mustBe messages("check_answers.title")
     }
 
   }

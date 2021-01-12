@@ -1,10 +1,25 @@
 service.name = National Import Duty Adjustment Centre
 service.homePageUrl = /national-import-duty-adjustment-centre
 
-start_page.title = Welcome
-start_page.guidance = This is your new service.
+site.continue = Continue
+site.error.summary = There is a problem.
+site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
+site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
 
 session_expired.title = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
 unauthorised.title = You can’t access this service with this account
+
+claim_type.title = What is the type of claim you are making?
+claim_type.error.required = Select type of claim you are making
+claim_type.Anti-Dumping = Anti-Dumping
+claim_type.Preference = Preference
+claim_type.Chicken = Chicken
+claim_type.147s_Tomato = 147s Tomato
+claim_type.Fish = Fish
+claim_type.Quota = Quota
+claim_type.Airworthiness = Airworthiness
+claim_type.TRS = TRS
+
+check_answers.title = Check your answers before sending your application

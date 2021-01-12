@@ -14,11 +14,14 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+
 @this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages)
 
-    @layout(pageTitle = Some(messages("session_expired.title"))) {
+    @layout(pageTitle = Title(messages("session_expired.title"))) {
 
         @components.heading(messages("session_expired.title"))
         @components.paragraph(messages("session_expired.guidance"))

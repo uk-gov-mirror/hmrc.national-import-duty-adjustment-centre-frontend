@@ -16,37 +16,23 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, when}
 import play.api.http.Status
 import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.StartPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class StartControllerSpec extends ControllerSpec {
 
-  val page: StartPage = mock[StartPage]
-
-  override protected def beforeEach(): Unit = {
-    super.beforeEach()
-    when(page.apply()(any(), any())).thenReturn(HtmlFormat.empty)
-  }
-
-  override protected def afterEach(): Unit = {
-    reset(page)
-    super.afterEach()
-  }
-
   private def controller(identifyAction: IdentifierAction) =
-    new StartController(stubMessagesControllerComponents(), identifyAction, page)
+    new StartController(stubMessagesControllerComponents(), identifyAction)
 
   "GET" should {
-    "return OK when user is authorised" in {
+
+    "redirect to first question when user is authorised" in {
       val result = controller(fakeAuthorisedIdentifierAction).onPageLoad(fakeGetRequest)
-      status(result) mustBe Status.OK
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(makeclaim.routes.ClaimTypeController.onPageLoad().url)
     }
 
     "redirect when user is unauthorised" in {

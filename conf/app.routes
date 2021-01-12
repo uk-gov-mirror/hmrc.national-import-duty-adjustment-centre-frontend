@@ -1,9 +1,17 @@
 # microservice specific routes
 
-->         /govuk-frontend                     govuk.Routes
-->         /hmrc-frontend                      hmrcfrontend.Routes
-GET        /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.onPageLoad
-GET        /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
-GET        /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
-GET        /language/:lang                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
-GET        /assets/*file                       controllers.Assets.versioned(path = "/public", file: Asset)
+->          /govuk-frontend                     govuk.Routes
+->          /hmrc-frontend                      hmrcfrontend.Routes
+
+GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.onPageLoad
+GET         /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
+GET         /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
+GET         /language/:lang                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /assets/*file                       controllers.Assets.versioned(path = "/public", file: Asset)
+
+# make claim
+GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
+POST        /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onSubmit()
+
+
+GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad

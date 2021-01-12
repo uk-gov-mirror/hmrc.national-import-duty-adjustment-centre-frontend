@@ -29,7 +29,7 @@ class SessionExpiredPageViewSpec extends UnitViewSpec {
   "SessionExpiredPage" should {
 
     "have correct title" in {
-      view.title() mustBe messages("session_expired.title")
+      view.title() must startWith(messages("session_expired.title"))
     }
 
     "have correct heading" in {

@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.{ErrorTemplate, StartPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ErrorTemplate
 
 class ErrorTemplateViewSpec extends UnitViewSpec {
 
@@ -26,10 +26,10 @@ class ErrorTemplateViewSpec extends UnitViewSpec {
 
   private val view: Html = page("some title", "some heading", "some message")
 
-  "StartPage" should {
+  "ErrorTemplate" should {
 
     "have correct title" in {
-      view.title() mustBe "some title"
+      view.title() must startWith("some title")
     }
 
     "have correct heading" in {

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
 
-@this(layout: Layout)
+import play.api.data.Form
+import play.api.i18n.Messages
 
-@()(implicit request: Request[_], messages: Messages)
+case class Title(pageHeader: String, messageKey: String) {
+  def create(implicit messages: Messages): String = messages(messageKey, pageHeader)
+}
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
+object Title {
 
-        @components.heading(messages("unauthorised.title"))
-    }
+  def apply(header: String): Title = new Title(header, "site.title")
+
+  def apply(form: Form[_], header: String): Title =
+    if (form.hasErrors) new Title(header, "site.title.error")
+    else new Title(header, "site.title")
+
+}

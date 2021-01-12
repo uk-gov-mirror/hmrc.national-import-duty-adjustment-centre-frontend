@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-@this(layout: Layout)
+import java.time.LocalDateTime
 
-@()(implicit request: Request[_], messages: Messages)
+import play.api.libs.json._
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
+final case class UserAnswers(
+  id: String,
+  claimType: Option[ClaimType] = None,
+  lastUpdated: LocalDateTime = LocalDateTime.now
+)
 
-        @components.heading(messages("unauthorised.title"))
-    }
+object UserAnswers {
+  implicit val format: OFormat[UserAnswers] = Json.format[UserAnswers]
+}

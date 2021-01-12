@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
-@this(layout: Layout)
+import javax.inject.Inject
+import play.api.data.Form
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 
-@()(implicit request: Request[_], messages: Messages)
+class ClaimTypeFormProvider @Inject() extends Mappings {
 
-    @layout(pageTitle = Title(messages("unauthorised.title"))) {
+  def apply(): Form[ClaimType] =
+    Form("claim_type" -> enumerable[ClaimType]("claim_type.error.required"))
 
-        @components.heading(messages("unauthorised.title"))
-    }
+}
