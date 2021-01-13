@@ -12,7 +12,7 @@ session_expired.guidance = The details you have given have been deleted because 
 
 unauthorised.title = You can’t access this service with this account
 
-claim_type.title = What is the type of claim you are making?
+claim_type.title = What type of claim you are making?
 claim_type.error.required = Select type of claim you are making
 claim_type.Anti-Dumping = Anti-Dumping
 claim_type.Preference = Preference
