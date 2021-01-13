@@ -21,17 +21,18 @@ import org.mockito.Mockito.{reset, when}
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class CheckYourAnswersControllerSpec extends ControllerSpec {
+class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   val page: CheckYourAnswersPage = mock[CheckYourAnswersPage]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(page.apply()(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -40,13 +41,53 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
   }
 
   private val controller =
-    new CheckYourAnswersController(stubMessagesControllerComponents(), fakeAuthorisedIdentifierAction, page)
+    new CheckYourAnswersController(
+      stubMessagesControllerComponents(),
+      fakeAuthorisedIdentifierAction,
+      dataRequiredAction,
+      page
+    )
 
   "GET" should {
 
-    "return OK when user is authorised" in {
+    "return OK when user has answered all questions" in {
+      withCachedData(Some(completeAnswers))
       val result = controller.onPageLoad()(fakeGetRequest)
+
       status(result) mustBe Status.OK
+    }
+
+    "error when cache empty" in {
+      withEmptyCache
+      val result = controller.onPageLoad()(fakeGetRequest)
+
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.routes.SessionExpiredController.onPageLoad().url)
+    }
+
+    "error when answers missing" in {
+      withCachedData(Some(emptyAnswers))
+      val result = controller.onPageLoad()(fakeGetRequest)
+      intercept[Exception](status(result)).getMessage must startWith("missing answer")
+    }
+  }
+
+  "POST" should {
+
+    "submit and redirect to next page" in {
+      withCachedData(Some(completeAnswers))
+      val result = controller.onSubmit()(postRequest())
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+    }
+
+    "error when cache empty" in {
+      withEmptyCache
+      val result = controller.onSubmit()(postRequest())
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.routes.SessionExpiredController.onPageLoad().url)
     }
   }
 }

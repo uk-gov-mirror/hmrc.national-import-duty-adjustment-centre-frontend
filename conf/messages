@@ -2,6 +2,7 @@ service.name = National Import Duty Adjustment Centre
 service.homePageUrl = /national-import-duty-adjustment-centre
 
 site.continue = Continue
+site.back = Back
 site.error.summary = There is a problem.
 site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
 site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
@@ -23,3 +24,7 @@ claim_type.Airworthiness = Airworthiness
 claim_type.TRS = TRS
 
 check_answers.title = Check your answers before sending your application
+check_answers.change = Change
+check_answers.submit = Accept and send
+check_answers.claim.title = About your claim
+check_answers.claim.claimType = Claim type

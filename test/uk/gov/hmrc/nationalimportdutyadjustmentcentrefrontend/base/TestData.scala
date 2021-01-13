@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 
-trait QuestionPage[A] extends Page
+trait TestData {
 
-case object ClaimTypePage extends QuestionPage[ClaimType]
+  val emptyAnswers: UserAnswers = UserAnswers("id")
+
+  val completeAnswers: UserAnswers = UserAnswers("id", claimType = Some(AntiDumping))
+}

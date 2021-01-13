@@ -16,8 +16,4 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-
-trait QuestionPage[A] extends Page
-
-case object ClaimTypePage extends QuestionPage[ClaimType]
+trait Page {}

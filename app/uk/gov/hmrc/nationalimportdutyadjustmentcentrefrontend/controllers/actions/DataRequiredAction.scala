@@ -17,27 +17,26 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions
 
 import javax.inject.Inject
-import play.api.mvc.ActionTransformer
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{ActionRefiner, Result}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{DataRequest, IdentifierRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
-import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalActionImpl @Inject() (val sessionRepository: SessionRepository)(implicit
+class DataRequiredActionImpl @Inject() (val sessionRepository: SessionRepository)(implicit
   val executionContext: ExecutionContext
-) extends DataRetrievalAction {
+) extends DataRequiredAction {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] =
+  override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, DataRequest[A]]] =
     sessionRepository.get(request.identifier).map {
       case None =>
-        DataRequest(request.request, request.identifier, UserAnswers(request.identifier))
+        Left(Redirect(routes.SessionExpiredController.onPageLoad()))
       case Some(userAnswers) =>
-        DataRequest(request.request, request.identifier, userAnswers)
+        Right(DataRequest(request.request, request.identifier, userAnswers))
     }
 
 }
 
-trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, DataRequest]
+trait DataRequiredAction extends ActionRefiner[IdentifierRequest, DataRequest]

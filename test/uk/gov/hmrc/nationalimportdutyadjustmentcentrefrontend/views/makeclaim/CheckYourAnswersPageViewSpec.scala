@@ -17,14 +17,17 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import play.twirl.api.Html
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.MakeClaimRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 
-class CheckYourAnswersPageViewSpec extends UnitViewSpec {
+class CheckYourAnswersPageViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersPage]
 
-  private val view: Html = page()
+  private val claim      = MakeClaimRequest(completeAnswers)
+  private val view: Html = page(claim)
 
   "CheckYourAnswersPage" should {
 
@@ -33,7 +36,28 @@ class CheckYourAnswersPageViewSpec extends UnitViewSpec {
     }
 
     "have correct heading" in {
-      view.getElementsByTag("h1").text() mustBe messages("check_answers.title")
+      view.getElementsByTag("h1") must containMessage("check_answers.title")
+    }
+
+    "have back link" in {
+      view.getElementsByClass("govuk-back-link") must containMessage("site.back")
+    }
+
+    "have claim section" which {
+
+      val claimSection = view.getElementById("claim_section")
+
+      "contains valid claim type" in {
+
+        val claimTypeRow = claimSection.getElementsByClass("claim_type_row")
+
+        claimTypeRow must haveSummaryKey(messages("check_answers.claim.claimType"))
+        claimTypeRow must haveSummaryValue(MessageKey.apply("claim_type", claim.claimType.toString))
+      }
+    }
+
+    "have 'Submit' button" in {
+      view.getElementById("submit") must includeMessage("check_answers.submit")
     }
 
   }

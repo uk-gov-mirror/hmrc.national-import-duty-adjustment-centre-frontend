@@ -15,7 +15,6 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-@import uk.gov.hmrc.govukfrontend.views.Layouts
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 
 @this(
@@ -23,15 +22,25 @@
         head: Head,
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
+        govukBackLink: GovukBackLink,
         appConfig: AppConfig
 )
 @(pageTitle: Title ,
         headBlock: Option[Html] = None,
-        scriptsBlock: Option[Html] = None
+        scriptsBlock: Option[Html] = None,
+        includeBackLink: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @beforeContentBlock = {
     @if(appConfig.welshLanguageSupportEnabled) {@languageSelect()}
+
+    @if(includeBackLink) {
+        @govukBackLink(BackLink(
+            classes = "govuk-!-display-none-print",
+            href = "javascript:history.back()",
+            content = Text(messages("site.back"))
+        ))
+    }
 }
 
 @govukLayout(

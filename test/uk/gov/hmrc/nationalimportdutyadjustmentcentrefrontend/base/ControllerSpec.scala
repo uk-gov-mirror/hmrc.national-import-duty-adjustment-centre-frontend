@@ -24,16 +24,20 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{
+  DataRequiredActionImpl,
   DataRetrievalActionImpl,
   FakeIdentifierActions
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.FakeRequestCSRFSupport.CSRFFakeRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait ControllerSpec extends UnitSpec with MockitoSugar with FakeIdentifierActions with BeforeAndAfterEach {
+trait ControllerSpec
+    extends UnitSpec with MockitoSugar with Injector with FakeIdentifierActions with BeforeAndAfterEach {
 
   implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
@@ -43,6 +47,9 @@ trait ControllerSpec extends UnitSpec with MockitoSugar with FakeIdentifierActio
   val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
   val dataRetrievalAction = new DataRetrievalActionImpl(sessionRepository)
+  val dataRequiredAction  = new DataRequiredActionImpl(sessionRepository)
+
+  val navigator = instanceOf[Navigator]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -54,7 +61,7 @@ trait ControllerSpec extends UnitSpec with MockitoSugar with FakeIdentifierActio
     super.afterEach()
   }
 
-  def withEmptyCache(): Unit = withCachedData(None)
+  def withEmptyCache: Unit = withCachedData(None)
 
   def withCachedData(answers: Option[UserAnswers]): Unit =
     when(sessionRepository.get(anyString())).thenReturn(Future.successful(answers))

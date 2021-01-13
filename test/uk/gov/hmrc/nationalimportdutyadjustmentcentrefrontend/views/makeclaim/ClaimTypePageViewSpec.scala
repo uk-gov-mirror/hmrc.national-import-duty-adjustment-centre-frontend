@@ -39,7 +39,11 @@ class ClaimTypePageViewSpec extends UnitViewSpec {
     }
 
     "have correct heading" in {
-      view().getElementsByTag("h1").text() mustBe messages("claim_type.title")
+      view().getElementsByTag("h1") must containMessage("claim_type.title")
+    }
+
+    "not have back link" in {
+      view().getElementsByClass("govuk-back-link") must beEmpty
     }
 
     "have radio option for each claim type" in {
@@ -52,7 +56,7 @@ class ClaimTypePageViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit").text() mustBe messages("site.continue")
+      view().getElementById("submit") must includeMessage("site.continue")
     }
 
   }

@@ -19,4 +19,4 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-trait UnitSpec extends AnyWordSpec with Matchers {}
+trait UnitSpec extends AnyWordSpec with Matchers

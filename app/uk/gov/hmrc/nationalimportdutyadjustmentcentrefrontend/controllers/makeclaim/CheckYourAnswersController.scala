@@ -19,7 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{DataRequiredAction, IdentifierAction}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.MakeClaimRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -27,11 +28,16 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
+  requireData: DataRequiredAction,
   checkYourAnswersPage: CheckYourAnswersPage
 ) extends FrontendController(mcc) with I18nSupport {
 
-  val onPageLoad: Action[AnyContent] = identify { implicit request =>
-    Ok(checkYourAnswersPage())
+  def onPageLoad(): Action[AnyContent] = (identify andThen requireData) { implicit request =>
+    Ok(checkYourAnswersPage(MakeClaimRequest(request.userAnswers)))
+  }
+
+  def onSubmit(): Action[AnyContent] = (identify andThen requireData) { implicit request =>
+    Redirect(routes.CheckYourAnswersController.onPageLoad()) // TODO - submit claim and show confirmation screen - NF-85
   }
 
 }

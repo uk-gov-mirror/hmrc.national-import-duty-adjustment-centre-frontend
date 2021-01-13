@@ -14,14 +14,53 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.MakeClaimRequest
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        summaryList: summaryList,
+        continueButton: components.continueButton
+)
 
-@()(implicit request: Request[_], messages: Messages)
+@(claim: MakeClaimRequest)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = Title(messages("check_answers.title"))) {
 
     @components.heading(messages("check_answers.title"))
+
+    @summaryList(
+        id = "claim_section",
+        heading = Some(messages("check_answers.claim.title")),
+        summaryListRows = Seq(
+            SummaryListRow(
+                classes = "claim_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.claimType"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = "#",
+                            content = Text(messages("check_answers.change")),
+                            visuallyHiddenText = Some(messages("check_answers.claim.claimType"))
+                        )
+                    )
+                ))
+            )
+        )
+    )
+
+    @formHelper(action = CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
+        @continueButton("check_answers.submit")
+    }
+
 }

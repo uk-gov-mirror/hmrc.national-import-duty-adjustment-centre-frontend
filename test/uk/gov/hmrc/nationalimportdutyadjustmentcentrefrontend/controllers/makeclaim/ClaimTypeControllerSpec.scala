@@ -27,7 +27,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpe
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{AntiDumping, Tomato147s}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -43,6 +42,7 @@ class ClaimTypeControllerSpec extends ControllerSpec {
       dataRetrievalAction,
       formProvider,
       stubMessagesControllerComponents(),
+      navigator,
       page
     )(executionContext)
 

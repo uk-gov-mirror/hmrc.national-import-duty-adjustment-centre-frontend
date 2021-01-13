@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimTypePage, Page}
 
-trait QuestionPage[A] extends Page
+case class MakeClaimRequest(userId: String, claimType: ClaimType)
 
-case object ClaimTypePage extends QuestionPage[ClaimType]
+object MakeClaimRequest {
+
+  def apply(userAnswers: UserAnswers): MakeClaimRequest =
+    new MakeClaimRequest(userId = userAnswers.id, claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)))
+
+  private def missing(answer: Page) =
+    throw new Exception(s"missing answer - $answer")
+
+}

@@ -31,7 +31,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("claim_type.title"))) {
+@layout(pageTitle = Title(form, messages("claim_type.title")), includeBackLink = false) {
 
     @formHelper(action = ClaimTypeController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
