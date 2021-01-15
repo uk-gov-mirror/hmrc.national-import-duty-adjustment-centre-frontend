@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 
-import java.time.LocalDateTime
-
-import play.api.libs.json._
-
-final case class UserAnswers(
-  id: String,
-  claimType: Option[ClaimType] = None,
-  claimReference: Option[String] = None,
-  lastUpdated: LocalDateTime = LocalDateTime.now
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        govukPanel: GovukPanel
 )
 
-object UserAnswers {
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+@(reference: String)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = Title(messages("confirmation.title")), includeBackLink = false) {
+
+    @govukPanel(Panel(
+        title = Text(messages("confirmation.title")),
+        content = HtmlContent(messages("confirmation.reference",reference))
+    ))
+
 }

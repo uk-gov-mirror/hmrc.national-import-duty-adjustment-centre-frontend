@@ -37,7 +37,7 @@ class ClaimTypeControllerSpec extends ControllerSpec {
 
   private def controller =
     new ClaimTypeController(
-      sessionRepository,
+      userAnswersRepository,
       fakeAuthorisedIdentifierAction,
       dataRetrievalAction,
       formProvider,

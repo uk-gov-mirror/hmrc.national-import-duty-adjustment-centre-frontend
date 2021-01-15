@@ -24,19 +24,29 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
+
+import scala.concurrent.Future
+import scala.util.Random
 
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   val page: CheckYourAnswersPage = mock[CheckYourAnswersPage]
+  val claimService: ClaimService = mock[ClaimService]
+  val claimRef                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(claimService.submitClaim(any[UserAnswers])(any())).thenReturn(
+      Future.successful(CreateClaimResponse("id", claimRef))
+    )
   }
 
   override protected def afterEach(): Unit = {
-    reset(page)
+    reset(page, claimService)
     super.afterEach()
   }
 
@@ -45,6 +55,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       stubMessagesControllerComponents(),
       fakeAuthorisedIdentifierAction,
       dataRequiredAction,
+      claimService,
+      userAnswersRepository,
       page
     )
 
@@ -57,12 +69,12 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe Status.OK
     }
 
-    "error when cache empty" in {
+    "redirect to start when cache empty" in {
       withEmptyCache
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.SessionExpiredController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
     }
 
     "error when answers missing" in {
@@ -74,20 +86,20 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   "POST" should {
 
-    "submit and redirect to next page" in {
+    "submit and redirect to confirmation page" in {
       withCachedData(Some(completeAnswers))
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(routes.ConfirmationController.onPageLoad().url)
     }
 
-    "error when cache empty" in {
+    "redirect to start when cache empty" in {
       withEmptyCache
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.SessionExpiredController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
     }
   }
 }

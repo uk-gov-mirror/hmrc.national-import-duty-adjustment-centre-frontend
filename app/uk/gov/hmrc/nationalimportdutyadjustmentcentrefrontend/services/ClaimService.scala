@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import java.time.LocalDateTime
+import javax.inject.Inject
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  CreateClaimRequest,
+  CreateClaimResponse,
+  UserAnswers
+}
 
-import play.api.libs.json._
+import scala.concurrent.Future
 
-final case class UserAnswers(
-  id: String,
-  claimType: Option[ClaimType] = None,
-  claimReference: Option[String] = None,
-  lastUpdated: LocalDateTime = LocalDateTime.now
-)
+class ClaimService @Inject() (connector: NIDACConnector) {
 
-object UserAnswers {
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+  def submitClaim(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] =
+    connector.submitClaim(CreateClaimRequest(userAnswers))
+
 }

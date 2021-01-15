@@ -19,35 +19,28 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{DataRequiredAction, IdentifierAction}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CheckYourAnswersController @Inject() (
+class ConfirmationController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
-  requireData: DataRequiredAction,
-  claimService: ClaimService,
   userAnswersRepository: UserAnswersRepository,
-  checkYourAnswersPage: CheckYourAnswersPage
+  confirmationPage: ConfirmationPage
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen requireData) { implicit request =>
-    Ok(checkYourAnswersPage(CreateClaimRequest(request.userAnswers)))
-  }
-
-  def onSubmit(): Action[AnyContent] = (identify andThen requireData).async { implicit request =>
-    claimService.submitClaim(request.userAnswers) flatMap { response =>
-      val updatedCache = request.userAnswers.copy(claimReference = Some(response.claimReference))
-      userAnswersRepository.set(updatedCache) map {
-        _ => Redirect(routes.ConfirmationController.onPageLoad())
+  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
+    userAnswersRepository.get(request.identifier) map { maybeAnswers =>
+      maybeAnswers.flatMap(_.claimReference) match {
+        case Some(reference) => Ok(confirmationPage(reference))
+        case _               => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }
     }
   }

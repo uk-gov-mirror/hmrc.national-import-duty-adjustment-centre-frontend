@@ -27,7 +27,7 @@ class Navigator @Inject() () {
 
   private val normalRoutes: (Page, UserAnswers) => Call = {
     case (ClaimTypePage, _) => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
-    case _                  => controllers.routes.StartController.onPageLoad()
+    case _                  => controllers.routes.StartController.start()
   }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =

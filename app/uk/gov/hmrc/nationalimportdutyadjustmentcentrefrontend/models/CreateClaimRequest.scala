@@ -16,14 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimTypePage, Page}
 
-case class MakeClaimRequest(userId: String, claimType: ClaimType)
+case class CreateClaimRequest(userId: String, claimType: ClaimType)
 
-object MakeClaimRequest {
+object CreateClaimRequest {
 
-  def apply(userAnswers: UserAnswers): MakeClaimRequest =
-    new MakeClaimRequest(userId = userAnswers.id, claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)))
+  implicit val format: OFormat[CreateClaimRequest] = Json.format[CreateClaimRequest]
+
+  def apply(userAnswers: UserAnswers): CreateClaimRequest =
+    new CreateClaimRequest(userId = userAnswers.id, claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)))
 
   private def missing(answer: Page) =
     throw new Exception(s"missing answer - $answer")

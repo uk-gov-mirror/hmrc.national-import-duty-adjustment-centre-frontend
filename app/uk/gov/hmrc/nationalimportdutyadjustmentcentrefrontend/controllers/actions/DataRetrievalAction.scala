@@ -18,25 +18,26 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actio
 
 import javax.inject.Inject
 import play.api.mvc.ActionTransformer
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{DataRequest, IdentifierRequest}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalActionImpl @Inject() (val sessionRepository: SessionRepository)(implicit
+class DataRetrievalActionImpl @Inject() (val sessionRepository: UserAnswersRepository)(implicit
   val executionContext: ExecutionContext
 ) extends DataRetrievalAction {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] =
-    sessionRepository.get(request.identifier).map {
-      case None =>
-        DataRequest(request.request, request.identifier, UserAnswers(request.identifier))
-      case Some(userAnswers) =>
-        DataRequest(request.request, request.identifier, userAnswers)
+  override protected def transform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] = {
+
+    def newAnswers: DataRequest[A] = DataRequest(request.request, request.identifier, UserAnswers(request.identifier))
+    def existingAnswers(userAnswers: UserAnswers): DataRequest[A] =
+      DataRequest(request.request, request.identifier, userAnswers)
+
+    sessionRepository.get(request.identifier).map { answers =>
+      answers.filter(_.claimReference.isEmpty).fold(newAnswers)(existingAnswers)
     }
+  }
 
 }
 

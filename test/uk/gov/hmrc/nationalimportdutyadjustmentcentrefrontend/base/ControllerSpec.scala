@@ -30,7 +30,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.FakeRequestCSRFSupport.CSRFFakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -42,33 +42,33 @@ trait ControllerSpec
   implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 
-  val sessionRepository: SessionRepository = mock[SessionRepository]
+  val userAnswersRepository: UserAnswersRepository = mock[UserAnswersRepository]
 
   val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
-  val dataRetrievalAction = new DataRetrievalActionImpl(sessionRepository)
-  val dataRequiredAction  = new DataRequiredActionImpl(sessionRepository)
+  val dataRetrievalAction = new DataRetrievalActionImpl(userAnswersRepository)
+  val dataRequiredAction  = new DataRequiredActionImpl(userAnswersRepository)
 
   val navigator = instanceOf[Navigator]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
+    when(userAnswersRepository.set(any[UserAnswers])).thenReturn(Future.successful(None))
   }
 
   override protected def afterEach(): Unit = {
-    reset(sessionRepository)
+    reset(userAnswersRepository)
     super.afterEach()
   }
 
   def withEmptyCache: Unit = withCachedData(None)
 
   def withCachedData(answers: Option[UserAnswers]): Unit =
-    when(sessionRepository.get(anyString())).thenReturn(Future.successful(answers))
+    when(userAnswersRepository.get(anyString())).thenReturn(Future.successful(answers))
 
   protected def theUpdatedCache: UserAnswers = {
     val captor = ArgumentCaptor.forClass(classOf[UserAnswers])
-    verify(sessionRepository).set(captor.capture())
+    verify(userAnswersRepository).set(captor.capture())
     captor.getValue
   }
 

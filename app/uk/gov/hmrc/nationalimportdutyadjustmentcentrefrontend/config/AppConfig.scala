@@ -35,4 +35,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   lazy val loginUrl: String         = config.get[String]("urls.login")
   lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
 
+  val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
+
 }

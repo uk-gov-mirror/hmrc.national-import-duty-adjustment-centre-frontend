@@ -26,7 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ClaimTypeController @Inject() (
-  sessionRepository: SessionRepository,
+  userAnswersRepository: UserAnswersRepository,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   formProvider: ClaimTypeFormProvider,
@@ -61,7 +61,7 @@ class ClaimTypeController @Inject() (
       value => {
         val updatedAnswers =
           request.userAnswers.copy(claimType = Some(value))
-        sessionRepository.set(updatedAnswers) map {
+        userAnswersRepository.set(updatedAnswers) map {
           _ => Redirect(navigator.nextPage(ClaimTypePage, updatedAnswers))
         }
       }

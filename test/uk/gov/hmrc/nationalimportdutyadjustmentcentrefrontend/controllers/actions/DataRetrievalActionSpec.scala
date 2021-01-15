@@ -27,14 +27,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Airworthiness
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{DataRequest, IdentifierRequest}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
-  class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
+  class Harness(sessionRepository: UserAnswersRepository) extends DataRetrievalActionImpl(sessionRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] = transform(request)
   }
 
@@ -45,7 +45,7 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
     "there is no data in the cache" must {
 
       "return a new UserAnswers" in {
-        val sessionRepository = mock[SessionRepository]
+        val sessionRepository = mock[UserAnswersRepository]
         when(sessionRepository.get("unknown-id")) thenReturn Future(None)
         val action = new Harness(sessionRepository)
 
@@ -63,7 +63,7 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
         val answers =
           UserAnswers("id", claimType = Some(Airworthiness), lastUpdated = LocalDateTime.now().minusMinutes(5))
-        val sessionRepository = mock[SessionRepository]
+        val sessionRepository = mock[UserAnswersRepository]
         when(sessionRepository.get("id")) thenReturn Future(Some(answers))
         val action = new Harness(sessionRepository)
 
@@ -71,6 +71,32 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
         whenReady(futureResult) { result =>
           result.userAnswers mustBe answers
+        }
+      }
+    }
+
+    "there is submitted data in the cache" must {
+
+      "return a new UserAnswers" in {
+
+        val submittedAnswers =
+          UserAnswers(
+            "id",
+            claimType = Some(Airworthiness),
+            claimReference = Some("reference"),
+            lastUpdated = LocalDateTime.now().minusMinutes(5)
+          )
+        val sessionRepository = mock[UserAnswersRepository]
+        when(sessionRepository.get("id")) thenReturn Future(Some(submittedAnswers))
+        val action = new Harness(sessionRepository)
+
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "id"))
+
+        whenReady(futureResult) { result =>
+          val answers = result.userAnswers
+          answers.id mustBe "id"
+          answers.claimType mustBe None
+          answers.claimReference mustBe None
         }
       }
     }

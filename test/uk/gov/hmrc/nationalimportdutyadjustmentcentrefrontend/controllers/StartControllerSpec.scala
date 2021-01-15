@@ -30,13 +30,13 @@ class StartControllerSpec extends ControllerSpec {
   "GET" should {
 
     "redirect to first question when user is authorised" in {
-      val result = controller(fakeAuthorisedIdentifierAction).onPageLoad(fakeGetRequest)
+      val result = controller(fakeAuthorisedIdentifierAction).start(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
       redirectLocation(result) mustBe Some(makeclaim.routes.ClaimTypeController.onPageLoad().url)
     }
 
     "redirect when user is unauthorised" in {
-      val result = controller(fakeUnauthorisedIdentifierAction).onPageLoad(fakeGetRequest)
+      val result = controller(fakeUnauthorisedIdentifierAction).start(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
       redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
     }

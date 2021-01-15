@@ -3,7 +3,7 @@
 ->          /govuk-frontend                     govuk.Routes
 ->          /hmrc-frontend                      hmrcfrontend.Routes
 
-GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.onPageLoad
+GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.start
 GET         /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
 GET         /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
 GET         /language/:lang                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
@@ -16,3 +16,5 @@ POST        /claim-type                         uk.gov.hmrc.nationalimportdutyad
 
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
+
+GET         /confirmation                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ConfirmationController.onPageLoad()

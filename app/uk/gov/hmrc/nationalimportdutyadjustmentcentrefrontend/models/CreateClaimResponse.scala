@@ -16,17 +16,11 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import java.time.LocalDateTime
+import play.api.libs.json.{Json, OFormat}
 
-import play.api.libs.json._
+case class CreateClaimResponse(userId: String, claimReference: String)
 
-final case class UserAnswers(
-  id: String,
-  claimType: Option[ClaimType] = None,
-  claimReference: Option[String] = None,
-  lastUpdated: LocalDateTime = LocalDateTime.now
-)
+object CreateClaimResponse {
 
-object UserAnswers {
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+  implicit val format: OFormat[CreateClaimResponse] = Json.format[CreateClaimResponse]
 }

@@ -18,7 +18,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.{DefaultSessionRepository, SessionRepository}
 
 class Module extends AbstractModule {
 
@@ -26,7 +25,6 @@ class Module extends AbstractModule {
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-    bind(classOf[SessionRepository]).to(classOf[DefaultSessionRepository]).asEagerSingleton()
   }
 
 }

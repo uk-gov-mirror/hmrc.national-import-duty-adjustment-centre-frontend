@@ -28,3 +28,6 @@ check_answers.change = Change
 check_answers.submit = Accept and send
 check_answers.claim.title = About your claim
 check_answers.claim.claimType = Claim type
+
+confirmation.title = Your application is confirmed
+confirmation.reference = Your reference number<br><strong>{0}</strong>
