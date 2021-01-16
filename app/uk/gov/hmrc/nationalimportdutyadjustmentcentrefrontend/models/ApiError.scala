@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json}
 
-case class CreateClaimResponse(correlationId: String, error: Option[ApiError] = None, result: Option[String] = None)
+case class ApiError(errorCode: String, errorMessage: Option[String] = None)
 
-object CreateClaimResponse {
-
-  implicit val format: OFormat[CreateClaimResponse] = Json.format[CreateClaimResponse]
+object ApiError {
+  implicit val formats: Format[ApiError] = Json.format[ApiError]
 }

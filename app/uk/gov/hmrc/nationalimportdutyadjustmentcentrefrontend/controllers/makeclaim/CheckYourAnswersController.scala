@@ -45,7 +45,7 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = (identify andThen requireData).async { implicit request =>
     claimService.submitClaim(request.userAnswers) flatMap { response =>
-      val updatedCache = request.userAnswers.copy(claimReference = Some(response.claimReference))
+      val updatedCache = request.userAnswers.copy(claimReference = response.result)
       userAnswersRepository.set(updatedCache) map {
         _ => Redirect(routes.ConfirmationController.onPageLoad())
       }
