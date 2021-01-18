@@ -28,5 +28,8 @@ final case class UserAnswers(
 )
 
 object UserAnswers {
+
+  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
+
   implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
 }

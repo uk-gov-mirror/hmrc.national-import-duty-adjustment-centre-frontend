@@ -39,25 +39,13 @@ class UserAnswersRepository @Inject() (mongoComponent: ReactiveMongoComponent, c
       idFormat = ReactiveMongoFormats.objectIdFormats
     ) {
 
-  val fieldName                = "lastUpdated"
-  val createdIndexName         = "userAnswersExpiry"
-  val expireAfterSeconds       = "expireAfterSeconds"
-  val timeToLiveInSeconds: Int = config.get[Int]("mongodb.timeToLiveInSeconds")
-
-  createIndex(fieldName, createdIndexName, timeToLiveInSeconds)
-
-  private def createIndex(field: String, indexName: String, ttl: Int): Future[Boolean] =
-    collection.indexesManager.ensure(
-      Index(Seq((field, IndexType.Ascending)), Some(indexName), options = BSONDocument(expireAfterSeconds -> ttl))
-    ) map {
-      result =>
-        logger.debug(s"set [$indexName] with value $ttl -> result : $result")
-        result
-    } recover {
-      case e =>
-        logger.error("Failed to set TTL index", e)
-        false
-    }
+  override def indexes: Seq[Index] = super.indexes ++ Seq(
+    Index(
+      key = Seq("lastUpdated" -> IndexType.Ascending),
+      name = Some("userAnswersExpiry"),
+      options = BSONDocument("expireAfterSeconds" -> config.get[Int]("mongodb.timeToLiveInSeconds"))
+    )
+  )
 
   def get(id: String): Future[Option[UserAnswers]] =
     super.find("id" -> id).map(_.headOption)
