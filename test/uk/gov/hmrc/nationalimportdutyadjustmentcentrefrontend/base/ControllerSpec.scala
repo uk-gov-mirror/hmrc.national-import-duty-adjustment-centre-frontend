@@ -25,12 +25,12 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{
   DataRequiredActionImpl,
-  DataRetrievalActionImpl,
   FakeIdentifierActions
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.FakeRequestCSRFSupport.CSRFFakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -42,34 +42,43 @@ trait ControllerSpec
   implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 
-  val userAnswersRepository: UserAnswersRepository = mock[UserAnswersRepository]
+  val dataRepository: CacheDataRepository = mock[CacheDataRepository]
 
   val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
-  val dataRetrievalAction = new DataRetrievalActionImpl(userAnswersRepository)
-  val dataRequiredAction  = new DataRequiredActionImpl(userAnswersRepository)
+  val dataRequiredAction = new DataRequiredActionImpl(dataRepository)
+
+  val cacheDataService: CacheDataService = new CacheDataService(dataRepository)
 
   val navigator = instanceOf[Navigator]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(userAnswersRepository.set(any[UserAnswers])).thenReturn(Future.successful(None))
+    when(dataRepository.set(any[CacheData])).thenReturn(Future.successful(None))
   }
 
   override protected def afterEach(): Unit = {
-    reset(userAnswersRepository)
+    reset(dataRepository)
     super.afterEach()
   }
 
-  def withEmptyCache: Unit = withCachedData(None)
+  def withEmptyCache: Unit = when(dataRepository.get(anyString())).thenReturn(Future.successful(None))
 
-  def withCachedData(answers: Option[UserAnswers]): Unit =
-    when(userAnswersRepository.get(anyString())).thenReturn(Future.successful(answers))
+  def withCacheUserAnswers(answers: Option[UserAnswers]): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", answers = answers))
+    when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
+  }
+
+  def withCachedClaimResponse(createClaimResponse: Option[CreateClaimResponse]): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", createClaimResponse = createClaimResponse))
+    when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
+  }
 
   protected def theUpdatedCache: UserAnswers = {
-    val captor = ArgumentCaptor.forClass(classOf[UserAnswers])
-    verify(userAnswersRepository).set(captor.capture())
-    captor.getValue
+    val captor = ArgumentCaptor.forClass(classOf[CacheData])
+    verify(dataRepository).set(captor.capture())
+    val cacheData: CacheData = captor.getValue
+    cacheData.answers.getOrElse(UserAnswers())
   }
 
   protected def postRequest(data: (String, String)*): Request[AnyContentAsFormUrlEncoded] =

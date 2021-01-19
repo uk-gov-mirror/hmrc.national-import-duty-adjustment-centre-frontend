@@ -19,37 +19,48 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{DataRequiredAction, IdentifierAction}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   requireData: DataRequiredAction,
-  claimService: ClaimService,
-  userAnswersRepository: UserAnswersRepository,
+  connector: NIDACConnector,
+  repository: CacheDataRepository,
   checkYourAnswersPage: CheckYourAnswersPage
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen requireData) { implicit request =>
-    Ok(checkYourAnswersPage(CreateClaimRequest(request.userAnswers)))
+    request.cacheData.answers match {
+      case Some(answers) => Ok(checkYourAnswersPage(CreateClaimRequest(request.internalId, answers)))
+      case None          => missingAnswersError
+    }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen requireData).async { implicit request =>
-    claimService.submitClaim(request.userAnswers) flatMap { response =>
-      val updatedCache = request.userAnswers.copy(claimReference = response.result)
-      userAnswersRepository.set(updatedCache) map {
-        _ => Redirect(routes.ConfirmationController.onPageLoad())
-      }
+    request.cacheData.answers match {
+      case Some(answers) =>
+        val claim = CreateClaimRequest(request.internalId, answers)
+        connector.submitClaim(claim) flatMap { response =>
+          repository.set(request.cacheData.copy(answers = None, createClaimResponse = Some(response))) map {
+            _ => Redirect(routes.ConfirmationController.onPageLoad())
+          }
+        }
+      case None => Future.successful(missingAnswersError)
     }
+
   }
+
+  private def missingAnswersError = throw new MissingUserAnswersException("Missing UserAnswers")
 
 }

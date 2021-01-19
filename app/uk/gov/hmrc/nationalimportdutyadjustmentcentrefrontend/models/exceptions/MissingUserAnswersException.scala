@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions
 
-import play.api.libs.json._
-
-final case class UserAnswers(claimType: Option[ClaimType] = None)
-
-object UserAnswers {
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
-}
+class MissingUserAnswersException(message: String) extends RuntimeException(message)

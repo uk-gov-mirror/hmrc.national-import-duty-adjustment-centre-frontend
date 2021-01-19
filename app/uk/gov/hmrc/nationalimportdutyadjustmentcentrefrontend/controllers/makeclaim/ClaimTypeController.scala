@@ -19,14 +19,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{
-  DataRetrievalAction,
-  IdentifierAction
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -34,9 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ClaimTypeController @Inject() (
-  userAnswersRepository: UserAnswersRepository,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  data: CacheDataService,
   formProvider: ClaimTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
   navigator: Navigator,
@@ -46,25 +42,20 @@ class ClaimTypeController @Inject() (
 
   private val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.claimType match {
-      case None        => form
-      case Some(value) => form.fill(value)
+  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
+    data.getOrCreateAnswers map { answers =>
+      val preparedForm = answers.claimType.fold(form)(form.fill)
+      Ok(claimTypePage(preparedForm))
     }
-
-    Ok(claimTypePage(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(claimTypePage(formWithErrors))),
-      value => {
-        val updatedAnswers =
-          request.userAnswers.copy(claimType = Some(value))
-        userAnswersRepository.set(updatedAnswers) map {
-          _ => Redirect(navigator.nextPage(ClaimTypePage, updatedAnswers))
+      value =>
+        data.updateAnswers(answers => answers.copy(claimType = Some(value))) map {
+          updatedAnswers => Redirect(navigator.nextPage(ClaimTypePage, updatedAnswers))
         }
-      }
     )
   }
 

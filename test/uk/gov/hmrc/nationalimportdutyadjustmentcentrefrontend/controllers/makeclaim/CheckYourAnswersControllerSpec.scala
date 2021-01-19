@@ -22,10 +22,10 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimResponse
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
@@ -34,19 +34,19 @@ import scala.util.Random
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   val page: CheckYourAnswersPage = mock[CheckYourAnswersPage]
-  val claimService: ClaimService = mock[ClaimService]
+  val connector: NIDACConnector  = mock[NIDACConnector]
   val claimRef                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(claimService.submitClaim(any[UserAnswers])(any())).thenReturn(
+    when(connector.submitClaim(any())(any())).thenReturn(
       Future.successful(CreateClaimResponse("id", None, Some(claimRef)))
     )
   }
 
   override protected def afterEach(): Unit = {
-    reset(page, claimService)
+    reset(page, connector)
     super.afterEach()
   }
 
@@ -55,15 +55,15 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       stubMessagesControllerComponents(),
       fakeAuthorisedIdentifierAction,
       dataRequiredAction,
-      claimService,
-      userAnswersRepository,
+      connector,
+      dataRepository,
       page
     )
 
   "GET" should {
 
     "return OK when user has answered all questions" in {
-      withCachedData(Some(completeAnswers))
+      withCacheUserAnswers(Some(completeAnswers))
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK
@@ -78,7 +78,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     }
 
     "error when answers missing" in {
-      withCachedData(Some(emptyAnswers))
+      withCacheUserAnswers(Some(emptyAnswers))
       val result = controller.onPageLoad()(fakeGetRequest)
       intercept[Exception](status(result)).getMessage must startWith("missing answer")
     }
@@ -87,7 +87,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     "submit and redirect to confirmation page" in {
-      withCachedData(Some(completeAnswers))
+      withCacheUserAnswers(Some(completeAnswers))
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER

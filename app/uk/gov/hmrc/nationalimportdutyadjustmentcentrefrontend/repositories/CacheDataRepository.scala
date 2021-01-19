@@ -26,16 +26,16 @@ import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserAnswersRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: Configuration)(implicit
+class CacheDataRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: Configuration)(implicit
   ec: ExecutionContext
-) extends ReactiveRepository[UserAnswers, BSONObjectID](
-      collectionName = "user-answers-cache",
+) extends ReactiveRepository[CacheData, BSONObjectID](
+      collectionName = "cache-data",
       mongo = mongoComponent.mongoConnector.db,
-      domainFormat = UserAnswers.formats,
+      domainFormat = CacheData.formats,
       idFormat = ReactiveMongoFormats.objectIdFormats
     ) {
 
@@ -47,15 +47,15 @@ class UserAnswersRepository @Inject() (mongoComponent: ReactiveMongoComponent, c
     )
   )
 
-  def get(id: String): Future[Option[UserAnswers]] =
+  def get(id: String): Future[Option[CacheData]] =
     super.find("id" -> id).map(_.headOption)
 
-  def set(userAnswers: UserAnswers): Future[Option[UserAnswers]] =
+  def set(data: CacheData): Future[Option[CacheData]] =
     super.findAndUpdate(
-      Json.obj("id" -> userAnswers.id),
-      Json.toJson(userAnswers copy (lastUpdated = LocalDateTime.now)).as[JsObject],
+      Json.obj("id" -> data.id),
+      Json.toJson(data copy (lastUpdated = LocalDateTime.now)).as[JsObject],
       upsert = true
-    ).map(_.value.map(_.as[UserAnswers]))
+    ).map(_.value.map(_.as[CacheData]))
 
   def delete(id: String): Future[Unit] =
     super

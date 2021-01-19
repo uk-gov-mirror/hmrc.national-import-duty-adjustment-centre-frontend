@@ -37,9 +37,8 @@ class ClaimTypeControllerSpec extends ControllerSpec {
 
   private def controller =
     new ClaimTypeController(
-      userAnswersRepository,
       fakeAuthorisedIdentifierAction,
-      dataRetrievalAction,
+      cacheDataService,
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
@@ -73,7 +72,7 @@ class ClaimTypeControllerSpec extends ControllerSpec {
     }
 
     "display page when cache has answer" in {
-      withCachedData(Some(UserAnswers("id", claimType = Some(AntiDumping))))
+      withCacheUserAnswers(Some(UserAnswers(claimType = Some(AntiDumping))))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 

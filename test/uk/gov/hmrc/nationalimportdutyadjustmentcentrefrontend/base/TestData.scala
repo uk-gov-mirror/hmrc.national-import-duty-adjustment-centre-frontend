@@ -21,7 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 
 trait TestData {
 
-  val emptyAnswers: UserAnswers = UserAnswers("id")
+  val emptyAnswers: UserAnswers = UserAnswers()
 
-  val completeAnswers: UserAnswers = UserAnswers("id", claimType = Some(AntiDumping))
+  val completeAnswers: UserAnswers = UserAnswers(claimType = Some(AntiDumping))
 }

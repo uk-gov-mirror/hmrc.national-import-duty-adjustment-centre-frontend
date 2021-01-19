@@ -23,9 +23,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.UnauthorisedPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -43,23 +41,19 @@ class ConfirmationControllerSpec extends ControllerSpec {
     super.afterEach()
   }
 
-  private val controller = new ConfirmationController(
-    stubMessagesControllerComponents(),
-    fakeAuthorisedIdentifierAction,
-    userAnswersRepository,
-    page
-  )
+  private val controller =
+    new ConfirmationController(stubMessagesControllerComponents(), fakeAuthorisedIdentifierAction, dataRepository, page)
 
   "GET" should {
     "return OK when cache contains claim reference" in {
-      withCachedData(Some(UserAnswers("id", claimReference = Some("reference"))))
+      withCachedClaimResponse(Some(CreateClaimResponse("id", result = Some("reference"))))
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK
     }
 
     "redirect to 'session expired' when cache does not contain reference" in {
-      withCachedData(Some(UserAnswers("id")))
+      withEmptyCache
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER

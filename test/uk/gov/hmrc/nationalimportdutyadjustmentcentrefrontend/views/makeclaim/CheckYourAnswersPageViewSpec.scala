@@ -26,7 +26,7 @@ class CheckYourAnswersPageViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersPage]
 
-  private val claim      = CreateClaimRequest(completeAnswers)
+  private val claim      = CreateClaimRequest("id", completeAnswers)
   private val view: Html = page(claim)
 
   "CheckYourAnswersPage" should {

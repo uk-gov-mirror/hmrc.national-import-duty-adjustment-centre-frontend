@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import javax.inject.Inject
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
-  CreateClaimRequest,
-  CreateClaimResponse,
-  UserAnswers
+import java.time.LocalDateTime
+
+import play.api.libs.json.{Json, OFormat}
+
+final case class CacheData(
+  id: String,
+  answers: Option[UserAnswers] = None,
+  createClaimResponse: Option[CreateClaimResponse] = None,
+  lastUpdated: LocalDateTime = LocalDateTime.now
+) {
+
+  def claimReference: Option[String] = createClaimResponse.flatMap(_.result)
 }
 
-import scala.concurrent.Future
+object CacheData {
 
-class ClaimService @Inject() (connector: NIDACConnector) {
+  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
 
-  def submitClaim(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] =
-    connector.submitClaim(CreateClaimRequest(userAnswers))
-
+  implicit val formats: OFormat[CacheData] = Json.format[CacheData]
 }

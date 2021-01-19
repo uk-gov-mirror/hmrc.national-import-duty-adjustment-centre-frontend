@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UserAnswersRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
@@ -30,13 +30,13 @@ import scala.concurrent.ExecutionContext
 class SignOutController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
-  userAnswersRepository: UserAnswersRepository,
+  cacheData: CacheDataRepository,
   appConfig: AppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
   val signOut: Action[AnyContent] = identify.async { implicit request =>
-    userAnswersRepository.delete(request.identifier) map { _ =>
+    cacheData.delete(request.identifier) map { _ =>
       Redirect(appConfig.signOutUrl)
     }
   }

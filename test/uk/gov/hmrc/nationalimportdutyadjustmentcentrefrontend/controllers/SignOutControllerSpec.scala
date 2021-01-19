@@ -32,17 +32,17 @@ class SignOutControllerSpec extends ControllerSpec {
   val appConfig: AppConfig = instanceOf[AppConfig]
 
   private def controller(identifyAction: IdentifierAction) =
-    new SignOutController(stubMessagesControllerComponents(), identifyAction, userAnswersRepository, appConfig)
+    new SignOutController(stubMessagesControllerComponents(), identifyAction, dataRepository, appConfig)
 
   "GET /sign-out" should {
 
     "sign out user when user is authorised" in {
-      when(userAnswersRepository.delete(any())).thenReturn(Future.successful(()))
+      when(dataRepository.delete(any())).thenReturn(Future.successful(()))
       val result = controller(fakeAuthorisedIdentifierAction).signOut(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
       redirectLocation(result) mustBe Some(appConfig.signOutUrl)
-      verify(userAnswersRepository).delete(any())
+      verify(dataRepository).delete(any())
     }
 
     "redirect when user is unauthorised" in {

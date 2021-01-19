@@ -46,17 +46,8 @@
                 value = Value(
                     content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
                 ),
-                actions = Some(Actions(
-                    items = Seq(
-                        ActionItem(
-                            href = "#",
-                            content = Text(messages("check_answers.change")),
-                            visuallyHiddenText = Some(messages("check_answers.claim.claimType"))
-                        )
-                    )
-                ))
-            )
-        )
+                actions = None
+        ))
     )
 
     @formHelper(action = CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
