@@ -14,38 +14,65 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language
+
 @this(
         govukLayout: GovukLayout,
+        hmrcHeader: HmrcHeader,
         head: Head,
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
         govukBackLink: GovukBackLink,
         appConfig: AppConfig
 )
-@(pageTitle: Title ,
+@(pageTitle: Title,
         headBlock: Option[Html] = None,
         scriptsBlock: Option[Html] = None,
         includeBackLink: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @beforeContentBlock = {
-    @if(appConfig.welshLanguageSupportEnabled) {@languageSelect()}
+@if(appConfig.welshLanguageSupportEnabled) {@languageSelect()}
 
-    @if(includeBackLink) {
-        @govukBackLink(BackLink(
-            classes = "govuk-!-display-none-print",
-            href = "javascript:history.back()",
-            content = Text(messages("site.back"))
-        ))
-    }
+@if(includeBackLink) {
+    @govukBackLink(BackLink(
+        classes = "govuk-!-display-none-print",
+        href = "javascript:history.back()",
+        content = Text(messages("site.back"))
+    ))
 }
+}
+
+@signOutHref = @{
+    if(request.isInstanceOf[IdentifierRequest[_]] || request.isInstanceOf[DataRequest[_]])
+        Some(controllers.routes.SignOutController.signOut().url)
+    else
+        None
+}
+@headerBlock = {
+@hmrcHeader(Header(
+    homepageUrl = "https://www.gov.uk",
+    serviceName = Some(messages("service.name")),
+    serviceUrl = controllers.routes.StartController.start().url,
+    language = language.En,
+    containerClasses = "govuk-width-container",
+    signOutHref = signOutHref
+)
+)
+}
+
 
 @govukLayout(
     pageTitle = Some(pageTitle.create),
     headBlock = Some(head(headBlock)),
+    headerBlock = Some(headerBlock),
     scriptsBlock = scriptsBlock,
     beforeContentBlock = Some(beforeContentBlock),
     footerBlock = Some(hmrcStandardFooter())
