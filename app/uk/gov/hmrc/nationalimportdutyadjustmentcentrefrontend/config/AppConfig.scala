@@ -24,7 +24,13 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 @Singleton
 class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig) {
 
-  case class Upscan(callbackBase: String, maxFileSizeMb: Int, approvedFileTypes: String, approvedFileExtensions: String)
+  case class Upscan(
+    callbackBase: String,
+    redirectBase: String,
+    maxFileSizeMb: Int,
+    approvedFileTypes: String,
+    approvedFileExtensions: String
+  )
 
   val welshLanguageSupportEnabled: Boolean = config
     .getOptional[Boolean]("features.welsh-language-support")
@@ -43,6 +49,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),
+    redirectBase = loadConfig("upscan.redirect-base"),
     maxFileSizeMb = config.get[Int]("upscan.max-file-size-mb"),
     approvedFileExtensions = loadConfig("upscan.approved-file-extensions"),
     approvedFileTypes = loadConfig("upscan.approved-file-types")

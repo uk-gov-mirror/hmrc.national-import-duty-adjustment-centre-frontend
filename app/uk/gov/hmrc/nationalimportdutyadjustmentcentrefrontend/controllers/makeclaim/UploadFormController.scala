@@ -50,10 +50,10 @@ class UploadFormController @Inject() (
     extends FrontendController(mcc) with I18nSupport {
 
   private val errorRedirectUrl =
-    appConfig.upscan.callbackBase + "/national-import-duty-adjustment-centre/upload-documents/error"
+    appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/upload-documents/error"
 
   private def successRedirectUrl(uploadId: UploadId) =
-    appConfig.upscan.callbackBase + routes.UploadFormController.showResult(uploadId).url
+    appConfig.upscan.redirectBase + routes.UploadFormController.showResult(uploadId).url
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     initiateForm()

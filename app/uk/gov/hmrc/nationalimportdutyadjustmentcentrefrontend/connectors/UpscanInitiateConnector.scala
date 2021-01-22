@@ -20,6 +20,7 @@ import javax.inject.Inject
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
   UpscanFileReference,
@@ -68,7 +69,8 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: AppC
     hc: HeaderCarrier
   ): Future[UpscanInitiateResponse] = {
     val request = UpscanInitiateRequestV2(
-      callbackUrl = appConfig.upscan.callbackBase + "/national-import-duty-adjustment-centre/upscan-callback",
+      callbackUrl =
+        appConfig.upscan.callbackBase + controllers.makeclaim.routes.UploadCallbackController.callback().url,
       successRedirect = redirectOnSuccess,
       errorRedirect = redirectOnError,
       maximumFileSize = Some(appConfig.upscan.maxFileSizeMb * 1024 * 1024),
