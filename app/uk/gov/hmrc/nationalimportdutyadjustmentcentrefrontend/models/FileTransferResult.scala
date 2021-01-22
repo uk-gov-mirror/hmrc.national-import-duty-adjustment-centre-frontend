@@ -20,19 +20,14 @@ import java.time.LocalDateTime
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class CacheData(
-  id: String,
-  answers: Option[UserAnswers] = None,
-  createClaimResponse: Option[CreateClaimResponse] = None,
-  lastUpdated: LocalDateTime = LocalDateTime.now
-) {
+case class FileTransferResult(
+  upscanReference: String,
+  success: Boolean,
+  httpStatus: Int,
+  transferredAt: LocalDateTime,
+  error: Option[String] = None
+)
 
-  def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
-}
-
-object CacheData {
-
-  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
-
-  implicit val formats: OFormat[CacheData] = Json.format[CacheData]
+object FileTransferResult {
+  implicit val formats: OFormat[FileTransferResult] = Json.format[FileTransferResult]
 }

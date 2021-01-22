@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimResponse
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, CreateClaimResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -46,7 +46,7 @@ class ConfirmationControllerSpec extends ControllerSpec {
 
   "GET" should {
     "return OK when cache contains claim reference" in {
-      withCachedClaimResponse(Some(CreateClaimResponse("id", result = Some("reference"))))
+      withCachedClaimResponse(Some(CreateClaimResponse("id", result = Some(CreateClaimResult("reference", Seq.empty)))))
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK

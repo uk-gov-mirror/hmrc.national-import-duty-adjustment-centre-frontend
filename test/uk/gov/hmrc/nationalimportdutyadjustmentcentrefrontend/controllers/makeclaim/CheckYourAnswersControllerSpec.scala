@@ -24,7 +24,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimResponse
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, CreateClaimResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -41,7 +41,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     super.beforeEach()
     when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(connector.submitClaim(any())(any())).thenReturn(
-      Future.successful(CreateClaimResponse("id", None, Some(claimRef)))
+      Future.successful(CreateClaimResponse("id", None, Some(CreateClaimResult(claimRef, Seq.empty))))
     )
   }
 
