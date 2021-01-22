@@ -17,9 +17,11 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
-final case class UserAnswers(claimType: Option[ClaimType] = None)
+final case class UserAnswers(claimType: Option[ClaimType] = None, uploads: Option[Seq[UploadedFile]] = None)
 
 object UserAnswers {
+
   implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
 }

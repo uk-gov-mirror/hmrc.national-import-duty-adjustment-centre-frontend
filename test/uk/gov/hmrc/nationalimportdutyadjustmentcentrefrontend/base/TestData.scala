@@ -16,12 +16,37 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
+import java.time.{LocalDateTime, ZonedDateTime}
+
+import reactivemongo.bson.BSONObjectID
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
 
+  // UserAnswers
   val emptyAnswers: UserAnswers = UserAnswers()
 
-  val completeAnswers: UserAnswers = UserAnswers(claimType = Some(AntiDumping))
+  val claimTypeAnswer: ClaimType = AntiDumping
+
+  val uploadAnswer: UploadedFile =
+    UploadedFile("reference", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
+
+  val completeAnswers: UserAnswers = UserAnswers(claimType = Some(claimTypeAnswer), uploads = Some(Seq(uploadAnswer)))
+
+  // Upscan
+  val uploadId = UploadId.generate
+
+  val upscanInitiateResponse: UpscanInitiateResponse =
+    UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
+
+  def uploadResult(status: UploadStatus) =
+    UploadDetails(BSONObjectID.generate(), uploadId, Reference("reference"), status, LocalDateTime.now)
+
+  val uploadedFile =
+    UploadedFile("reference", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
+
 }

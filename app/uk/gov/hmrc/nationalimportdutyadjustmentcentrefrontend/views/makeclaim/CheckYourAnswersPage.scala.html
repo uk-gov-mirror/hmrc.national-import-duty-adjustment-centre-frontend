@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
@@ -47,10 +47,21 @@
                     content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
                 ),
                 actions = None
-        ))
+            ),
+            SummaryListRow(
+                classes = "upload_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.uploaded"))
+                ),
+                value = Value(
+                    content = HtmlContent(claim.uploads.map(_.fileName).mkString("<br>"))
+                ),
+                actions = None
+            )
+        )
     )
 
-    @formHelper(action = CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
         @continueButton("check_answers.submit")
     }
 

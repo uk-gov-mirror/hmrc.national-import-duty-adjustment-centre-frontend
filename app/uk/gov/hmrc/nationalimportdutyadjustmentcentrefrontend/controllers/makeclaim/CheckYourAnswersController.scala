@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{DataRequiredAction, IdentifierAction}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
@@ -43,7 +44,7 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(): Action[AnyContent] = (identify andThen requireData) { implicit request =>
     request.cacheData.answers match {
       case Some(answers) => Ok(checkYourAnswersPage(CreateClaimRequest(request.internalId, answers)))
-      case None          => missingAnswersError
+      case None          => Redirect(controllers.routes.StartController.start())
     }
   }
 
@@ -56,7 +57,7 @@ class CheckYourAnswersController @Inject() (
             _ => Redirect(routes.ConfirmationController.onPageLoad())
           }
         }
-      case None => Future.successful(missingAnswersError)
+      case None => Future(missingAnswersError)
     }
 
   }

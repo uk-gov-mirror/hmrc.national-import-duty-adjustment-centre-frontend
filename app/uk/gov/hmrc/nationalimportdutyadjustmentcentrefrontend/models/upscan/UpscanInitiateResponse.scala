@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
 
-@this(govukButton: GovukButton)
+import play.api.libs.json.{Json, OFormat}
 
-@(messageKey: String = "site.continue", disabled: Boolean = false)(implicit messages: Messages)
+case class UpscanInitiateResponse(
+  fileReference: UpscanFileReference,
+  postTarget: String,
+  formFields: Map[String, String]
+)
 
-@govukButton(Button(content = Text(messages(messageKey)), attributes = Map("id" -> "submit"), disabled = disabled))
+object UpscanInitiateResponse {
+  implicit val format: OFormat[UpscanInitiateResponse] = Json.format[UpscanInitiateResponse]
+}

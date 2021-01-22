@@ -16,4 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-trait Page {}
+trait Page
+
+case object UploadPage extends Page

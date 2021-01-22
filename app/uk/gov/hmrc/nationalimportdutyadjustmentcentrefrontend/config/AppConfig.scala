@@ -18,11 +18,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.i18n.Lang
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig) {
+
+  case class Upscan(callbackBase: String, maxFileSizeMb: Int, approvedFileTypes: String, approvedFileExtensions: String)
 
   val welshLanguageSupportEnabled: Boolean = config
     .getOptional[Boolean]("features.welsh-language-support")
@@ -32,10 +34,21 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val cy: String            = "cy"
   val defaultLanguage: Lang = Lang(en)
 
-  lazy val loginUrl: String         = config.get[String]("urls.login")
-  lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
-  lazy val signOutUrl: String       = config.get[String]("urls.signout")
+  lazy val loginUrl: String         = loadConfig("urls.login")
+  lazy val loginContinueUrl: String = loadConfig("urls.loginContinue")
+  lazy val signOutUrl: String       = loadConfig("urls.signout")
 
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
+  val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
+
+  val upscan: Upscan = Upscan(
+    callbackBase = loadConfig("upscan.callback-base"),
+    maxFileSizeMb = config.get[Int]("upscan.max-file-size-mb"),
+    approvedFileExtensions = loadConfig("upscan.approved-file-extensions"),
+    approvedFileTypes = loadConfig("upscan.approved-file-types")
+  )
+
+  private def loadConfig(key: String) =
+    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
 }

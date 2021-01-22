@@ -23,14 +23,15 @@ import play.api.data.Form
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{AntiDumping, Tomato147s}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class ClaimTypeControllerSpec extends ControllerSpec {
+class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
   private val page         = mock[ClaimTypePage]
   private val formProvider = new ClaimTypeFormProvider
@@ -84,20 +85,12 @@ class ClaimTypeControllerSpec extends ControllerSpec {
 
     val validRequest = postRequest(("claim_type", Tomato147s.toString))
 
-    "redirect when valid answer is submitted" in {
+    "update cache and redirect when valid answer is submitted" in {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
-    }
-
-    "update cache when valid answer is submitted" in {
-
-      val result = controller.onSubmit()(validRequest)
-      status(result) mustEqual SEE_OTHER
-
       theUpdatedCache.claimType mustBe Some(Tomato147s)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ClaimTypePage, emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

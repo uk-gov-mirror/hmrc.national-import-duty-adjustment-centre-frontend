@@ -14,8 +14,16 @@ GET         /assets/*file                       controllers.Assets.versioned(pat
 GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
 POST        /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onSubmit()
 
+GET         /upload-documents                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onPageLoad()
+GET         /upload-documents/success           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.showResult(uploadId: uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadId)
+GET         /upload-documents/error             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.showError(errorCode: String)
+
 
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
 
 GET         /confirmation                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ConfirmationController.onPageLoad()
+
+# upload file notification callback
++ nocsrf
+POST        /upscan-callback                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadCallbackController.callback

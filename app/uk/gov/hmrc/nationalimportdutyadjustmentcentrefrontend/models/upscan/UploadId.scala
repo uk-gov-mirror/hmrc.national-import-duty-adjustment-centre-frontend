@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
 
-@this(govukButton: GovukButton)
+import java.util.UUID
 
-@(messageKey: String = "site.continue", disabled: Boolean = false)(implicit messages: Messages)
+import play.api.mvc.QueryStringBindable
 
-@govukButton(Button(content = Text(messages(messageKey)), attributes = Map("id" -> "submit"), disabled = disabled))
+case class UploadId(value: String) extends AnyVal
+
+object UploadId {
+  def generate: UploadId = UploadId(UUID.randomUUID().toString)
+
+  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
+    stringBinder.transform(UploadId(_), _.value)
+
+}

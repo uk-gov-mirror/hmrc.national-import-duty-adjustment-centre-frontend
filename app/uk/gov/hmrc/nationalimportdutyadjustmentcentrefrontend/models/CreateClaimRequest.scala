@@ -18,16 +18,21 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimTypePage, Page}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimTypePage, Page, UploadPage}
 
-case class CreateClaimRequest(userId: String, claimType: ClaimType)
+case class CreateClaimRequest(userId: String, claimType: ClaimType, uploads: Seq[UploadedFile])
 
 object CreateClaimRequest {
 
   implicit val format: OFormat[CreateClaimRequest] = Json.format[CreateClaimRequest]
 
   def apply(id: String, userAnswers: UserAnswers): CreateClaimRequest =
-    new CreateClaimRequest(userId = id, claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)))
+    new CreateClaimRequest(
+      userId = id,
+      claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
+      uploads = userAnswers.uploads.getOrElse(missing(UploadPage))
+    )
 
   private def missing(answer: Page) =
     throw new MissingUserAnswersException(s"missing answer - $answer")

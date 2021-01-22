@@ -23,11 +23,41 @@ claim_type.Quota = Quota
 claim_type.Airworthiness = Airworthiness
 claim_type.TRS = TRS
 
+upload_documents.title = Upload your supporting documentation
+upload_documents.first.label = Select your first file
+upload_documents.status.in_progress = Waiting for the file to be scanned
+
+upload_documents.body.hint = You should send as many supporting documents for your claim as possible.
+upload_documents.body.document.heading = Suggested supporting documents
+upload_documents.body.document.para.1 = You can upload one file at a time. This can include:
+upload_documents.body.document.bullet.1 = airway bill
+upload_documents.body.document.bullet.2 = bill of lading
+upload_documents.body.document.bullet.3 = C88
+upload_documents.body.document.bullet.4 = E2
+upload_documents.body.document.bullet.5 = invoice
+upload_documents.body.document.bullet.6 = packing list
+upload_documents.body.document.bullet.7 = proof of origin
+upload_documents.body.document.bullet.8 = substitute entry
+upload_documents.body.files.para.1 = Files must be 6mb or less, and in one of the following formats:
+upload_documents.body.files.bullet.1 = Image (.jpeg, .jpg or .png)
+upload_documents.body.files.bullet.2 = PDF (.pdf)
+upload_documents.body.files.bullet.3 = MS Word document (.doc or .docx)
+upload_documents.body.files.bullet.4 = MS Excel spreadsheet (.xls or .xlsx)
+
+error.file-upload.required=You must upload a file
+error.file-upload.invalid-size-small=The selected file is empty
+error.file-upload.invalid-size-large=File size cannot be over 6mb
+error.file-upload.invalid-type=Upload a valid file type
+error.file-upload.quarantine=This file contains a virus and cannot be uploaded
+error.file-upload.unknown=The selected file could not be uploaded
+error.file-upload.try-again=The selected file could not be uploaded - try again
+
 check_answers.title = Check your answers before sending your application
 check_answers.change = Change
 check_answers.submit = Accept and send
 check_answers.claim.title = About your claim
 check_answers.claim.claimType = Claim type
+check_answers.claim.uploaded = Uploaded documents
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>

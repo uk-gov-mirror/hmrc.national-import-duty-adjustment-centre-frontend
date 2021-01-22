@@ -51,7 +51,7 @@ class ClaimTypeController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(claimTypePage(formWithErrors))),
+      formWithErrors => Future(BadRequest(claimTypePage(formWithErrors))),
       value =>
         data.updateAnswers(answers => answers.copy(claimType = Some(value))) map {
           updatedAnswers => Redirect(navigator.nextPage(ClaimTypePage, updatedAnswers))
