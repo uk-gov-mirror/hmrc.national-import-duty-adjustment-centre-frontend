@@ -21,9 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 
 class Module extends AbstractModule {
 
-  override def configure(): Unit = {
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
+  override def configure(): Unit =
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-  }
 
 }

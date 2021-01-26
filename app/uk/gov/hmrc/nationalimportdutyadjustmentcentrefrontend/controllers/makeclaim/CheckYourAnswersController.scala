@@ -19,49 +19,50 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{DataRequiredAction, IdentifierAction}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
-  requireData: DataRequiredAction,
+  data: CacheDataService,
   connector: NIDACConnector,
-  repository: CacheDataRepository,
   checkYourAnswersPage: CheckYourAnswersPage
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen requireData) { implicit request =>
-    request.cacheData.answers match {
-      case Some(answers) => Ok(checkYourAnswersPage(CreateClaimRequest(request.internalId, answers)))
-      case None          => Redirect(controllers.routes.StartController.start())
+  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
+    data.getAnswers map { answers =>
+      Ok(checkYourAnswersPage(CreateClaimRequest(request.identifier, answers)))
+    } recover {
+      case _: MissingUserAnswersException =>
+        Redirect(controllers.routes.StartController.start())
     }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen requireData).async { implicit request =>
-    request.cacheData.answers match {
-      case Some(answers) =>
-        val claim = CreateClaimRequest(request.internalId, answers)
-        connector.submitClaim(claim) flatMap { response =>
-          repository.set(request.cacheData.copy(answers = None, createClaimResponse = Some(response))) map {
-            _ => Redirect(routes.ConfirmationController.onPageLoad())
-          }
+  def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
+    data.getAnswers flatMap { answers =>
+      val claim = CreateClaimRequest(request.identifier, answers)
+      connector.submitClaim(claim) flatMap { response =>
+        data.updateResponse(response) map {
+          _ => Redirect(routes.ConfirmationController.onPageLoad())
         }
-      case None => Future(missingAnswersError)
+      }
+    } recover {
+      case _: MissingUserAnswersException =>
+        Redirect(controllers.routes.StartController.start())
     }
 
   }
-
-  private def missingAnswersError = throw new MissingUserAnswersException("Missing UserAnswers")
 
 }

@@ -20,7 +20,8 @@ import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{InProgress, UploadId, UploadStatus}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{InProgress, UploadStatus}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.{UploadDetails, UploadRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -28,24 +29,30 @@ import scala.concurrent.{ExecutionContext, Future}
 class MongoBackedUploadProgressTracker @Inject() (repository: UploadRepository)(implicit ec: ExecutionContext)
     extends UploadProgressTracker {
 
-  override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Boolean] =
-    repository.add(UploadDetails(BSONObjectID.generate(), uploadId, fileReference, InProgress)).map(_ => true)
+  override def requestUpload(uploadId: UploadId, journeyId: JourneyId, fileReference: Reference): Future[Boolean] =
+    repository.add(UploadDetails(BSONObjectID.generate(), uploadId, journeyId, fileReference, InProgress)).map(
+      _ => true
+    )
 
-  override def registerUploadResult(fileReference: Reference, uploadStatus: UploadStatus): Future[Boolean] =
-    repository.updateStatus(fileReference, uploadStatus).map(_ => true)
+  override def registerUploadResult(
+    fileReference: Reference,
+    journeyId: JourneyId,
+    uploadStatus: UploadStatus
+  ): Future[Boolean] =
+    repository.updateStatus(fileReference, journeyId, uploadStatus).map(_ => true)
 
-  override def getUploadResult(id: UploadId): Future[Option[UploadStatus]] =
-    for (result <- repository.findByUploadId(id)) yield result.map(_.status)
+  override def getUploadResult(id: UploadId, journeyId: JourneyId): Future[Option[UploadStatus]] =
+    for (result <- repository.findUploadDetails(id, journeyId)) yield result.map(_.status)
 
 }
 
 @ImplementedBy(classOf[MongoBackedUploadProgressTracker])
 trait UploadProgressTracker {
 
-  def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Boolean]
+  def requestUpload(uploadId: UploadId, journeyId: JourneyId, fileReference: Reference): Future[Boolean]
 
-  def registerUploadResult(reference: Reference, uploadStatus: UploadStatus): Future[Boolean]
+  def registerUploadResult(fileReference: Reference, journeyId: JourneyId, uploadStatus: UploadStatus): Future[Boolean]
 
-  def getUploadResult(id: UploadId): Future[Option[UploadStatus]]
+  def getUploadResult(id: UploadId, journeyId: JourneyId): Future[Option[UploadStatus]]
 
 }

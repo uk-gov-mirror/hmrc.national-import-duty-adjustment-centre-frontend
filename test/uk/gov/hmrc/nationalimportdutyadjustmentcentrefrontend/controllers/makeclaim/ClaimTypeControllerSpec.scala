@@ -73,7 +73,7 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(Some(UserAnswers(claimType = Some(AntiDumping))))
+      withCacheUserAnswers(UserAnswers(claimType = Some(AntiDumping)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -87,9 +87,11 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
+      withCacheUserAnswers(emptyAnswers)
+
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCache.claimType mustBe Some(Tomato147s)
+      theUpdatedUserAnswers.claimType mustBe Some(Tomato147s)
       redirectLocation(result) mustBe Some(navigator.nextPage(ClaimTypePage, emptyAnswers).url)
     }
 

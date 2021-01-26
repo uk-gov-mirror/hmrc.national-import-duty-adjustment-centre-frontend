@@ -28,7 +28,7 @@ import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JsonFormats
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, JsonFormats, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails._
 
@@ -37,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class UploadDetails(
   id: BSONObjectID,
   uploadId: UploadId,
+  journeyId: JourneyId,
   reference: Reference,
   status: UploadStatus,
   created: LocalDateTime = LocalDateTime.now
@@ -100,18 +101,19 @@ class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config
 
   def add(uploadDetails: UploadDetails): Future[Boolean] = insert(uploadDetails).map(_ => true)
 
-  def findByUploadId(uploadId: UploadId): Future[Option[UploadDetails]] =
-    find("uploadId" -> Json.toJson(uploadId)).map(_.headOption)
+  def findUploadDetails(uploadId: UploadId, journeyId: JourneyId): Future[Option[UploadDetails]] =
+    find("uploadId" -> Json.toJson(uploadId), "journeyId" -> Json.toJson(journeyId)).map(_.headOption)
 
-  def updateStatus(reference: Reference, newStatus: UploadStatus): Future[UploadStatus] =
+  def updateStatus(reference: Reference, journeyId: JourneyId, newStatus: UploadStatus): Future[UploadStatus] =
     for (
       result <- findAndUpdate(
-        query = JsObject(Seq("reference" -> Json.toJson(reference))),
+        query = JsObject(Seq("reference" -> Json.toJson(reference), "journeyId" -> Json.toJson(journeyId))),
         update = Json.obj("$set" -> Json.obj("status" -> Json.toJson(newStatus))),
-        upsert = true
+        upsert = true // TODO - do we want to upsert?  Should fail if not found
       )
     )
       yield result.result[UploadDetails].map(_.status).getOrElse(
+        // TODO - change return type to Option and return None if not found
         throw new Exception("Update failed, no document modified")
       )
 

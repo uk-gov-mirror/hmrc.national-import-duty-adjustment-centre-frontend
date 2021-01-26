@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import java.util.UUID
 
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.QueryStringBindable
 
-case class UploadId(value: String) extends AnyVal
+case class JourneyId(value: String)
 
-object UploadId {
-  def generate: UploadId = UploadId(UUID.randomUUID().toString)
+object JourneyId {
+  def generate: JourneyId = JourneyId(UUID.randomUUID().toString)
 
-  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
-    stringBinder.transform(UploadId(_), _.value)
+  implicit val idFormat: OFormat[JourneyId] = Json.format[JourneyId]
+
+  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[JourneyId] =
+    stringBinder.transform(JourneyId(_), _.value)
 
 }

@@ -54,16 +54,15 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     new CheckYourAnswersController(
       stubMessagesControllerComponents(),
       fakeAuthorisedIdentifierAction,
-      dataRequiredAction,
+      cacheDataService,
       connector,
-      dataRepository,
       page
     )
 
   "GET" should {
 
     "return OK when user has answered all questions" in {
-      withCacheUserAnswers(Some(completeAnswers))
+      withCacheUserAnswers(completeAnswers)
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK
@@ -77,17 +76,20 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
     }
 
-    "error when answers missing" in {
-      withCacheUserAnswers(Some(emptyAnswers))
+    "redirect to start when answers missing" in {
+      withCacheUserAnswers(emptyAnswers)
+
       val result = controller.onPageLoad()(fakeGetRequest)
-      intercept[Exception](status(result)).getMessage must startWith("missing answer")
+
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
     }
   }
 
   "POST" should {
 
     "submit and redirect to confirmation page" in {
-      withCacheUserAnswers(Some(completeAnswers))
+      withCacheUserAnswers(completeAnswers)
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER

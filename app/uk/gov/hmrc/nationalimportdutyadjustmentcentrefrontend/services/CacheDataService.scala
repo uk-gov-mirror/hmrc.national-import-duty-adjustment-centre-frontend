@@ -18,23 +18,35 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: ExecutionContext) {
 
-  def getOrCreateAnswers(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
-    repository.get(request.identifier) map { data =>
-      data.flatMap(_.answers).getOrElse(new UserAnswers())
+  private def getCacheData(implicit request: IdentifierRequest[_]): Future[CacheData] =
+    repository.get(request.identifier) flatMap {
+      case Some(data) => Future(data)
+      case None =>
+        val data = CacheData(request.identifier)
+        repository.set(data) map { _ => data }
     }
 
+  def getAnswers(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
+    getCacheData map (_.answers)
+
   def updateAnswers(update: UserAnswers => UserAnswers)(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
-    repository.get(request.identifier) flatMap { maybeData =>
-      val data: CacheData             = maybeData.getOrElse(CacheData(request.identifier))
-      val updatedAnswers: UserAnswers = update(data.answers.getOrElse(UserAnswers()))
-      repository.set(data.copy(answers = Some(updatedAnswers))) map { _ => updatedAnswers }
+    getCacheData flatMap { data =>
+      val updatedAnswers: UserAnswers = update(data.answers)
+      repository.set(data.copy(answers = updatedAnswers)) map { _ => updatedAnswers }
+    }
+
+  def updateResponse(
+    claimResponse: CreateClaimResponse
+  )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
+    getCacheData flatMap { data =>
+      repository.set(data.copy(answers = UserAnswers(), createClaimResponse = Some(claimResponse)))
     }
 
 }

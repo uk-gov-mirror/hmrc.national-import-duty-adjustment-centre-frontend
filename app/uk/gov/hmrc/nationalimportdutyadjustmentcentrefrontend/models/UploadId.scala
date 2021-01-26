@@ -16,23 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import java.time.LocalDateTime
+import java.util.UUID
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.mvc.QueryStringBindable
 
-final case class CacheData(
-  id: String,
-  answers: UserAnswers = UserAnswers(),
-  createClaimResponse: Option[CreateClaimResponse] = None,
-  lastUpdated: LocalDateTime = LocalDateTime.now
-) {
+case class UploadId(value: String)
 
-  def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
-}
+object UploadId {
+  def generate: UploadId = UploadId(UUID.randomUUID().toString)
 
-object CacheData {
+  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
+    stringBinder.transform(UploadId(_), _.value)
 
-  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
-
-  implicit val formats: OFormat[CacheData] = Json.format[CacheData]
 }

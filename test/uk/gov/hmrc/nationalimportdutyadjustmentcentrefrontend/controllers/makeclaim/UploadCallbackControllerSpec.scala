@@ -16,6 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -25,29 +29,40 @@ import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UpscanNotificationSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{UploadId, UploadStatus}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.UploadProgressTracker
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{
+  MongoBackedUploadProgressTracker,
+  UploadProgressTracker
+}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class UploadCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with TestData {
+class UploadCallbackControllerSpec
+    extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach with TestData {
 
-  private val dummyProgressTracker = new UploadProgressTracker {
-    override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Boolean] = Future.successful(true)
+  implicit val ec: ExecutionContext =
+    scala.concurrent.ExecutionContext.Implicits.global
 
-    override def registerUploadResult(reference: Reference, uploadStatus: UploadStatus): Future[Boolean] =
-      Future.successful(true)
-
-    override def getUploadResult(id: UploadId): Future[Option[UploadStatus]] = Future.successful(None)
-  }
+  private val mockUploadRepository = mock[UploadRepository]
+  private val progressTracker      = new MongoBackedUploadProgressTracker(mockUploadRepository)
 
   override lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(bind[UploadProgressTracker].to(dummyProgressTracker))
+    .overrides(bind[UploadProgressTracker].to(progressTracker))
     .build()
 
-  val post = FakeRequest("POST", "/national-import-duty-adjustment-centre/upscan-callback")
+  override protected def beforeEach(): Unit = {
+    super.beforeEach()
+
+    when(mockUploadRepository.updateStatus(any(), any(), any())).thenReturn(Future.successful(uploadInProgress))
+  }
+
+  override protected def afterEach(): Unit = {
+    reset(mockUploadRepository)
+    super.afterEach()
+  }
+
+  val post = FakeRequest("POST", s"/national-import-duty-adjustment-centre/upscan-callback?journeyId=$journeyId")
 
   "UploadCallbackController" should {
 
@@ -64,7 +79,7 @@ class UploadCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
         status(result) must be(NO_CONTENT)
       }
 
-      "failed notification is recieved" in {
+      "failed notification is received" in {
 
         val request = post
           .withHeaders((CONTENT_TYPE, JSON))

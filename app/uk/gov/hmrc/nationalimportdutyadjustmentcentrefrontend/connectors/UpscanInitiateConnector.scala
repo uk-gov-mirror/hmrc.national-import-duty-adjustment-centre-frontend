@@ -20,8 +20,9 @@ import javax.inject.Inject
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
   UpscanFileReference,
   UpscanInitiateResponse
@@ -42,7 +43,7 @@ case class UpscanInitiateRequestV2(
 
 case class UploadForm(href: String, fields: Map[String, String])
 
-case class Reference(value: String) extends AnyVal
+case class Reference(value: String)
 
 object Reference {
   implicit val referenceReader: Reads[Reference] = Reads.StringReads.map(Reference(_))
@@ -65,12 +66,12 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: AppC
 
   private val headers = Map(HeaderNames.CONTENT_TYPE -> "application/json")
 
-  def initiateV2(redirectOnSuccess: Option[String], redirectOnError: Option[String])(implicit
+  def initiateV2(journeyId: JourneyId, redirectOnSuccess: Option[String], redirectOnError: Option[String])(implicit
     hc: HeaderCarrier
   ): Future[UpscanInitiateResponse] = {
     val request = UpscanInitiateRequestV2(
       callbackUrl =
-        appConfig.upscan.callbackBase + controllers.makeclaim.routes.UploadCallbackController.callback().url,
+        appConfig.upscan.callbackBase + controllers.makeclaim.routes.UploadCallbackController.callback(journeyId).url,
       successRedirect = redirectOnSuccess,
       errorRedirect = redirectOnError,
       maximumFileSize = Some(appConfig.upscan.maxFileSizeMb * 1024 * 1024),

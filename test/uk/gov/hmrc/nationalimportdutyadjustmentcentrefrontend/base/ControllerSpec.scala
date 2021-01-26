@@ -23,10 +23,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{
-  DataRequiredActionImpl,
-  FakeIdentifierActions
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
@@ -46,8 +43,6 @@ trait ControllerSpec
 
   val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
-  val dataRequiredAction = new DataRequiredActionImpl(dataRepository)
-
   val cacheDataService: CacheDataService = new CacheDataService(dataRepository)
 
   val navigator = instanceOf[Navigator]
@@ -62,9 +57,9 @@ trait ControllerSpec
     super.afterEach()
   }
 
-  def withEmptyCache: Unit = when(dataRepository.get(anyString())).thenReturn(Future.successful(None))
+  def withEmptyCache(): Unit = when(dataRepository.get(anyString())).thenReturn(Future.successful(None))
 
-  def withCacheUserAnswers(answers: Option[UserAnswers]): Unit = {
+  def withCacheUserAnswers(answers: UserAnswers): Unit = {
     val cacheData: Option[CacheData] = Some(CacheData("id", answers = answers))
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
@@ -74,11 +69,11 @@ trait ControllerSpec
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
-  protected def theUpdatedCache: UserAnswers = {
+  protected def theUpdatedUserAnswers: UserAnswers = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
     verify(dataRepository).set(captor.capture())
     val cacheData: CacheData = captor.getValue
-    cacheData.answers.getOrElse(UserAnswers())
+    cacheData.answers
   }
 
   protected def postRequest(data: (String, String)*): Request[AnyContentAsFormUrlEncoded] =

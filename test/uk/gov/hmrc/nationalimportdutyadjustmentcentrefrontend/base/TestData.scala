@@ -21,8 +21,9 @@ import java.time.{LocalDateTime, ZonedDateTime}
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, JourneyId, UploadId, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -38,15 +39,19 @@ trait TestData {
   val completeAnswers: UserAnswers = UserAnswers(claimType = Some(claimTypeAnswer), uploads = Some(Seq(uploadAnswer)))
 
   // Upscan
-  val uploadId = UploadId.generate
+  val uploadId  = UploadId.generate
+  val journeyId = JourneyId.generate
 
   val upscanInitiateResponse: UpscanInitiateResponse =
     UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
 
   def uploadResult(status: UploadStatus) =
-    UploadDetails(BSONObjectID.generate(), uploadId, Reference("reference"), status, LocalDateTime.now)
+    UploadDetails(BSONObjectID.generate(), uploadId, journeyId, Reference("reference"), status, LocalDateTime.now)
 
-  val uploadedFile =
+  val uploadInProgress: UploadStatus = InProgress
+  val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")
+
+  val uploadFileSuccess: UploadStatus =
     UploadedFile("reference", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
 
 }

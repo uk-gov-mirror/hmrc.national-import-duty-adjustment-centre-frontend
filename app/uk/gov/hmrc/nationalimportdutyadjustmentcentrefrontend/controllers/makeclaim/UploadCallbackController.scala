@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.libs.json.JsValue
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.UploadProgressTracker
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,16 +35,16 @@ class UploadCallbackController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
-  val callback: Action[JsValue] = Action.async(parse.json) { implicit request =>
+  def callback(journeyId: JourneyId): Action[JsValue] = Action.async(parse.json) { implicit request =>
     withJsonBody[UpscanNotification] { feedback: UpscanNotification =>
-      handleCallback(feedback).map(_ => NoContent)
+      handleCallback(journeyId, feedback).map(_ => NoContent)
     } recover {
       case e: IllegalArgumentException => BadRequest
       case e                           => InternalServerError
     }
   }
 
-  def handleCallback(callback: UpscanNotification): Future[Boolean] = {
+  def handleCallback(journeyId: JourneyId, callback: UpscanNotification): Future[Boolean] = {
 
     val uploadStatus = callback match {
       case ready: UpscanFileReady =>
@@ -59,7 +60,7 @@ class UploadCallbackController @Inject() (
         Failed(failed.failureDetails.failureReason, failed.failureDetails.message)
     }
 
-    uploadProgressTracker.registerUploadResult(Reference(callback.reference), uploadStatus)
+    uploadProgressTracker.registerUploadResult(Reference(callback.reference), journeyId, uploadStatus)
   }
 
 }
