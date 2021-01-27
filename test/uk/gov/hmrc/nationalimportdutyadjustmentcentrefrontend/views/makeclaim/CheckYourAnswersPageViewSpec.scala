@@ -52,7 +52,33 @@ class CheckYourAnswersPageViewSpec extends UnitViewSpec with TestData {
         val claimTypeRow = claimSection.getElementsByClass("claim_type_row")
 
         claimTypeRow must haveSummaryKey(messages("check_answers.claim.claimType"))
-        claimTypeRow must haveSummaryValue(MessageKey.apply("claim_type", claim.claimType.toString))
+        claimTypeRow must haveSummaryValue(MessageKey.apply("claim_type", claimTypeAnswer.toString))
+      }
+
+      "contains valid upload" in {
+
+        val uploadRow = claimSection.getElementsByClass("upload_row")
+
+        uploadRow must haveSummaryKey(messages("check_answers.claim.uploaded"))
+        uploadRow must haveSummaryValue(uploadAnswer.fileName)
+      }
+
+    }
+
+    "have repayment section" which {
+
+      val repaymentSection = view.getElementById("repayment_section")
+
+      "contains valid reclaim duty type" in {
+
+        val reclaimDutyTypeRow = repaymentSection.getElementsByClass("reclaim_duty_type_row")
+
+        reclaimDutyTypeRow must haveSummaryKey(messages("check_answers.repayment.reclaimDutyType"))
+        reclaimDutyTypeRow must haveSummaryValue(
+          reclaimDutyTypesAnswer.map(
+            value => MessageKey.apply("check_answers.repayment.reclaimDutyType", value.toString)
+          ).mkString(", ")
+        )
       }
     }
 

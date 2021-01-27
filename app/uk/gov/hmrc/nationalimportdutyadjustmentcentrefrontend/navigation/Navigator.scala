@@ -20,15 +20,21 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimTypePage, Page, UploadPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
+  ClaimTypePage,
+  Page,
+  ReclaimDutyTypePage,
+  UploadPage
+}
 
 @Singleton
 class Navigator @Inject() () {
 
   private val normalRoutes: (Page, UserAnswers) => Call = {
-    case (ClaimTypePage, _) => controllers.makeclaim.routes.UploadFormController.onPageLoad()
-    case (UploadPage, _)    => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
-    case _                  => controllers.routes.StartController.start()
+    case (ClaimTypePage, _)       => controllers.makeclaim.routes.UploadFormController.onPageLoad()
+    case (UploadPage, _)          => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()
+    case (ReclaimDutyTypePage, _) => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
+    case _                        => controllers.routes.StartController.start()
   }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =

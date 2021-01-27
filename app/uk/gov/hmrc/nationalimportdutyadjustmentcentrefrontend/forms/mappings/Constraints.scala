@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, ReclaimDutyType}
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
-trait QuestionPage[A] extends Page
+trait Constraints {
 
-case object ClaimTypePage       extends QuestionPage[ClaimType]
-case object ReclaimDutyTypePage extends QuestionPage[Set[ReclaimDutyType]]
+  protected def nonEmptySet(errorKey: String): Constraint[Set[_]] =
+    Constraint {
+      case set if set.nonEmpty =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+}

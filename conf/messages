@@ -44,6 +44,13 @@ upload_documents.body.files.bullet.2 = PDF (.pdf)
 upload_documents.body.files.bullet.3 = MS Word document (.doc or .docx)
 upload_documents.body.files.bullet.4 = MS Excel spreadsheet (.xls or .xlsx)
 
+reclaimDutyType.title = What do you want to reclaim?
+reclaimDutyType.hint = Select all that apply.
+reclaimDutyType.01 = Customs Duty
+reclaimDutyType.02 = VAT
+reclaimDutyType.03 = Another type of duty
+reclaimDutyType.error.required = Select what you want to reclaim
+
 error.file-upload.required=You must upload a file
 error.file-upload.invalid-size-small=The selected file is empty
 error.file-upload.invalid-size-large=File size cannot be over 6mb
@@ -57,7 +64,12 @@ check_answers.change = Change
 check_answers.submit = Accept and send
 check_answers.claim.title = About your claim
 check_answers.claim.claimType = Claim type
-check_answers.claim.uploaded = Uploaded documents
+check_answers.claim.uploaded = Supporting documents
+check_answers.repayment.title = Repayment request
+check_answers.repayment.reclaimDutyType = What do you want to reclaim?
+check_answers.repayment.reclaimDutyType.01 = Customs duty
+check_answers.repayment.reclaimDutyType.02 = VAT
+check_answers.repayment.reclaimDutyType.03 = Other
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>

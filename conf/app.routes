@@ -18,6 +18,9 @@ GET         /upload-documents                   uk.gov.hmrc.nationalimportdutyad
 GET         /upload-documents/progress          uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onProgress(uploadId: UploadId)
 GET         /upload-documents/error             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onError(errorCode: String)
 
+GET         /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onPageLoad()
+POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onSubmit()
+
 
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()

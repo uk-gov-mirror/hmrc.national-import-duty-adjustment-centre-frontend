@@ -21,9 +21,17 @@ import java.time.{LocalDateTime, ZonedDateTime}
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, JourneyId, UploadId, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  ClaimType,
+  JourneyId,
+  ReclaimDutyType,
+  UploadId,
+  UserAnswers,
+  WithValue
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -36,7 +44,13 @@ trait TestData {
   val uploadAnswer: UploadedFile =
     UploadedFile("reference", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
 
-  val completeAnswers: UserAnswers = UserAnswers(claimType = Some(claimTypeAnswer), uploads = Some(Seq(uploadAnswer)))
+  val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat)
+
+  val completeAnswers: UserAnswers = UserAnswers(
+    claimType = Some(claimTypeAnswer),
+    uploads = Some(Seq(uploadAnswer)),
+    reclaimDutyTypes = Some(reclaimDutyTypesAnswer)
+  )
 
   // Upscan
   val uploadId  = UploadId.generate

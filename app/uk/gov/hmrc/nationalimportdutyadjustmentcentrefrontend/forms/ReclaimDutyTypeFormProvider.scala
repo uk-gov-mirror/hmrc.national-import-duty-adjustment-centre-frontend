@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
-import play.api.libs.json._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import javax.inject.Inject
+import play.api.data.Form
+import play.api.data.Forms.set
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
 
-final case class UserAnswers(
-  journeyId: JourneyId = JourneyId.generate,
-  claimType: Option[ClaimType] = None,
-  reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
-  uploads: Option[Seq[UploadedFile]] = None
-)
+class ReclaimDutyTypeFormProvider @Inject() extends Mappings {
 
-object UserAnswers {
+  def apply(): Form[Set[ReclaimDutyType]] =
+    Form(
+      "reclaimDutyType" -> set(enumerable[ReclaimDutyType]("reclaimDutyType.error.required"))
+        .verifying(nonEmptySet("reclaimDutyType.error.required"))
+    )
 
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
 }

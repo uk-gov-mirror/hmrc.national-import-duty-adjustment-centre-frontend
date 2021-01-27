@@ -61,6 +61,23 @@
         )
     )
 
+    @summaryList(
+        id = "repayment_section",
+        heading = Some(messages("check_answers.repayment.title")),
+        summaryListRows = Seq(
+            SummaryListRow(
+                classes = "reclaim_duty_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.repayment.reclaimDutyType"))
+                ),
+                value = Value(
+                    content = HtmlContent(claim.reclaimDutyTypes.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType.toString)).mkString(", "))
+                ),
+                actions = None
+            )
+        )
+    )
+
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
         @continueButton("check_answers.submit")
     }

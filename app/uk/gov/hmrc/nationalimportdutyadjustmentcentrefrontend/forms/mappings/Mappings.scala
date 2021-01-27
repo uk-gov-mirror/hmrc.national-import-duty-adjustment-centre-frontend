@@ -20,7 +20,7 @@ import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Enumerable
 
-trait Mappings extends Formatters {
+trait Mappings extends Formatters with Constraints {
 
   protected def text(errorKey: String = "error.required"): FieldMapping[String] =
     of(stringFormatter(errorKey))
