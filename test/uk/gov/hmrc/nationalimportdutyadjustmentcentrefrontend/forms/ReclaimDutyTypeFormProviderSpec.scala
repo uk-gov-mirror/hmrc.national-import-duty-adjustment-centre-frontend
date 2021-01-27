@@ -17,10 +17,13 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
 import play.api.data.FormError
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.{
+  CheckboxFieldBehaviours,
+  OptionFieldBehaviours
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
 
-class ReclaimDutyTypeFormProviderSpec extends OptionFieldBehaviours {
+class ReclaimDutyTypeFormProviderSpec extends CheckboxFieldBehaviours {
 
   val form = new ReclaimDutyTypeFormProvider()()
 
@@ -29,13 +32,13 @@ class ReclaimDutyTypeFormProviderSpec extends OptionFieldBehaviours {
     val fieldName   = "reclaimDutyType"
     val requiredKey = "reclaimDutyType.error.required"
 
-    behave like optionsField[ReclaimDutyType](
+    behave like checkboxField[ReclaimDutyType](
       form,
       fieldName,
       validValues = ReclaimDutyType.values,
-      invalidError = FormError(fieldName, "reclaimDutyType.error.required")
+      invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 
-    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+    behave like mandatoryCheckboxField(form, fieldName, requiredKey)
   }
 }

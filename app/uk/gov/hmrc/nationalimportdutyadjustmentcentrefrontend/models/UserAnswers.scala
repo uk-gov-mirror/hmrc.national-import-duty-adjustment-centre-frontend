@@ -23,6 +23,7 @@ final case class UserAnswers(
   journeyId: JourneyId = JourneyId.generate,
   claimType: Option[ClaimType] = None,
   reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
+  bankDetails: Option[BankDetails] = None,
   uploads: Option[Seq[UploadedFile]] = None
 )
 

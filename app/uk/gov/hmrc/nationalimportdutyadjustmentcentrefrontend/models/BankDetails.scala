@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukSummaryList
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-@this(govukSummaryList: GovukSummaryList)
+import play.api.libs.json.{Json, OFormat}
 
-@(id: String, heading: Option[String] = None, summaryListRows: Seq[Option[SummaryListRow]])
+case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
 
-@heading.map { text =>
-    @subHeading(text)
+object BankDetails {
+  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
 }
-
-@govukSummaryList(SummaryList(
-    rows = summaryListRows.flatten,
-    attributes = Map("id" -> id)
-))

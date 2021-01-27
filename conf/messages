@@ -51,6 +51,21 @@ reclaimDutyType.02 = VAT
 reclaimDutyType.03 = Another type of duty
 reclaimDutyType.error.required = Select what you want to reclaim
 
+bankDetails.title = Enter your UK bank details
+bankDetails.hint = This must be a UK business account. The bank must also accept Bacs payments.
+bankDetails.name.heading = Name on the business account
+bankDetails.name.hint = Enter the name as it appears on your business bank statements.
+bankDetails.name.error.required = Enter the name on the account
+bankDetails.name.error.length = Name on account must be 40 characters or fewer
+bankDetails.sortCode.heading = Sort code
+bankDetails.sortCode.hint = Must be 6 digits long.
+bankDetails.sortCode.error.required = Enter a sort code
+bankDetails.sortCode.error.invalid = Enter a valid sort code like 309430
+bankDetails.accountNumber.heading = Account number
+bankDetails.accountNumber.hint = Must be between 6 and 8 digits long.
+bankDetails.accountNumber.error.required = Enter an account number
+bankDetails.accountNumber.error.invalid = Enter a valid account number like 00733445
+
 error.file-upload.required=You must upload a file
 error.file-upload.invalid-size-small=The selected file is empty
 error.file-upload.invalid-size-large=File size cannot be over 6mb
@@ -70,6 +85,8 @@ check_answers.repayment.reclaimDutyType = What do you want to reclaim?
 check_answers.repayment.reclaimDutyType.01 = Customs duty
 check_answers.repayment.reclaimDutyType.02 = VAT
 check_answers.repayment.reclaimDutyType.03 = Other
+check_answers.payment.title = Payment details
+check_answers.payment.bankDetails = Importer bank details
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>

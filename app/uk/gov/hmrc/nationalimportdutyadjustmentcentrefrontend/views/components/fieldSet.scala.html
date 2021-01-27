@@ -14,18 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukSummaryList
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+@this(govukFieldset: GovukFieldset, govukHint: GovukHint)
 
-@this(govukSummaryList: GovukSummaryList)
+@(legend: String, asHeading: Boolean = true, hint: Option[Html] = None)(content: Html)(implicit messages: Messages)
 
-@(id: String, heading: Option[String] = None, summaryListRows: Seq[Option[SummaryListRow]])
-
-@heading.map { text =>
-    @subHeading(text)
+@body = {
+  @hint.map(html =>
+    govukHint(Hint(content = HtmlContent(html)))
+  )
+  @content
 }
 
-@govukSummaryList(SummaryList(
-    rows = summaryListRows.flatten,
-    attributes = Map("id" -> id)
+@govukFieldset(Fieldset(
+    legend = Some(Legend(
+        content = Text(messages(legend)),
+        classes = if(asHeading) "govuk-fieldset__legend--l" else "",
+        isPageHeading = asHeading
+    )),
+    html = body
 ))

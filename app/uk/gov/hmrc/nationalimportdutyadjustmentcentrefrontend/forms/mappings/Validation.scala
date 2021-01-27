@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukSummaryList
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
-@this(govukSummaryList: GovukSummaryList)
+import scala.util.matching.Regex
 
-@(id: String, heading: Option[String] = None, summaryListRows: Seq[Option[SummaryListRow]])
+object Validation {
 
-@heading.map { text =>
-    @subHeading(text)
+  val accountNumberPattern: Regex = "^[ -]*(?:\\d[ -]*){6,8}$".r.anchored
+  val sortCodePattern: Regex      = "^[ -]*(?:\\d[ -]*){6,6}$".r.anchored
+
 }
-
-@govukSummaryList(SummaryList(
-    rows = summaryListRows.flatten,
-    attributes = Map("id" -> id)
-))

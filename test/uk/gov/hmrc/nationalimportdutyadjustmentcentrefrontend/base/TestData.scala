@@ -24,14 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.A
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
-  ClaimType,
-  JourneyId,
-  ReclaimDutyType,
-  UploadId,
-  UserAnswers,
-  WithValue
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -46,10 +39,13 @@ trait TestData {
 
   val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat)
 
+  val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
+
   val completeAnswers: UserAnswers = UserAnswers(
     claimType = Some(claimTypeAnswer),
     uploads = Some(Seq(uploadAnswer)),
-    reclaimDutyTypes = Some(reclaimDutyTypesAnswer)
+    reclaimDutyTypes = Some(reclaimDutyTypesAnswer),
+    bankDetails = Some(bankDetailsAnswer)
   )
 
   // Upscan

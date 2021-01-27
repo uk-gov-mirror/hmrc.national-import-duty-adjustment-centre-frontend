@@ -45,6 +45,15 @@ trait ViewMatchers extends Matchers {
   def haveSummaryKey(value: String)   = new ElementsHasElementsContainingTextMatcher("govuk-summary-list__key", value)
   def haveSummaryValue(value: String) = new ElementsHasElementsContainingTextMatcher("govuk-summary-list__value", value)
 
+  def haveAttribute(key: String, value: String): Matcher[Element] = new ElementHasAttributeValueMatcher(key, value)
+  def haveValue(value: String): Matcher[Element]                  = new ElementHasAttributeValueMatcher("value", value)
+
+  def haveFieldError(fieldName: String, content: String)(implicit messages: Messages): Matcher[Element] =
+    new ContainElementWithIDMatcher(s"$fieldName-error") and new ElementContainsGovukFieldError(
+      fieldName,
+      messages(content)
+    )
+
   def beEmpty: Matcher[Elements] = (left: Elements) => {
     MatchResult(left.size() == 0, "Elements was not empty", "Elements was empty")
   }
@@ -85,6 +94,42 @@ trait ViewMatchers extends Matchers {
         s"Elements with class {$elementsClass} had text {${left.first().getElementsByClass(elementsClass).text()}}, expected {$value}",
         s"Element with class {$elementsClass} had text {${left.first().getElementsByClass(elementsClass).text()}}"
       )
+
+  }
+
+  class ElementHasAttributeValueMatcher(key: String, value: String) extends Matcher[Element] {
+
+    override def apply(left: Element): MatchResult =
+      MatchResult(
+        left != null && left.attr(key) == value,
+        s"Element attribute {$key} had value {${left.attr(key)}}, expected {$value}",
+        s"Element attribute {$key} had value {$value}"
+      )
+
+  }
+
+  class ContainElementWithIDMatcher(id: String) extends Matcher[Element] {
+
+    override def apply(left: Element): MatchResult =
+      MatchResult(
+        left != null && left.getElementById(id) != null,
+        s"Document did not contain element with ID {$id}\n${actualContentWas(left)}",
+        s"Document contained an element with ID {$id}"
+      )
+
+  }
+
+  class ElementContainsGovukFieldError(fieldName: String, content: String = "") extends Matcher[Element] {
+
+    override def apply(left: Element): MatchResult = {
+      val element           = left.getElementById(s"$fieldName-error")
+      val fieldErrorElement = if (element == null) left else element
+      MatchResult(
+        fieldErrorElement.text().contains(content),
+        s"Element did not contain {$content}\n${actualContentWas(fieldErrorElement)}",
+        s"Element contained {$content}"
+      )
+    }
 
   }
 

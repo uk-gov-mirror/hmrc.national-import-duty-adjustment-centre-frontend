@@ -21,6 +21,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
+  BankDetailsPage,
   ClaimTypePage,
   Page,
   ReclaimDutyTypePage,
@@ -33,7 +34,8 @@ class Navigator @Inject() () {
   private val normalRoutes: (Page, UserAnswers) => Call = {
     case (ClaimTypePage, _)       => controllers.makeclaim.routes.UploadFormController.onPageLoad()
     case (UploadPage, _)          => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()
-    case (ReclaimDutyTypePage, _) => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
+    case (ReclaimDutyTypePage, _) => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
+    case (BankDetailsPage, _)     => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
     case _                        => controllers.routes.StartController.start()
   }
 

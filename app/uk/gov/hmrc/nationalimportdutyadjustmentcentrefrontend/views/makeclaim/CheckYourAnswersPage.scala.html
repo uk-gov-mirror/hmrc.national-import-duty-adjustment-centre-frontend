@@ -38,7 +38,7 @@
         id = "claim_section",
         heading = Some(messages("check_answers.claim.title")),
         summaryListRows = Seq(
-            SummaryListRow(
+            Some(SummaryListRow(
                 classes = "claim_type_row",
                 key = Key(
                     content = Text(messages("check_answers.claim.claimType"))
@@ -47,8 +47,8 @@
                     content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
                 ),
                 actions = None
-            ),
-            SummaryListRow(
+            )),
+            Some(SummaryListRow(
                 classes = "upload_row",
                 key = Key(
                     content = Text(messages("check_answers.claim.uploaded"))
@@ -57,7 +57,7 @@
                     content = HtmlContent(claim.uploads.map(_.fileName).mkString("<br>"))
                 ),
                 actions = None
-            )
+            ))
         )
     )
 
@@ -65,7 +65,7 @@
         id = "repayment_section",
         heading = Some(messages("check_answers.repayment.title")),
         summaryListRows = Seq(
-            SummaryListRow(
+            Some(SummaryListRow(
                 classes = "reclaim_duty_type_row",
                 key = Key(
                     content = Text(messages("check_answers.repayment.reclaimDutyType"))
@@ -74,6 +74,25 @@
                     content = HtmlContent(claim.reclaimDutyTypes.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType.toString)).mkString(", "))
                 ),
                 actions = None
+            ))
+        )
+    )
+
+    @summaryList(
+        id = "payment_section",
+        heading = Some(messages("check_answers.payment.title")),
+        summaryListRows = Seq(
+            claim.bankDetails.map(bankDetails =>
+                SummaryListRow(
+                    classes = "bank_details_type_row",
+                    key = Key(
+                        content = Text(messages("check_answers.payment.bankDetails"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(Seq(bankDetails.accountName, bankDetails.sortCode, bankDetails.accountNumber).mkString("<br>"))
+                    ),
+                    actions = None
+                )
             )
         )
     )
