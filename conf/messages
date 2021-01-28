@@ -57,6 +57,7 @@ bankDetails.name.heading = Name on the business account
 bankDetails.name.hint = Enter the name as it appears on your business bank statements.
 bankDetails.name.error.required = Enter the name on the account
 bankDetails.name.error.length = Name on account must be 40 characters or fewer
+bankDetails.name.error.invalid = Name on the account includes 1 or more characters that cannot be used
 bankDetails.sortCode.heading = Sort code
 bankDetails.sortCode.hint = Must be 6 digits long.
 bankDetails.sortCode.error.required = Enter a sort code

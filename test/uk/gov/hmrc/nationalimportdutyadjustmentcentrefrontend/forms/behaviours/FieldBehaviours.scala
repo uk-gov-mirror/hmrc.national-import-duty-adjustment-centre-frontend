@@ -16,10 +16,38 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours
 
+import org.scalacheck.Gen
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.{Form, FormError}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.FormSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Generators
 
-trait FieldBehaviours extends FormSpec {
+trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
+
+  def fieldThatBindsValidData(form: Form[_], fieldName: String, validDataGenerator: Gen[String]): Unit =
+    "bind valid data" in {
+
+      forAll(validDataGenerator -> "validDataItem") {
+        dataItem: String =>
+          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+          result.value.value mustBe dataItem
+      }
+    }
+
+  def fieldThatPreventsUnsafeInput(
+    form: Form[_],
+    fieldName: String,
+    unsafeInputs: Gen[String],
+    invalidError: FormError
+  ): Unit =
+    "prevent unsafe inputs" in {
+
+      forAll(unsafeInputs) {
+        input: String =>
+          val result = form.bind(Map(fieldName -> input)).apply(fieldName)
+          result.errors mustEqual Seq(invalidError)
+      }
+    }
 
   def mandatoryField(form: Form[_], fieldName: String, requiredError: FormError): Unit = {
 

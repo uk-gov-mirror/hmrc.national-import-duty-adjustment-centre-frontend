@@ -27,7 +27,12 @@ class BankDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[BankDetails] = Form(
     mapping(
       "accountName" -> text("bankDetails.name.error.required")
-        .verifying(firstError(maxLength(40, "bankDetails.name.error.length"))),
+        .verifying(
+          firstError(
+            maxLength(40, "bankDetails.name.error.length"),
+            regexp(Validation.safeInputPattern, "bankDetails.name.error.invalid")
+          )
+        ),
       "sortCode" -> text("bankDetails.sortCode.error.required")
         .verifying(firstError(regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid"))),
       "accountNumber" -> text("bankDetails.accountNumber.error.required")

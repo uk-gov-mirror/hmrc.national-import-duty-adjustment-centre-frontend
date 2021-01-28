@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours
 
-import scala.util.matching.Regex
+import play.api.data.{Form, FormError}
 
-object Validation {
+trait StringFieldBehaviours extends FieldBehaviours {
 
-  val accountNumberPattern: Regex = "^[ -]*(?:\\d[ -]*){6,8}$".r.anchored
-  val sortCodePattern: Regex      = "^[ -]*(?:\\d[ -]*){6,6}$".r.anchored
-  val safeInputPattern            = """^[A-Za-z0-9À-ÿ \!\)\(.,_/’'"&-]+$"""
+  def fieldWithMaxLength(form: Form[_], fieldName: String, maxLength: Int, lengthError: FormError): Unit =
+    s"not bind strings longer than $maxLength characters" in {
+
+      forAll(stringsLongerThan(maxLength) -> "longString") {
+        string =>
+          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+          result.errors mustEqual Seq(lengthError)
+      }
+    }
 
 }
