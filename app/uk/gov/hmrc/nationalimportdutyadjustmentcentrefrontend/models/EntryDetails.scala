@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-trait Page
+import java.time.LocalDate
 
-case object FirstPage  extends Page
-case object UploadPage extends Page
+import play.api.libs.json.{Json, OFormat}
+
+case class EntryDetails(entryProcessingUnit: String, entryNumber: String, entryDate: LocalDate)
+
+object EntryDetails {
+  implicit val format: OFormat[EntryDetails] = Json.format[EntryDetails]
+}

@@ -24,6 +24,9 @@ POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyad
 GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
 POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()
 
+GET         /entry-details                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.EntryDetailsController.onPageLoad()
+POST        /entry-details                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.EntryDetailsController.onSubmit()
+
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
 

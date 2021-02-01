@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
+import java.time.LocalDate
+
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Enumerable
@@ -42,5 +44,12 @@ trait Mappings extends Formatters with Constraints {
     ev: Enumerable[A]
   ): FieldMapping[A] =
     of(enumerableFormatter[A](requiredKey, invalidKey))
+
+  protected def localDate(
+    invalidKey: String,
+    requiredKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[LocalDate] =
+    of(localDateFormatter(invalidKey, requiredKey, args))
 
 }

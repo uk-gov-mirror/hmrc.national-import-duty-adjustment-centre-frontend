@@ -51,7 +51,7 @@ lazy val scoverageSettings: Seq[Setting[_]] = Seq(
     ".*(BuildInfo|Routes|Options|LanguageSwitchController|LanguageSelect).*",
     "logger.*\\(.*\\)"
   ).mkString(";"),
-  coverageMinimum := 87.5,
+  coverageMinimum := 90,
   coverageFailOnMinimum := true,
   coverageHighlighting := true,
   parallelExecution in Test := false

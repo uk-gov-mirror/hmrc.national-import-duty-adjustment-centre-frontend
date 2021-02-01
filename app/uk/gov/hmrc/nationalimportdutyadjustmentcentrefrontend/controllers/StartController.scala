@@ -19,16 +19,20 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.FirstPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 @Singleton
-class StartController @Inject() (mcc: MessagesControllerComponents, identify: IdentifierAction)
+class StartController @Inject() (mcc: MessagesControllerComponents, identify: IdentifierAction, navigator: Navigator)
     extends FrontendController(mcc) with I18nSupport {
 
-  val start: Action[AnyContent] = identify { implicit request =>
-    Redirect(controllers.makeclaim.routes.ClaimTypeController.onPageLoad())
+  private val noAnswers = UserAnswers()
+
+  val start: Action[AnyContent] = identify { _ =>
+    Redirect(navigator.nextPage(FirstPage, noAnswers))
   }
 
 }

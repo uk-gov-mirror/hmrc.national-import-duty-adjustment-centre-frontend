@@ -1,0 +1,82 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.DateFields.{dayKey, monthKey, yearKey}
+
+@this(dateInput: GovukDateInput)
+
+@(
+  fieldName: String,
+  form: Form[_],
+  labelKey: String,
+  hintKey: Option[String] = None
+)(implicit messages: Messages)
+
+@dayField = @{form(fieldName)}
+@monthField = @{form(s"$fieldName.$monthKey")}
+@yearField = @{form(s"$fieldName.$yearKey")}
+
+@errorMessages = @{
+  val errors = (dayField.errors ++ monthField.errors ++ yearField.errors).map(err => messages(err.message, err.args:_*)).mkString("<br>")
+  if(errors.nonEmpty) Some(ErrorMessage(content = HtmlContent(errors))) else None
+}
+
+@isDateError = @{
+    dayField.error.exists(err => err.key == fieldName && !err.message.contains(dayKey))
+}
+@containsErrorForKey(key: String) = @{
+    form.errors.exists(err => err.message.contains(s".$key"))
+}
+@inputClasses(field: Field, key: String, width: String) = @{
+    s"govuk-input govuk-date-input__input govuk-input--width-$width ${if(isDateError || field.hasErrors || containsErrorForKey(key)) "govuk-input--error"}"
+}
+
+@dateInput(DateInput(
+  id = fieldName + "-input",
+  fieldset = Some(Fieldset(
+    legend = Some(Legend(
+      content = Text(messages(labelKey)),
+      classes = "govuk-fieldset__legend--m"
+    )),
+      attributes = Map("id" -> s"$fieldName-fieldset")
+  )),
+  hint = hintKey.map(h => Hint(content = Text(messages(h)))),
+  errorMessage = errorMessages,
+  items = Seq(
+    InputItem(
+      id = dayField.id,
+      name = dayField.name,
+      label = Some(messages("date.day")),
+      value = dayField.value,
+      classes = inputClasses(dayField, dayKey, "2")
+    ),
+    InputItem(
+      id = monthField.id,
+      name = monthField.name,
+      label = Some(messages("date.month")),
+      value = monthField.value,
+      classes = inputClasses(monthField, monthKey, "2")
+    ),
+    InputItem(
+      id = yearField.id,
+      name = yearField.name,
+      label = Some(messages("date.year")),
+      value = yearField.value,
+      classes = inputClasses(yearField, yearKey, "4")
+    )
+  )
+))

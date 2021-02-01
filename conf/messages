@@ -7,6 +7,15 @@ site.error.summary = There is a problem.
 site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
 site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
 
+date.day = Day
+date.month = Month
+date.year = Year
+date.error.day = Enter a day between 1 and 31
+date.error.month = Enter a month between 1 and 12
+
+error.number.nonNumeric = Enter a number
+error.number.wholeNumber = Enter a whole number
+
 session_expired.title = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
@@ -67,6 +76,29 @@ bankDetails.accountNumber.hint = Must be between 6 and 8 digits long.
 bankDetails.accountNumber.error.required = Enter an account number
 bankDetails.accountNumber.error.invalid = Enter a valid account number like 00733445
 
+entryDetails.title = Entry details
+entryDetails.hint = These can be found on Single Administrative Document (C88) or Import Entry Acceptance Advice (E2) documents.
+entryDetails.claimEpu.heading = Entry processing unit (EPU)
+entryDetails.claimEpu.hint = This is 3 numbers, for example ‘131’.
+entryDetails.claimEpu.error.required = Enter the entry processing unit (EPU) number
+entryDetails.claimEpu.error.invalid = Enter the entry processing unit (EPU) number in the correct format
+entryDetails.entryNumber.heading = Entry number
+entryDetails.entryNumber.hint = This is 6 numbers and a letter, for example ‘123456Q’.
+entryDetails.entryNumber.error.required = Enter the entry number
+entryDetails.entryNumber.error.invalid = Enter the entry number in the correct format
+entryDetails.entryDate.heading = Entry date
+entryDetails.entryDate.hint = For example, 25 3 2019.
+entryDetails.claimEntryDate.error.required = Enter the entry date
+entryDetails.claimEntryDate.error.required.day = Entry date must include a day
+entryDetails.claimEntryDate.error.required.month = Entry date must include a month
+entryDetails.claimEntryDate.error.required.year = Entry date must include a year
+entryDetails.claimEntryDate.error.required.day.month = Entry date must include a day and month
+entryDetails.claimEntryDate.error.required.day.year = Entry date must include a day and year
+entryDetails.claimEntryDate.error.required.month.year = Entry date must include a month and year
+entryDetails.claimEntryDate.error.invalid = Entry date must be a real date
+entryDetails.claimEntryDate.error.maxDate = Entry date must be today or in the past
+entryDetails.claimEntryDate.error.minDate = Entry date must be after {0}
+
 error.file-upload.required=You must upload a file
 error.file-upload.invalid-size-small=The selected file is empty
 error.file-upload.invalid-size-large=File size cannot be over 6mb
@@ -79,6 +111,10 @@ check_answers.title = Check your answers before sending your application
 check_answers.change = Change
 check_answers.submit = Accept and send
 check_answers.claim.title = About your claim
+check_answers.claim.entryDetails = Entry details
+check_answers.claim.entryDetails.epu = EPU: {0}
+check_answers.claim.entryDetails.entryNumber = Entry number: {0}
+check_answers.claim.entryDetails.entryDate = Entry date: {0}
 check_answers.claim.claimType = Claim type
 check_answers.claim.uploaded = Supporting documents
 check_answers.repayment.title = Repayment request

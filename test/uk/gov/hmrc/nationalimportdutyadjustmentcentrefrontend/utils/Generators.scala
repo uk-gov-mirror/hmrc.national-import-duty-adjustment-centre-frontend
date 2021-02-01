@@ -140,6 +140,13 @@ trait Generators {
       choose(0, vector.size - 1).flatMap(vector(_))
     }
 
+  def entryNumber(): Gen[String] =
+    for {
+      length <- choose(6, 6)
+      digits <- listOfN(length, arbitrary[Number])
+      char   <- listOfN(1, arbitrary[Char])
+    } yield s"$digits$char"
+
   def datesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 
     def toMillis(date: LocalDate): Long =

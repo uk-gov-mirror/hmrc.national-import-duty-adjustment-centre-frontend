@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
-trait Page
+object DateFields {
 
-case object FirstPage  extends Page
-case object UploadPage extends Page
+  val dayKey   = "day"
+  val monthKey = "month"
+  val yearKey  = "year"
+}

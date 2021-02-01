@@ -24,6 +24,7 @@ final case class UserAnswers(
   claimType: Option[ClaimType] = None,
   reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
   bankDetails: Option[BankDetails] = None,
+  entryDetails: Option[EntryDetails] = None,
   uploads: Option[Seq[UploadedFile]] = None
 )
 

@@ -42,10 +42,6 @@ class ClaimTypePageViewSpec extends UnitViewSpec {
       view().getElementsByTag("h1") must containMessage("claim_type.title")
     }
 
-    "not have back link" in {
-      view().getElementsByClass("govuk-back-link") must beEmpty
-    }
-
     "have radio option for each claim type" in {
       ClaimType.options(form, "claim_type").foreach { item =>
         val inputId = view().getElementsByAttributeValue("value", item.value.get).get(0).id()

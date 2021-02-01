@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
-import java.time.{LocalDateTime, ZonedDateTime}
+import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
@@ -28,6 +28,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
+
+  val fixedDate: LocalDate         = LocalDate.now()
+  val fixedDateTime: LocalDateTime = LocalDateTime.now()
 
   // UserAnswers
   val emptyAnswers: UserAnswers = UserAnswers()
@@ -41,22 +44,25 @@ trait TestData {
 
   val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
 
+  val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
+
   val completeAnswers: UserAnswers = UserAnswers(
     claimType = Some(claimTypeAnswer),
     uploads = Some(Seq(uploadAnswer)),
     reclaimDutyTypes = Some(reclaimDutyTypesAnswer),
-    bankDetails = Some(bankDetailsAnswer)
+    bankDetails = Some(bankDetailsAnswer),
+    entryDetails = Some(entryDetailsAnswer)
   )
 
   // Upscan
-  val uploadId  = UploadId.generate
-  val journeyId = JourneyId.generate
+  val uploadId: UploadId   = UploadId.generate
+  val journeyId: JourneyId = JourneyId.generate
 
   val upscanInitiateResponse: UpscanInitiateResponse =
     UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
 
-  def uploadResult(status: UploadStatus) =
-    UploadDetails(BSONObjectID.generate(), uploadId, journeyId, Reference("reference"), status, LocalDateTime.now)
+  def uploadResult(status: UploadStatus): UploadDetails =
+    UploadDetails(BSONObjectID.generate(), uploadId, journeyId, Reference("reference"), status, fixedDateTime)
 
   val uploadInProgress: UploadStatus = InProgress
   val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")

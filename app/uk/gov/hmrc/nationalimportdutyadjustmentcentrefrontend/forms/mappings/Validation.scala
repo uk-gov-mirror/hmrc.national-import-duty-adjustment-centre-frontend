@@ -23,5 +23,7 @@ object Validation {
   val accountNumberPattern: Regex = "^[ -]*(?:\\d[ -]*){6,8}$".r.anchored
   val sortCodePattern: Regex      = "^[ -]*(?:\\d[ -]*){6,6}$".r.anchored
   val safeInputPattern            = """^[A-Za-z0-9À-ÿ \!\)\(.,_/’'"&-]+$"""
+  val entryProcessingUnit         = "^[0-9][0-9][0-9]$"
+  val entryNumber                 = "^([0-9]{6}[a-z|A-Z])$"
 
 }

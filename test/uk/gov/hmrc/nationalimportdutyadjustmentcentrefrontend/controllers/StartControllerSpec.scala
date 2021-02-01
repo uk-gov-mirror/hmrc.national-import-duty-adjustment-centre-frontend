@@ -20,19 +20,21 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.FirstPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class StartControllerSpec extends ControllerSpec {
 
   private def controller(identifyAction: IdentifierAction) =
-    new StartController(stubMessagesControllerComponents(), identifyAction)
+    new StartController(stubMessagesControllerComponents(), identifyAction, navigator)
 
   "GET" should {
 
     "redirect to first question when user is authorised" in {
       val result = controller(fakeAuthorisedIdentifierAction).start(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(makeclaim.routes.ClaimTypeController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(FirstPage, UserAnswers()).url)
     }
 
     "redirect when user is unauthorised" in {

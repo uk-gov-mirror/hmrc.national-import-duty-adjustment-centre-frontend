@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels
 
-trait Page
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-case object FirstPage  extends Page
-case object UploadPage extends Page
+object DateFormatter {
+
+  private val displayDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+
+  def format(date: LocalDate): String = date.format(displayDateFormatter)
+}

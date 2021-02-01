@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
+import java.time.LocalDate
+
 import org.scalatest.OptionValues
 import play.api.data.{Form, FormError}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
@@ -153,6 +155,92 @@ class MappingsSpec extends UnitSpec with OptionValues with Mappings {
     "not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
       result.errors must contain(FormError("value", "error.required"))
+    }
+  }
+
+  "localDate" must {
+
+    val date      = LocalDate.of(2020, 10, 28)
+    val validData = Map("value" -> "28", "value.month" -> "10", "value.year" -> "2020")
+
+    val testForm: Form[LocalDate] =
+      Form("value" -> localDate("date.invalid", "date.required"))
+
+    "bind a valid value" in {
+      val result = testForm.bind(validData)
+      result.get mustEqual date
+    }
+
+    "not bind an empty value" in {
+      val result = testForm.bind(Map("value" -> ""))
+      result.errors must contain(FormError("value", "date.required"))
+    }
+
+    "not bind an empty map" in {
+      val result = testForm.bind(Map.empty[String, String])
+      result.errors must contain(FormError("value", "date.required"))
+    }
+
+    "not bind an invalid day format" in {
+      val result = testForm.bind(validData + ("value" -> "xx"))
+      result.errors must contain(FormError("value", "error.number.nonNumeric"))
+    }
+
+    "not bind an invalid day number" in {
+      val result = testForm.bind(validData + ("value" -> "32"))
+      result.errors must contain(FormError("value", "date.error.day"))
+    }
+
+    "not bind an invalid month format" in {
+      val result = testForm.bind(validData + ("value.month" -> "10.0"))
+      result.errors must contain(FormError("value.month", "error.number.wholeNumber"))
+    }
+
+    "not bind an invalid month number" in {
+      val result = testForm.bind(validData + ("value.month" -> "13"))
+      result.errors must contain(FormError("value.month", "date.error.month"))
+    }
+
+    "not bind an invalid year format" in {
+      val result = testForm.bind(validData + ("value.year" -> "year"))
+      result.errors must contain(FormError("value.year", "error.number.nonNumeric"))
+    }
+
+    "not bind missing day" in {
+      val result = testForm.bind(validData - "value")
+      result.errors must contain(FormError("value", "date.required.day"))
+    }
+
+    "not bind missing month" in {
+      val result = testForm.bind(validData - "value.month")
+      result.errors must contain(FormError("value.month", "date.required.month"))
+    }
+
+    "not bind missing year" in {
+      val result = testForm.bind(validData - "value.year")
+      result.errors must contain(FormError("value.year", "date.required.year"))
+    }
+
+    "not bind missing day and month" in {
+      val result = testForm.bind(validData - "value" - "value.month")
+      result.errors must contain(FormError("value", "date.required.day.month"))
+    }
+
+    "not bind missing day and year" in {
+      val result = testForm.bind(validData - "value" - "value.year")
+      result.errors must contain(FormError("value", "date.required.day.year"))
+    }
+
+    "not bind missing month and year" in {
+      val result = testForm.bind(validData - "value.month" - "value.year")
+      result.errors must contain(FormError("value.month", "date.required.month.year"))
+    }
+
+    "unbind a valid value" in {
+      val result = testForm.fill(date)
+      result.apply("value").value.value mustEqual "28"
+      result.apply("value.month").value.value mustEqual "10"
+      result.apply("value.year").value.value mustEqual "2020"
     }
   }
 }
