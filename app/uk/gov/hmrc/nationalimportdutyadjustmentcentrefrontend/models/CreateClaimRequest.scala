@@ -19,16 +19,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
-  ClaimTypePage,
-  EntryDetailsPage,
-  Page,
-  ReclaimDutyTypePage,
-  UploadPage
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 case class CreateClaimRequest(
   userId: String,
+  contactDetails: ContactDetails,
   claimType: ClaimType,
   uploads: Seq[UploadedFile],
   reclaimDutyTypes: Set[ReclaimDutyType],
@@ -43,6 +38,7 @@ object CreateClaimRequest {
   def apply(id: String, userAnswers: UserAnswers): CreateClaimRequest =
     new CreateClaimRequest(
       userId = id,
+      contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       uploads = userAnswers.uploads.getOrElse(missing(UploadPage)),
       reclaimDutyTypes = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)),

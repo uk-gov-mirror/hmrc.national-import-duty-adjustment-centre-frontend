@@ -21,6 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 
 final case class UserAnswers(
   journeyId: JourneyId = JourneyId.generate,
+  contactDetails: Option[ContactDetails] = None,
   claimType: Option[ClaimType] = None,
   reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
   bankDetails: Option[BankDetails] = None,

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import play.api.libs.json.{Json, OFormat}
 
-trait QuestionPage[A] extends Page
+case class ContactDetails(firstName: String, lastName: String, emailAddress: String, telephoneNumber: String)
 
-case object ClaimTypePage       extends QuestionPage[ClaimType]
-case object ContactDetailsPage  extends QuestionPage[ContactDetails]
-case object ReclaimDutyTypePage extends QuestionPage[Set[ReclaimDutyType]]
-case object BankDetailsPage     extends QuestionPage[BankDetails]
-case object EntryDetailsPage    extends QuestionPage[EntryDetails]
+object ContactDetails {
+  implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+}

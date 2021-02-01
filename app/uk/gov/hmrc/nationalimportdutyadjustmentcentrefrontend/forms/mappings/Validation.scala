@@ -26,4 +26,8 @@ object Validation {
   val entryProcessingUnit         = "^[0-9][0-9][0-9]$"
   val entryNumber                 = "^([0-9]{6}[a-z|A-Z])$"
 
+  val emailAddressPattern =
+    """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?)*$"""
+
+  val phoneNumberPattern = """^[0-9]{11}"""
 }

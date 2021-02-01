@@ -39,7 +39,7 @@
     label = Label(
         content = Text(messages(label, headingMessageArgs: _*)),
         isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--l" else "govuk-label--m"
+        classes = if(isPageHeading) "govuk-label--l" else ""
     ),
     hint = hint.map(hintHtml => Hint(
         content = HtmlContent(hintHtml)
