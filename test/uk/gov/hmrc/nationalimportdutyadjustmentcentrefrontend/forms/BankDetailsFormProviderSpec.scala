@@ -95,19 +95,19 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
 
     "not bind sort codes with characters" in {
       val result        = form.bind(Map(fieldName -> "abcdef")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern.toString))
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
       result.errors mustEqual Seq(expectedError)
     }
 
     "not bind sort codes with less than 6 digit" in {
       val result        = form.bind(Map(fieldName -> "12   34  5")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern.toString))
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
       result.errors mustEqual Seq(expectedError)
     }
 
     "not bind sort codes with more than 6 digit" in {
       val result        = form.bind(Map(fieldName -> "12   34  5678")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern.toString))
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
       result.errors mustEqual Seq(expectedError)
     }
   }
@@ -136,19 +136,19 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
 
     "not bind strings with characters" in {
       val result        = form.bind(Map(fieldName -> "abcdef")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern.toString))
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern))
       result.errors mustEqual Seq(expectedError)
     }
 
     "not bind strings with less than 6 digit" in {
       val result        = form.bind(Map(fieldName -> "12 34   5")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern.toString))
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern))
       result.errors mustEqual Seq(expectedError)
     }
 
     "not bind strings with more than 8 digit" in {
       val result        = form.bind(Map(fieldName -> "12 34 56 789")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern.toString))
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern))
       result.errors mustEqual Seq(expectedError)
     }
   }

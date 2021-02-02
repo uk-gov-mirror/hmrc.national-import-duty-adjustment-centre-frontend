@@ -22,6 +22,7 @@ trait QuestionPage[A] extends Page
 
 case object ClaimTypePage       extends QuestionPage[ClaimType]
 case object ContactDetailsPage  extends QuestionPage[ContactDetails]
+case object AddressPage         extends QuestionPage[Address]
 case object ReclaimDutyTypePage extends QuestionPage[Set[ReclaimDutyType]]
 case object BankDetailsPage     extends QuestionPage[BankDetails]
 case object EntryDetailsPage    extends QuestionPage[EntryDetails]

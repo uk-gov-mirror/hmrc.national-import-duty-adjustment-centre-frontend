@@ -24,6 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 case class CreateClaimRequest(
   userId: String,
   contactDetails: ContactDetails,
+  importerAddress: Address,
   claimType: ClaimType,
   uploads: Seq[UploadedFile],
   reclaimDutyTypes: Set[ReclaimDutyType],
@@ -39,6 +40,7 @@ object CreateClaimRequest {
     new CreateClaimRequest(
       userId = id,
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
+      importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       uploads = userAnswers.uploads.getOrElse(missing(UploadPage)),
       reclaimDutyTypes = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)),

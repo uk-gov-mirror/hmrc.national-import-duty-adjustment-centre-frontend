@@ -21,6 +21,7 @@
     id: String,
     name: String,
     label: String,
+    hiddenLabel: Option[String] = None,
     isPageHeading: Boolean = false,
     headingMessageArgs: Seq[String] = Seq(),
     hint: Option[String] = None,
@@ -32,12 +33,17 @@
 )(implicit messages: Messages)
 
 
+@labelContent = {
+    @{if(label.nonEmpty){messages(label, headingMessageArgs: _*)}}
+    @hiddenLabel.map { hidden => <span class="govuk-visually-hidden">@messages(hidden)</span>}
+}
+
 @govukInput(Input(
     id,
     name,
     classes = classes.fold("")(x => x),
     label = Label(
-        content = Text(messages(label, headingMessageArgs: _*)),
+        content = HtmlContent(labelContent),
         isPageHeading = isPageHeading,
         classes = if(isPageHeading) "govuk-label--l" else ""
     ),

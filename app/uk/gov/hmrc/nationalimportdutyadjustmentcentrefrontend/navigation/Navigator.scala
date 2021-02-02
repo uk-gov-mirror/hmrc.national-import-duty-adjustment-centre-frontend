@@ -27,7 +27,8 @@ class Navigator @Inject() () {
 
   private val normalRoutes: (Page, UserAnswers) => Call = {
     case (FirstPage, _)           => controllers.makeclaim.routes.ContactDetailsController.onPageLoad()
-    case (ContactDetailsPage, _)  => controllers.makeclaim.routes.EntryDetailsController.onPageLoad()
+    case (ContactDetailsPage, _)  => controllers.makeclaim.routes.AddressController.onPageLoad()
+    case (AddressPage, _)         => controllers.makeclaim.routes.EntryDetailsController.onPageLoad()
     case (EntryDetailsPage, _)    => controllers.makeclaim.routes.ClaimTypeController.onPageLoad()
     case (ClaimTypePage, _)       => controllers.makeclaim.routes.UploadFormController.onPageLoad()
     case (UploadPage, _)          => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()

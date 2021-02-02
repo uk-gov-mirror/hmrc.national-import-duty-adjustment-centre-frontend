@@ -16,21 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import play.api.libs.json.{Json, OFormat}
 
-final case class UserAnswers(
-  journeyId: JourneyId = JourneyId.generate,
-  contactDetails: Option[ContactDetails] = None,
-  importerAddress: Option[Address] = None,
-  claimType: Option[ClaimType] = None,
-  reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
-  bankDetails: Option[BankDetails] = None,
-  entryDetails: Option[EntryDetails] = None,
-  uploads: Option[Seq[UploadedFile]] = None
-)
+case class Address(name: String, addressLine1: String, addressLine2: Option[String], city: String, postCode: String)
 
-object UserAnswers {
-
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+object Address {
+  implicit val format: OFormat[Address] = Json.format[Address]
 }

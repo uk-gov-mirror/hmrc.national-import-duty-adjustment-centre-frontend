@@ -52,6 +52,22 @@
                     ).mkString("<br>"))
                 ),
                 actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "your_address_row",
+                key = Key(
+                    content = Text(messages("check_answers.yourDetails.yourAddress"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        Some(claim.importerAddress.name),
+                        Some(claim.importerAddress.addressLine1),
+                        claim.importerAddress.addressLine2,
+                        Some(claim.importerAddress.city),
+                        Some(claim.importerAddress.postCode)
+                    ).flatten.mkString("<br>"))
+                ),
+                actions = None
             ))
         )
     )

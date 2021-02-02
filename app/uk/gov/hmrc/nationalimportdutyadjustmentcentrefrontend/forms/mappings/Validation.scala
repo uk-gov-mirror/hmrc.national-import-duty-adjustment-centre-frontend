@@ -16,18 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
-import scala.util.matching.Regex
-
 object Validation {
 
-  val accountNumberPattern: Regex = "^[ -]*(?:\\d[ -]*){6,8}$".r.anchored
-  val sortCodePattern: Regex      = "^[ -]*(?:\\d[ -]*){6,6}$".r.anchored
-  val safeInputPattern            = """^[A-Za-z0-9À-ÿ \!\)\(.,_/’'"&-]+$"""
-  val entryProcessingUnit         = "^[0-9][0-9][0-9]$"
-  val entryNumber                 = "^([0-9]{6}[a-z|A-Z])$"
+  val accountNumberPattern = "^[0-9]{6,8}$"
+  val sortCodePattern      = "^[0-9]{6}$"
+  val safeInputPattern     = """^[A-Za-z0-9À-ÿ \!\)\(.,_/’'"&-]+$"""
+  val entryProcessingUnit  = "^[0-9]{3}$"
+  val entryNumber          = "^([0-9]{6}[a-z|A-Z])$"
 
   val emailAddressPattern =
     """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?)*$"""
 
-  val phoneNumberPattern = """^[0-9]{11}"""
+  val phoneNumberPattern = "^[0-9]{11}$"
+  val postcodePattern    = "^[0-9a-zA-Z]{1,7}$"
 }

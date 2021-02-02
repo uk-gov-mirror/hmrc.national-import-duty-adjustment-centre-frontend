@@ -14,6 +14,9 @@ GET         /assets/*file                       controllers.Assets.versioned(pat
 GET         /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onPageLoad()
 POST        /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onSubmit()
 
+GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
+POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()
+
 GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
 POST        /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onSubmit()
 

@@ -46,11 +46,14 @@ trait TestData {
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
 
+  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "PCode")
+
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
   val completeAnswers: UserAnswers = UserAnswers(
     claimType = Some(claimTypeAnswer),
     contactDetails = Some(contactDetailsAnswer),
+    importerAddress = Some(addressAnswer),
     uploads = Some(Seq(uploadAnswer)),
     reclaimDutyTypes = Some(reclaimDutyTypesAnswer),
     bankDetails = Some(bankDetailsAnswer),
