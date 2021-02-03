@@ -19,13 +19,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, CreateClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -36,14 +34,14 @@ class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   data: CacheDataService,
-  connector: NIDACConnector,
+  service: CreateClaimService,
   checkYourAnswersPage: CheckYourAnswersPage
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      Ok(checkYourAnswersPage(CreateClaimRequest(request.identifier, answers)))
+      Ok(checkYourAnswersPage(Claim(answers)))
     } recover {
       case _: MissingUserAnswersException =>
         Redirect(controllers.routes.StartController.start())
@@ -52,8 +50,8 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers flatMap { answers =>
-      val claim = CreateClaimRequest(request.identifier, answers)
-      connector.submitClaim(claim) flatMap { response =>
+      val claim = Claim(answers)
+      service.submitClaim(claim) flatMap { response =>
         data.updateResponse(response) map {
           _ => Redirect(routes.ConfirmationController.onPageLoad())
         }

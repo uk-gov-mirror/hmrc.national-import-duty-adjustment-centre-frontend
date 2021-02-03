@@ -21,8 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
-case class CreateClaimRequest(
-  userId: String,
+case class Claim(
   contactDetails: ContactDetails,
   importerAddress: Address,
   claimType: ClaimType,
@@ -32,13 +31,12 @@ case class CreateClaimRequest(
   entryDetails: EntryDetails
 )
 
-object CreateClaimRequest {
+object Claim {
 
-  implicit val format: OFormat[CreateClaimRequest] = Json.format[CreateClaimRequest]
+  implicit val format: OFormat[Claim] = Json.format[Claim]
 
-  def apply(id: String, userAnswers: UserAnswers): CreateClaimRequest =
-    new CreateClaimRequest(
-      userId = id,
+  def apply(userAnswers: UserAnswers): Claim =
+    new Claim(
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),

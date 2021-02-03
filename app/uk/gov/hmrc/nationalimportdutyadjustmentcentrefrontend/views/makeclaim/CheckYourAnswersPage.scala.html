@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimRequest
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
@@ -29,7 +29,7 @@
         continueButton: components.continueButton
 )
 
-@(claim: CreateClaimRequest)(implicit request: Request[_], messages: Messages)
+@(claim: Claim)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = Title(messages("check_answers.title"))) {
 
