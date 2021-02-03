@@ -37,11 +37,11 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     claimType = AntiDumping,
     uploads = Seq.empty,
     reclaimDutyTypes = Set(Vat),
-    bankDetails = Some(BankDetails("account name", "001122", "12345678")),
+    bankDetails = BankDetails("account name", "001122", "12345678"),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31))
   )
 
-  val content = EISCreateCaseRequest.Content(
+  val content: EISCreateCaseRequest.Content = EISCreateCaseRequest.Content(
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
       "Import Co Ltd",

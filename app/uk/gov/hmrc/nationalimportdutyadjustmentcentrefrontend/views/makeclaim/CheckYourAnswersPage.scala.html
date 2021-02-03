@@ -134,22 +134,20 @@
         id = "payment_section",
         heading = Some(messages("check_answers.payment.title")),
         summaryListRows = Seq(
-            claim.bankDetails.map(bankDetails =>
-                SummaryListRow(
-                    classes = "bank_details_type_row",
-                    key = Key(
-                        content = Text(messages("check_answers.payment.bankDetails"))
-                    ),
-                    value = Value(
-                        content = HtmlContent(Seq(
-                            bankDetails.accountName,
-                            bankDetails.sortCode,
-                            bankDetails.accountNumber
-                        ).mkString("<br>"))
-                    ),
-                    actions = None
-                )
-            )
+            Some(SummaryListRow(
+                classes = "bank_details_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.payment.bankDetails"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        claim.bankDetails.accountName,
+                        claim.bankDetails.sortCode,
+                        claim.bankDetails.accountNumber
+                    ).mkString("<br>"))
+                ),
+                actions = None
+            ))
         )
     )
 
