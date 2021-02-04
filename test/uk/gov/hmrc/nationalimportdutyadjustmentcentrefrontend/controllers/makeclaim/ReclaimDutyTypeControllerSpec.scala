@@ -92,7 +92,7 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyTypes mustBe Some(Set(Customs))
-      redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, emptyAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

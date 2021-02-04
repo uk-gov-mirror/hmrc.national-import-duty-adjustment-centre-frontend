@@ -54,6 +54,9 @@ trait ViewMatchers extends Matchers {
       messages(content)
     )
 
+  def haveSummaryError(key: String)(implicit messages: Messages): Matcher[Element] =
+    new ContainErrorSummaryWithMessage(messages(key))
+
   def beEmpty: Matcher[Elements] = (left: Elements) => {
     MatchResult(left.size() == 0, "Elements was not empty", "Elements was empty")
   }
@@ -130,6 +133,17 @@ trait ViewMatchers extends Matchers {
         s"Element contained {$content}"
       )
     }
+
+  }
+
+  class ContainErrorSummaryWithMessage(text: String) extends Matcher[Element] {
+
+    override def apply(left: Element): MatchResult =
+      MatchResult(
+        left != null && left.getElementsByClass("govuk-error-summary__list").text().contains(text),
+        s"Document did not contain error element with message {$text}\n${actualContentWas(left)}",
+        s"Document contained an error element with message {$text}"
+      )
 
   }
 

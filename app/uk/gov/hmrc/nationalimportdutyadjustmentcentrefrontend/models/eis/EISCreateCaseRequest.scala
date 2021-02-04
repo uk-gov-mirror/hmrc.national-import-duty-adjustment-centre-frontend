@@ -59,8 +59,7 @@ object EISCreateCaseRequest {
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = entryDataFormatter.format(claim.entryDetails.entryDate),
-        // TODO - remove hard-coded values for paid and due amounts
-        DutyDetails = claim.reclaimDutyTypes.map(value => DutyDetail(value.toString, "0", "0")).toSeq,
+        DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
         FirstName = claim.contactDetails.firstName,
         LastName = claim.contactDetails.lastName

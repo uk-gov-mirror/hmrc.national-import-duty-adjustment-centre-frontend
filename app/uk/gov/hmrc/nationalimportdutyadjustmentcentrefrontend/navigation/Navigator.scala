@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
@@ -26,15 +27,36 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 class Navigator @Inject() () {
 
   private val normalRoutes: (Page, UserAnswers) => Call = {
-    case (FirstPage, _)           => controllers.makeclaim.routes.ContactDetailsController.onPageLoad()
-    case (ContactDetailsPage, _)  => controllers.makeclaim.routes.AddressController.onPageLoad()
-    case (AddressPage, _)         => controllers.makeclaim.routes.EntryDetailsController.onPageLoad()
-    case (EntryDetailsPage, _)    => controllers.makeclaim.routes.ClaimTypeController.onPageLoad()
-    case (ClaimTypePage, _)       => controllers.makeclaim.routes.UploadFormController.onPageLoad()
-    case (UploadPage, _)          => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()
-    case (ReclaimDutyTypePage, _) => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
-    case (BankDetailsPage, _)     => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
-    case _                        => controllers.routes.StartController.start()
+    case (FirstPage, _)                      => controllers.makeclaim.routes.ContactDetailsController.onPageLoad()
+    case (ContactDetailsPage, _)             => controllers.makeclaim.routes.AddressController.onPageLoad()
+    case (AddressPage, _)                    => controllers.makeclaim.routes.EntryDetailsController.onPageLoad()
+    case (EntryDetailsPage, _)               => controllers.makeclaim.routes.ClaimTypeController.onPageLoad()
+    case (ClaimTypePage, _)                  => controllers.makeclaim.routes.UploadFormController.onPageLoad()
+    case (UploadPage, _)                     => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()
+    case (ReclaimDutyTypePage, answers)      => reclaimDutyTypeNextPage(answers)
+    case (CustomsDutyRepaymentPage, answers) => customsDutyRepaymentNextPage(answers)
+    case (ImportVatRepaymentPage, answers)   => importVatRepaymentNextPage(answers)
+    case (OtherDutyRepaymentPage, _)         => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
+    case (BankDetailsPage, _)                => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
+    case _                                   => controllers.routes.StartController.start()
+  }
+
+  private def reclaimDutyTypeNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
+    case Some(duties) if duties.contains(Customs) =>
+      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty()
+    case _ => customsDutyRepaymentNextPage(answers)
+  }
+
+  private def customsDutyRepaymentNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
+    case Some(duties) if duties.contains(Vat) =>
+      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadImportVat()
+    case _ => importVatRepaymentNextPage(answers)
+  }
+
+  private def importVatRepaymentNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
+    case Some(duties) if duties.contains(Other) =>
+      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty()
+    case _ => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
   }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =

@@ -45,4 +45,5 @@ object ReclaimDutyType extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[ReclaimDutyType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 
+  implicit def typeToString: ReclaimDutyType => String = _.toString
 }

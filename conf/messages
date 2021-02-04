@@ -60,6 +60,29 @@ reclaimDutyType.02 = VAT
 reclaimDutyType.03 = Another type of duty
 reclaimDutyType.error.required = Select what you want to reclaim
 
+dutyPaid.actual.error.required = Enter an amount that was paid
+dutyPaid.should.error.required = Enter an amount that should have been paid
+dutyPaid.error.invalid = Enter an amount in the correct format
+dutyPaid.actual.error.zero = The amount paid must be higher than £0
+dutyPaid.should.error.zero = The amount that should have been paid must be greater than £0
+dutyPaid.amounts.error.same = The amount that should have been paid cannot be equal to the amount paid
+dutyPaid.amounts.error.greater = The amount that should have been paid cannot be more than the amount paid
+
+customsDutyPaid.title = Customs Duty payment details
+customsDutyPaid.actual.label = How much Customs Duty was paid to HMRC?
+customsDutyPaid.actual.hint = Do not include any agent fees.
+customsDutyPaid.should.label = How much Customs Duty do you think should have been paid?
+
+importVatPaid.title = VAT payment details
+importVatPaid.actual.label = How much VAT was paid to HMRC?
+importVatPaid.actual.hint = Do not include any agent fees.
+importVatPaid.should.label = How much VAT do you think should have been paid?
+
+otherDutyPaid.title = Other duties payment details
+otherDutyPaid.actual.label = How much of other duties was paid to HMRC?
+otherDutyPaid.actual.hint = Do not include any agent fees.
+otherDutyPaid.should.label = How much of other duties do you think should have been paid?
+
 contactDetails.title = What are your contact details?
 contactDetails.hint = We may need to contact you to discuss this claim.
 contactDetails.firstName.heading = First name
@@ -160,6 +183,7 @@ check_answers.repayment.reclaimDutyType = What do you want to reclaim?
 check_answers.repayment.reclaimDutyType.01 = Customs duty
 check_answers.repayment.reclaimDutyType.02 = VAT
 check_answers.repayment.reclaimDutyType.03 = Other
+check_answers.repayment.total = Repayment request total
 check_answers.payment.title = Payment details
 check_answers.payment.bankDetails = Importer bank details
 
