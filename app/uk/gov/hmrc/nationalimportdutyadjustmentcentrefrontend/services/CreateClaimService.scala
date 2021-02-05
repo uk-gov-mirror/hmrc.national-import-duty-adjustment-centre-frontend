@@ -28,12 +28,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateClaimService @Inject() (connector: NIDACConnector)(implicit ec: ExecutionContext) {
+  private val acknowledgementReferenceMaxLength = 32
 
   def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {
 
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISCreateCaseRequest = EISCreateCaseRequest(
-      AcknowledgementReference = correlationId.replace("-", ""),
+      AcknowledgementReference = correlationId.replace("-", "").takeRight(acknowledgementReferenceMaxLength),
       ApplicationType = "NIDAC",
       OriginatingSystem = "Digital",
       Content = EISCreateCaseRequest.Content(claim)

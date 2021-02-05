@@ -40,10 +40,12 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     reclaimDutyPayments =
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
     bankDetails = BankDetails("account name", "001122", "12345678"),
-    entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31))
+    entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
+    submissionDate = LocalDate.of(2021, 1, 31)
   )
 
   val content: EISCreateCaseRequest.Content = EISCreateCaseRequest.Content(
+    RepresentationType = "Importer",
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
       "Import Co Ltd",
@@ -54,9 +56,12 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     EntryDate = "20201231",
     DutyDetails =
       Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
+    PayTo = "Importer",
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
+    ClaimReason = "TBC",
     FirstName = "Adam",
-    LastName = "Smith"
+    LastName = "Smith",
+    SubmissionDate = "20210131"
   )
 
   "EISCreateCaseRequest" should {

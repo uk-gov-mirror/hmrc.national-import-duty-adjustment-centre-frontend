@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
+import java.time.LocalDate
+
 import play.api.Logger
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
@@ -30,7 +32,8 @@ case class Claim(
   uploads: Seq[UploadedFile],
   reclaimDutyPayments: Map[ReclaimDutyType, DutyPaid],
   bankDetails: BankDetails,
-  entryDetails: EntryDetails
+  entryDetails: EntryDetails,
+  submissionDate: LocalDate
 ) {
 
   def repaymentTotal: BigDecimal = reclaimDutyPayments.values.map(_.dueAmount).sum
@@ -50,7 +53,8 @@ object Claim {
           dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
       ).toMap,
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
-      entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage))
+      entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage)),
+      submissionDate = LocalDate.now()
     )
 
   private def missing(answer: Any) = {

@@ -36,33 +36,41 @@ object EISCreateCaseRequest {
   implicit val formats: Format[EISCreateCaseRequest] = Json.format[EISCreateCaseRequest]
 
   case class Content(
+    RepresentationType: String,
     ClaimType: String,
     ImporterDetails: ImporterDetails,
     EntryProcessingUnit: String,
     EntryNumber: String,
     EntryDate: String,
     DutyDetails: Seq[DutyDetail],
+    PayTo: String,
     PaymentDetails: Option[PaymentDetails],
+    ClaimReason: String,
     FirstName: String,
-    LastName: String
+    LastName: String,
+    SubmissionDate: String
   )
 
   object Content {
     implicit val formats: Format[Content] = Json.format[Content]
 
-    val entryDataFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val eisDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
     def apply(claim: Claim): Content =
       Content(
+        RepresentationType = "Importer", // TODO NF-204 - hard code values
         ClaimType = claim.claimType.toString,
         ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress),
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
         EntryNumber = claim.entryDetails.entryNumber,
-        EntryDate = entryDataFormatter.format(claim.entryDetails.entryDate),
+        EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
         DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
+        PayTo = "Importer", // TODO NF-204 - hard code values
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
+        ClaimReason = "TBC", // TODO NF-204 - hard code values
         FirstName = claim.contactDetails.firstName,
-        LastName = claim.contactDetails.lastName
+        LastName = claim.contactDetails.lastName,
+        SubmissionDate = eisDateFormatter.format(claim.submissionDate)
       )
 
   }
