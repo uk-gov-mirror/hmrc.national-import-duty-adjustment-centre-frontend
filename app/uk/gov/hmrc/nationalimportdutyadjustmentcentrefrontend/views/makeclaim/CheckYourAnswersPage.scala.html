@@ -77,6 +77,16 @@
         heading = Some(messages("check_answers.claim.title")),
         summaryListRows = Seq(
             Some(SummaryListRow(
+                classes = "claim_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.claimType"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
                 classes = "entry_details_row",
                 key = Key(
                     content = Text(messages("check_answers.claim.entryDetails"))
@@ -91,12 +101,12 @@
                 actions = None
             )),
             Some(SummaryListRow(
-                classes = "claim_type_row",
+                classes = "item_numbers_row",
                 key = Key(
-                    content = Text(messages("check_answers.claim.claimType"))
+                    content = Text(messages("check_answers.claim.itemNumbers"))
                 ),
                 value = Value(
-                    content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
+                    content = Text(claim.itemNumbers.numbers)
                 ),
                 actions = None
             )),

@@ -33,6 +33,7 @@ case class Claim(
   reclaimDutyPayments: Map[ReclaimDutyType, DutyPaid],
   bankDetails: BankDetails,
   entryDetails: EntryDetails,
+  itemNumbers: ItemNumbers,
   submissionDate: LocalDate
 ) {
 
@@ -54,6 +55,7 @@ object Claim {
       ).toMap,
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
       entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage)),
+      itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),
       submissionDate = LocalDate.now()
     )
 

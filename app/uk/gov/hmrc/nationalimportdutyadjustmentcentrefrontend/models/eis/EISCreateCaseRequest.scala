@@ -45,6 +45,7 @@ object EISCreateCaseRequest {
     DutyDetails: Seq[DutyDetail],
     PayTo: String,
     PaymentDetails: Option[PaymentDetails],
+    ItemNumber: String,
     ClaimReason: String,
     FirstName: String,
     LastName: String,
@@ -67,6 +68,7 @@ object EISCreateCaseRequest {
         DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
         PayTo = "Importer", // TODO NF-204 - hard code values
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
+        ItemNumber = claim.itemNumbers.numbers,
         ClaimReason = "TBC", // TODO NF-204 - hard code values
         FirstName = claim.contactDetails.firstName,
         LastName = claim.contactDetails.lastName,

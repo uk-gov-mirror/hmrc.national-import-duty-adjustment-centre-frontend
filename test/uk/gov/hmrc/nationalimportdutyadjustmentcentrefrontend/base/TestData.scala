@@ -60,6 +60,8 @@ trait TestData {
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
+  var itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+
   val completeAnswers: UserAnswers = UserAnswers(
     claimType = Some(claimTypeAnswer),
     contactDetails = Some(contactDetailsAnswer),
@@ -68,7 +70,8 @@ trait TestData {
     reclaimDutyTypes = Some(reclaimDutyTypesAnswer),
     reclaimDutyPayments = reclaimDutyPayments,
     bankDetails = Some(bankDetailsAnswer),
-    entryDetails = Some(entryDetailsAnswer)
+    entryDetails = Some(entryDetailsAnswer),
+    itemNumbers = Some(itemNumbersAnswer)
   )
 
   // Upscan

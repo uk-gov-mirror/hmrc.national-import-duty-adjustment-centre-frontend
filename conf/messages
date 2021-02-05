@@ -134,6 +134,11 @@ bankDetails.accountNumber.hint = Must be between 6 and 8 digits long.
 bankDetails.accountNumber.error.required = Enter an account number
 bankDetails.accountNumber.error.invalid = Enter a valid account number like 00733445
 
+itemNumbers.title = Which item numbers are you claiming for?
+itemNumbers.hint = Tell us the item numbers as they appear on your declaration. You can enter an individual item number, multiple items or a range. For example, 1, 10, 11-20.
+itemNumbers.error.required = Enter an item number
+itemNumbers.error.length = Item numbers must be 500 characters or fewer
+
 entryDetails.title = Entry details
 entryDetails.hint = These can be found on Single Administrative Document (C88) or Import Entry Acceptance Advice (E2) documents.
 entryDetails.claimEpu.heading = Entry processing unit (EPU)
@@ -177,6 +182,7 @@ check_answers.claim.entryDetails.epu = EPU: {0}
 check_answers.claim.entryDetails.entryNumber = Entry number: {0}
 check_answers.claim.entryDetails.entryDate = Entry date: {0}
 check_answers.claim.claimType = Claim type
+check_answers.claim.itemNumbers = Item numbers
 check_answers.claim.uploaded = Supporting documents
 check_answers.repayment.title = Repayment request
 check_answers.repayment.reclaimDutyType = What do you want to reclaim?

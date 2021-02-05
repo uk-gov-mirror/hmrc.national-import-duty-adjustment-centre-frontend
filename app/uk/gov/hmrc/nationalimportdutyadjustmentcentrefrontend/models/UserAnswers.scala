@@ -28,6 +28,7 @@ final case class UserAnswers(
   reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
   bankDetails: Option[BankDetails] = None,
   entryDetails: Option[EntryDetails] = None,
+  itemNumbers: Option[ItemNumbers] = None,
   uploads: Option[Seq[UploadedFile]] = None
 )
 

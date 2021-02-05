@@ -58,7 +58,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     "redirect to the correct repayment calculation page" when {
 
       "user has ONLY requested Customs Duty repayment" in {
-        nextPage(CustomsDutyRepaymentPage, Customs) mustBe routes.BankDetailsController.onPageLoad()
+        nextPage(CustomsDutyRepaymentPage, Customs) mustBe routes.UploadFormController.onPageLoad()
       }
       "user has requested Import VAT repayment" in {
         nextPage(
@@ -79,7 +79,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     "redirect to the correct repayment calculation page" when {
 
       "user has ONLY requested Import VAT repayment" in {
-        nextPage(ImportVatRepaymentPage, Vat) mustBe routes.BankDetailsController.onPageLoad()
+        nextPage(ImportVatRepaymentPage, Vat) mustBe routes.UploadFormController.onPageLoad()
       }
       "user has requested Other Duty repayment" in {
         nextPage(ImportVatRepaymentPage, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
