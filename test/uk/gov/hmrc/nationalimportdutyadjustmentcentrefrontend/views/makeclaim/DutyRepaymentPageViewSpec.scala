@@ -116,13 +116,15 @@ class DutyRepaymentPageViewSpec extends UnitViewSpec with TestData {
       }
 
       "values are the same" in {
-        view("customsDutyPaid", form.bind(Map("actuallyPaid" -> "10", "shouldPaid" -> "10.00"))) must haveSummaryError(
+        view("customsDutyPaid", form.bind(Map("actuallyPaid" -> "10", "shouldPaid" -> "10.00"))) must haveFieldError(
+          "shouldPaid",
           "dutyPaid.amounts.error.same"
         )
       }
 
       "should is more that actual" in {
-        view("customsDutyPaid", form.bind(Map("actuallyPaid" -> "10", "shouldPaid" -> "10.01"))) must haveSummaryError(
+        view("customsDutyPaid", form.bind(Map("actuallyPaid" -> "10", "shouldPaid" -> "10.01"))) must haveFieldError(
+          "shouldPaid",
           "dutyPaid.amounts.error.greater"
         )
       }

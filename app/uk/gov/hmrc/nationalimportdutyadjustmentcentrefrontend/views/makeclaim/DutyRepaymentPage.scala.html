@@ -33,17 +33,25 @@ continueButton: components.continueButton )
 
 @(form: Form[DutyPaid], submit: Call, messagePrefix: String)(implicit request: Request[_], messages: Messages)
 
+
+@updateGlobalErrorsTo(field: String) = @{
+  form.copy(errors = form.errors.map(err => err.copy(key = if(err.key.isEmpty) field else err.key)))
+}
+
 @layout(pageTitle = Title(form, messages(s"$messagePrefix.title"))) {
 
     @formHelper(action = submit, 'autoComplete -> "off") {
-        @errorSummary(form.errors)
 
-        @fieldSet(
-            legend = s"$messagePrefix.title"
-        ) {
+        @defining(updateGlobalErrorsTo("shouldPaid")) { newForm =>
+
+            @errorSummary(newForm.errors)
+
+            @fieldSet(
+                legend = s"$messagePrefix.title"
+            ) {
 
             @inputText(
-                form = form,
+                form = newForm,
                 id = "actuallyPaid",
                 name = "actuallyPaid",
                 label = s"$messagePrefix.actual.label",
@@ -53,18 +61,19 @@ continueButton: components.continueButton )
                 attributes = Map("autocomplete" -> "off")
             )
 
-            @inputText(
-                form = form,
-                id = "shouldPaid",
-                name = "shouldPaid",
-                label = s"$messagePrefix.should.label",
-                prefix = Prefix.currencyPrefix,
-                classes = Some("govuk-input--width-10"),
-                attributes = Map("autocomplete" -> "off")
-            )
+                @inputText(
+                    form = newForm,
+                    id = "shouldPaid",
+                    name = "shouldPaid",
+                    label = s"$messagePrefix.should.label",
+                    prefix = Prefix.currencyPrefix,
+                    classes = Some("govuk-input--width-10"),
+                    attributes = Map("autocomplete" -> "off")
+                )
 
+            }
+
+            @continueButton()
         }
-
-        @continueButton()
     }
 }
