@@ -24,7 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDuty
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{FirstPage, Page, _}
 
-private case class P(page: Page, destination: () => Call, condition: UserAnswers => Boolean)
+private case class P(page: Page, destination: () => Call, canAccessGiven: UserAnswers => Boolean)
 
 @Singleton
 class Navigator @Inject() () {
@@ -104,7 +104,7 @@ class Navigator @Inject() () {
 
   private def nextPageFor(currentPage: Page, userAnswers: UserAnswers): Page =
     after(currentPage)
-      .find(canAccessGiven(userAnswers))
+      .find(_.canAccessGiven(userAnswers))
       .getOrElse(
         throw new IllegalStateException(s"Could not find next page for: $currentPage")
       ) // TODO improve handling/messaging here?
@@ -119,7 +119,7 @@ class Navigator @Inject() () {
   // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
   def previousPage(currentPage: Page, userAnswers: UserAnswers): Call = {
     val previous: Page = before(currentPage)
-      .filter(canAccessGiven(userAnswers))
+      .filter(_.canAccessGiven(userAnswers))
       .reverse
       .find(candidate => nextPageFor(candidate.page, userAnswers) == currentPage)
       .map(_.page)
@@ -128,7 +128,6 @@ class Navigator @Inject() () {
     viewFor(previous)
   }
 
-  private def before(page: Page): Seq[P]               = pageOrder.take(pageOrder.map(_.page).indexOf(page))
-  private def after(page: Page): Seq[P]                = pageOrder.drop(pageOrder.map(_.page).indexOf(page) + 1)
-  private def canAccessGiven(userAnswers: UserAnswers) = (p: P) => p.condition(userAnswers)
+  private def before(page: Page): Seq[P] = pageOrder.take(pageOrder.map(_.page).indexOf(page))
+  private def after(page: Page): Seq[P]  = pageOrder.drop(pageOrder.map(_.page).indexOf(page) + 1)
 }
