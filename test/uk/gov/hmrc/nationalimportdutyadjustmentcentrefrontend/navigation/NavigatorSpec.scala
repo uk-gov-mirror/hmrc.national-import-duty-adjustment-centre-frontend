@@ -35,7 +35,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   private val navigator = instanceOf[Navigator]
 
-  private def answers(reclaim: ReclaimDutyType*): UserAnswers = completeAnswers.copy(reclaimDutyTypes = Some(Set(reclaim: _*)))
+  private def answers(reclaim: ReclaimDutyType*): UserAnswers =
+    completeAnswers.copy(reclaimDutyTypes = Some(Set(reclaim: _*)))
 
   private def nextPage(page: Page, reclaim: ReclaimDutyType*) =
     navigator.nextPage(page, answers(reclaim: _*))

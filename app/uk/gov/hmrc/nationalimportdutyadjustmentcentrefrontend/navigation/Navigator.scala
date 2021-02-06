@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.{makeclaim, routes}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{FirstPage, Page, _}
@@ -67,7 +68,7 @@ class Navigator @Inject() () {
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call = {
     val existing      = normalRoutes(page, userAnswers)
-    val reimplemented = viewFor(findNextPage(page, userAnswers))
+    val reimplemented = viewFor(nextPageFor(page, userAnswers))
     if (existing != reimplemented)
       throw new IllegalStateException("New implementation did not return same result as old one")
     reimplemented
@@ -85,39 +86,25 @@ class Navigator @Inject() () {
       }
 
   private val pageOrder: Seq[P] = Seq(
-    P(FirstPage, controllers.routes.StartController.start, always),
-    P(ClaimTypePage, controllers.makeclaim.routes.ClaimTypeController.onPageLoad, always),
-    P(EntryDetailsPage, controllers.makeclaim.routes.EntryDetailsController.onPageLoad, always),
-    P(ItemNumbersPage, controllers.makeclaim.routes.ItemNumbersController.onPageLoad, always),
-    P(ReclaimDutyTypePage, controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad, always),
-    P(
-      CustomsDutyRepaymentPage,
-      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty,
-      hasDutyType(ReclaimDutyType.Customs)
-    ),
-    P(
-      ImportVatRepaymentPage,
-      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadImportVat,
-      hasDutyType(ReclaimDutyType.Vat)
-    ),
-    P(
-      OtherDutyRepaymentPage,
-      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty,
-      hasDutyType(ReclaimDutyType.Other)
-    ),
-    P(UploadPage, controllers.makeclaim.routes.UploadFormController.onPageLoad, always),
-    P(ContactDetailsPage, controllers.makeclaim.routes.ContactDetailsController.onPageLoad, always),
-    P(AddressPage, controllers.makeclaim.routes.AddressController.onPageLoad, always),
-    P(BankDetailsPage, controllers.makeclaim.routes.BankDetailsController.onPageLoad, always),
-    P(CheckYourAnswersPage, controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad, always),
-    P(ConfirmationPage, controllers.makeclaim.routes.ConfirmationController.onPageLoad, always)
+    P(FirstPage, routes.StartController.start, always),
+    P(ClaimTypePage, makeclaim.routes.ClaimTypeController.onPageLoad, always),
+    P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always),
+    P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always),
+    P(ReclaimDutyTypePage, makeclaim.routes.ReclaimDutyTypeController.onPageLoad, always),
+    P(CustomsDutyRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty, hasDutyType(Customs)),
+    P(ImportVatRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadImportVat, hasDutyType(Vat)),
+    P(OtherDutyRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty, hasDutyType(Other)),
+    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always),
+    P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always),
+    P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always),
+    P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always),
+    P(CheckYourAnswersPage, makeclaim.routes.CheckYourAnswersController.onPageLoad, always),
+    P(ConfirmationPage, makeclaim.routes.ConfirmationController.onPageLoad, always)
   )
 
-  private val pagesInOrder: Seq[Page] = pageOrder.map(_.page)
-
-  private def findNextPage(currentPage: Page, userAnswers: UserAnswers): Page =
+  private def nextPageFor(currentPage: Page, userAnswers: UserAnswers): Page =
     after(currentPage)
-      .find(p => p.condition(userAnswers))
+      .find(canAccessGiven(userAnswers))
       .getOrElse(
         throw new IllegalStateException(s"Could not find next page for: $currentPage")
       ) // TODO improve handling/messaging here?
@@ -131,14 +118,17 @@ class Navigator @Inject() () {
 
   // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
   def previousPage(currentPage: Page, userAnswers: UserAnswers): Call = {
-    val backTo: Page = before(currentPage)
-      .find(candidate => findNextPage(candidate.page, userAnswers) == currentPage)
+    val previous: Page = before(currentPage)
+      .filter(canAccessGiven(userAnswers))
+      .reverse
+      .find(candidate => nextPageFor(candidate.page, userAnswers) == currentPage)
       .map(_.page)
       .getOrElse(throw new IllegalStateException("Maybe this should return an optional and we don't render a backlink"))
 
-    viewFor(backTo)
+    viewFor(previous)
   }
 
-  private def before(page: Page): Seq[P] = pageOrder.take(pagesInOrder.indexOf(page))
-  private def after(page: Page): Seq[P]  = pageOrder.drop(pagesInOrder.indexOf(page) + 1)
+  private def before(page: Page): Seq[P]               = pageOrder.take(pageOrder.map(_.page).indexOf(page))
+  private def after(page: Page): Seq[P]                = pageOrder.drop(pageOrder.map(_.page).indexOf(page) + 1)
+  private def canAccessGiven(userAnswers: UserAnswers) = (p: P) => p.condition(userAnswers)
 }
