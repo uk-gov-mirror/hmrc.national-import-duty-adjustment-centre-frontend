@@ -67,8 +67,10 @@ class Navigator @Inject() () {
     controllers.makeclaim.routes.UploadFormController.onPageLoad()
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call = {
-    val existing      = normalRoutes(page, userAnswers)
-    val reimplemented = viewFor(nextPageFor(pageOrder, page, userAnswers))
+    val existing = normalRoutes(page, userAnswers)
+    val reimplemented = viewFor(nextPageFor(pageOrder, page, userAnswers)).getOrElse(
+      throw new IllegalStateException(s"No page after $page")
+    )
     if (existing != reimplemented)
       throw new IllegalStateException("New implementation did not return same result as old one")
     reimplemented
@@ -104,24 +106,28 @@ class Navigator @Inject() () {
 
   private val reversePageOrder = pageOrder.reverse
 
-  private def nextPageFor(pages: Seq[P], currentPage: Page, userAnswers: UserAnswers): Page =
+  private def nextPageFor(pages: Seq[P], currentPage: Page, userAnswers: UserAnswers): Option[Page] =
     after(pages, currentPage)
       .find(_.canAccessGiven(userAnswers))
-      .getOrElse(
-        throw new IllegalStateException(s"Could not find next page for: $currentPage")
-      ) // TODO improve handling/messaging here?
-      .page
+      .map(_.page)
 
-  private def viewFor(page: Page): Call =
-    pageOrder
-      .find(_.page == page)
-      .getOrElse(throw new IllegalStateException(s"Unknown page: $page")) // TODO improve handling/messaging here?
-      .destination()
+  private def viewFor(page: Option[Page]): Option[Call] =
+    page.flatMap(
+      p =>
+        pageOrder
+          .find(_.page == p)
+          .map(_.destination())
+    )
 
   // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
-  def previousPage(currentPage: Page, userAnswers: UserAnswers): Call = {
-    viewFor(nextPageFor(reversePageOrder, currentPage, userAnswers))
+  def previousPage(currentPage: Page, userAnswers: UserAnswers): Call =
+    viewFor(nextPageFor(reversePageOrder, currentPage, userAnswers)).getOrElse(
+      throw new IllegalStateException(s"No page before $currentPage - consider returning Option[Call]")
+    )
+
+  private def after(pages: Seq[P], page: Page): Seq[P] = pages.span(_.page != page)._2 match {
+    case s if s.isEmpty => Seq.empty
+    case s              => s.tail
   }
 
-  private def after(pages: Seq[P], page: Page): Seq[P]  = pages.span(_.page != page)._2.tail
 }
