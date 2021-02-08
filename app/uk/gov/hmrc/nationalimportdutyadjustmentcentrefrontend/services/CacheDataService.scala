@@ -34,7 +34,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
     }
 
   def getAnswers(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
-    getCacheData map (_.answers)
+    updateAnswers(answers => answers)
 
   def updateAnswers(update: UserAnswers => UserAnswers)(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
     getCacheData flatMap { data =>

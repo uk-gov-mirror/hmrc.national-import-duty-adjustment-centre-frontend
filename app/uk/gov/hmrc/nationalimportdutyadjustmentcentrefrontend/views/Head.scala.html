@@ -14,15 +14,28 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.KeepAliveController
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.SignOutController
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 
-@(headBlock: Option[Html] = None)
+@this(hmrcTimeoutDialog: HmrcTimeoutDialog, appConfig: AppConfig)
+
+@(headBlock: Option[Html] = None)(implicit request: Request[_], messages: Messages)
 @headBlock
-
-<script src='@routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
-<script src='@routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
-<script src='@controllers.routes.Assets.versioned("javascripts/nidacfrontend.js")'></script>
 
 <!--[if lte IE 8]><script src='@controllers.routes.Assets.versioned("javascripts/html5shiv.min.js")'></script><![endif]-->
 <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
 <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
+
+@if(request.isInstanceOf[IdentifierRequest[_]]) {
+    @hmrcTimeoutDialog(
+        TimeoutDialog(
+            timeout = Some(appConfig.timeoutDialogTimeout),
+            countdown = Some(appConfig.timeoutDialogCountdown),
+            keepAliveUrl = Some(KeepAliveController.keepAlive().url),
+            signOutUrl = Some(SignOutController.signOut().url),
+            timeoutUrl = Some(SignOutController.signOut().url),
+            language = Some(messages.lang.code)
+        )
+    )
+}

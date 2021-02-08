@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.{any, anyString}
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{atLeastOnce, reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
@@ -71,7 +71,7 @@ trait ControllerSpec
 
   protected def theUpdatedUserAnswers: UserAnswers = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
-    verify(dataRepository).set(captor.capture())
+    verify(dataRepository, atLeastOnce).set(captor.capture())
     val cacheData: CacheData = captor.getValue
     cacheData.answers
   }

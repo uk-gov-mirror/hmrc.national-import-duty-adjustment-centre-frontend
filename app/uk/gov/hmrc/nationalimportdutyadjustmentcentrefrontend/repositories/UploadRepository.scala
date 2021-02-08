@@ -27,6 +27,7 @@ import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, JsonFormats, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
@@ -82,7 +83,7 @@ object UploadDetails {
   val format: Format[UploadDetails] = mongoEntity(Json.format[UploadDetails])
 }
 
-class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: Configuration)(implicit
+class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: AppConfig)(implicit
   ec: ExecutionContext
 ) extends ReactiveRepository[UploadDetails, BSONObjectID](
       collectionName = "upload-data",
@@ -95,7 +96,7 @@ class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config
     Index(
       key = Seq("created" -> IndexType.Ascending),
       name = Some("uploadExpiry"),
-      options = BSONDocument("expireAfterSeconds" -> config.get[Int]("mongodb.timeToLiveInSeconds"))
+      options = BSONDocument("expireAfterSeconds" -> config.mongoTimeToLiveInSeconds)
     )
   )
 

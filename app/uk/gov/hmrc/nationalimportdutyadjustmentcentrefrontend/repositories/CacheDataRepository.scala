@@ -26,11 +26,12 @@ import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CacheDataRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: Configuration)(implicit
+class CacheDataRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: AppConfig)(implicit
   ec: ExecutionContext
 ) extends ReactiveRepository[CacheData, BSONObjectID](
       collectionName = "cache-data",
@@ -43,7 +44,7 @@ class CacheDataRepository @Inject() (mongoComponent: ReactiveMongoComponent, con
     Index(
       key = Seq("lastUpdated" -> IndexType.Ascending),
       name = Some("userAnswersExpiry"),
-      options = BSONDocument("expireAfterSeconds" -> config.get[Int]("mongodb.timeToLiveInSeconds"))
+      options = BSONDocument("expireAfterSeconds" -> config.mongoTimeToLiveInSeconds)
     )
   )
 
