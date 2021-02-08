@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{AntiDumping, Tomato147s}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
@@ -48,7 +48,7 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    withEmptyCache
+    withEmptyCache()
     when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
@@ -83,7 +83,7 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
   "POST" should {
 
-    val validRequest = postRequest(("claim_type", Tomato147s.toString))
+    val validRequest = postRequest(("claim_type", AntiDumping.toString))
 
     "update cache and redirect when valid answer is submitted" in {
 
@@ -91,7 +91,7 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.claimType mustBe Some(Tomato147s)
+      theUpdatedUserAnswers.claimType mustBe Some(AntiDumping)
       redirectLocation(result) mustBe Some(navigator.nextPage(ClaimTypePage, emptyAnswers).url)
     }
 

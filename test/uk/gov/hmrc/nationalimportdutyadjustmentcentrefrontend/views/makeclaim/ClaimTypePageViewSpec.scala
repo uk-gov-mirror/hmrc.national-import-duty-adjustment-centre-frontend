@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Chicken
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 
 class ClaimTypePageViewSpec extends UnitViewSpec {
@@ -60,9 +60,9 @@ class ClaimTypePageViewSpec extends UnitViewSpec {
   "ClaimTypePage on filled form" should {
 
     "have selected radio option" in {
-      val checked = view(form.fill(Chicken)).getElementsByAttribute("checked")
+      val checked = view(form.fill(Quota)).getElementsByAttribute("checked")
 
-      checked.attr("value") mustBe Chicken.toString
+      checked.attr("value") mustBe Quota.toString
     }
 
     "display error when no choice is made" in {
