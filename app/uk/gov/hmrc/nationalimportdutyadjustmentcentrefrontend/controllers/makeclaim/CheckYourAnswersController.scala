@@ -51,10 +51,12 @@ class CheckYourAnswersController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers flatMap { answers =>
       val claim = Claim(answers)
-      service.submitClaim(claim) flatMap { response =>
-        data.updateResponse(response) map {
-          _ => Redirect(routes.ConfirmationController.onPageLoad())
-        }
+      service.submitClaim(claim) flatMap {
+        case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
+        case response =>
+          data.updateResponse(response) map {
+            _ => Redirect(routes.ConfirmationController.onPageLoad())
+          }
       }
     } recover {
       case _: MissingUserAnswersException =>
