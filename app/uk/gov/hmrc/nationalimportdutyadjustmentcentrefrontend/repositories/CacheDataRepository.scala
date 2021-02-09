@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 import java.time.LocalDateTime
 
 import javax.inject.Inject
-import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.indexes.{Index, IndexType}
@@ -28,6 +27,7 @@ import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JsonFormats.formatLocalDateTime
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,7 +49,11 @@ class CacheDataRepository @Inject() (mongoComponent: ReactiveMongoComponent, con
   )
 
   def get(id: String): Future[Option[CacheData]] =
-    super.find("id" -> id).map(_.headOption)
+    super.findAndUpdate(
+      query = Json.obj("id" -> id),
+      update = Json.obj("$set" -> Json.obj("lastUpdated" -> formatLocalDateTime.writes(LocalDateTime.now()))),
+      upsert = false
+    ).map(_.value.map(_.as[CacheData]))
 
   def set(data: CacheData): Future[Option[CacheData]] =
     super.findAndUpdate(
