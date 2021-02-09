@@ -25,19 +25,21 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: ExecutionContext) {
 
-  private def getCacheData(implicit request: IdentifierRequest[_]): Future[CacheData] =
-    repository.get(request.identifier) flatMap {
+  private def getCacheData(id :String): Future[CacheData] =
+    repository.get(id) flatMap {
       case Some(data) => Future(data)
       case None =>
-        val data = CacheData(request.identifier)
+        val data = CacheData(id)
         repository.set(data) map { _ => data }
     }
+
+  def getAnswers(id: String): Future[UserAnswers] = getCacheData(id).map(_.answers)
 
   def getAnswers(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
     updateAnswers(answers => answers)
 
   def updateAnswers(update: UserAnswers => UserAnswers)(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
-    getCacheData flatMap { data =>
+    getCacheData(request.identifier) flatMap { data =>
       val updatedAnswers: UserAnswers = update(data.answers)
       repository.set(data.copy(answers = updatedAnswers)) map { _ => updatedAnswers }
     }
@@ -45,7 +47,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   def updateResponse(
     claimResponse: CreateClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
-    getCacheData flatMap { data =>
+    getCacheData(request.identifier) flatMap { data =>
       repository.set(data.copy(answers = UserAnswers(), createClaimResponse = Some(claimResponse)))
     }
 

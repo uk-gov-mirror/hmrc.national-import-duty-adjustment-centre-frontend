@@ -25,7 +25,7 @@
 
 @(reference: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("confirmation.title")), includeBackLink = false) {
+@layout(pageTitle = Title(messages("confirmation.title")), navigatorPage = None) {
 
     @govukPanel(Panel(
         title = Text(messages("confirmation.title")),

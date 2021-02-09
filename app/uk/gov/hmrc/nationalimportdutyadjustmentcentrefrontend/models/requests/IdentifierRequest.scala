@@ -17,5 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 
-case class IdentifierRequest[A](request: Request[A], identifier: String) extends WrappedRequest[A](request)
+case class IdentifierRequest[A](request: Request[A], identifier: String, answers: UserAnswers) extends WrappedRequest[A](request)

@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +36,8 @@ trait IdentifierAction
 class AuthenticatedIdentifierAction @Inject() (
   override val authConnector: AuthConnector,
   config: AppConfig,
-  val parser: BodyParsers.Default
+  val parser: BodyParsers.Default,
+  cacheDataService: CacheDataService
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction with AuthorisedFunctions {
 
@@ -46,7 +48,11 @@ class AuthenticatedIdentifierAction @Inject() (
 
     authorised().retrieve(Retrievals.internalId) {
       _.map {
-        internalId => block(IdentifierRequest(request, internalId))
+        internalId => {
+          cacheDataService.getAnswers(internalId) flatMap  { answers =>
+            block(IdentifierRequest(request, internalId, answers))
+          }
+        }
       }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
     } recover {
       case _: NoActiveSession =>

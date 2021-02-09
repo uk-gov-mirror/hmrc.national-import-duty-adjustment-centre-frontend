@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EntryDetails
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.EntryDetailsPage
 
 @this(
         layout: Layout,
@@ -33,7 +34,7 @@
 
 @(form: Form[EntryDetails])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("entryDetails.title"))) {
+@layout(pageTitle = Title(form, messages("entryDetails.title")), navigatorPage = Some(EntryDetailsPage)) {
 
     @formHelper(action = EntryDetailsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)

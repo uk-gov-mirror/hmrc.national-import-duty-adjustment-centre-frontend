@@ -14,10 +14,13 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.StartController
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.SignOutController
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
@@ -25,30 +28,38 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language
 
 @this(
-        govukLayout: GovukLayout,
-        hmrcHeader: HmrcHeader,
-        head: Head,
-        hmrcStandardFooter: HmrcStandardFooter,
-        languageSelect: LanguageSelect,
-        govukBackLink: GovukBackLink,
-        appConfig: AppConfig
+    govukLayout: GovukLayout,
+    hmrcHeader: HmrcHeader,
+    head: Head,
+    hmrcStandardFooter: HmrcStandardFooter,
+    languageSelect: LanguageSelect,
+    govukBackLink: GovukBackLink,
+    navigator: Navigator,
+    appConfig: AppConfig
 )
 @(pageTitle: Title,
         headBlock: Option[Html] = None,
-        includeBackLink: Boolean = true
+        navigatorPage: Option[Page] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
-@beforeContentBlock = {
-@if(appConfig.welshLanguageSupportEnabled) {@languageSelect()}
+@backUrl = @{
+  navigatorPage.flatMap( page =>
+      request match {
+          case identifierRequest: IdentifierRequest[_] => navigator.previousPage(page, identifierRequest.answers).map(_.url)
+          case _ => None
+      }
+  )
+}
 
-@if(includeBackLink) {
+@beforeContentBlock = {
+    @if(appConfig.welshLanguageSupportEnabled) {@languageSelect()}
+
     @govukBackLink(BackLink(
         attributes = Map("id"->"back-link"),
         classes = "govuk-!-display-none-print",
-        href = "javascript:history.back()",
+        href = backUrl.getOrElse("javascript:history.back()"),
         content = Text(messages("site.back"))
     ))
-}
 }
 
 @signOutHref = @{

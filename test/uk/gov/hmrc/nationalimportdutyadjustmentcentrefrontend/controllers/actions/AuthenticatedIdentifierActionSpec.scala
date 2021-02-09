@@ -75,7 +75,7 @@ class AuthActionSpec extends UnitSpec with MockitoSugar with Injector {
     startWith(appConfig.loginUrl)
 
   private def handleAuthError(exc: AuthorisationException): Future[Result] = {
-    val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(exc), appConfig, parser)
+    val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(exc), appConfig, parser, ???)
     val controller = new Harness(authAction)
     controller.onPageLoad()(fakeRequest)
   }
