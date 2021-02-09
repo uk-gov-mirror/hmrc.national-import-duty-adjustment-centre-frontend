@@ -89,7 +89,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
       "go to upload page when neither VAT or Other duty selected" in {
-        nextPage(answers(Customs)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs)) mustBe routes.UploadFormSummaryController.onPageLoad()
       }
     }
     "going back" should {
@@ -112,8 +112,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
       "go to upload page when Other duty not selected" in {
-        nextPage(answers(Customs, Vat)) mustBe routes.UploadFormController.onPageLoad()
-        nextPage(answers(Vat)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs, Vat)) mustBe routes.UploadFormSummaryController.onPageLoad()
+        nextPage(answers(Vat)) mustBe routes.UploadFormSummaryController.onPageLoad()
       }
     }
     "going back" should {
@@ -135,10 +135,10 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
     "going forward" should {
       "go to upload page" in {
-        nextPage(answers(Customs, Other)) mustBe routes.UploadFormController.onPageLoad()
-        nextPage(answers(Vat, Other)) mustBe routes.UploadFormController.onPageLoad()
-        nextPage(answers(Customs, Vat, Other)) mustBe routes.UploadFormController.onPageLoad()
-        nextPage(answers(Other)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs, Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
+        nextPage(answers(Vat, Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
+        nextPage(answers(Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
       }
     }
     "going back" should {

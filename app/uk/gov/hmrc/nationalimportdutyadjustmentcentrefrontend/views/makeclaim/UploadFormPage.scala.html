@@ -31,7 +31,7 @@
         appConfig: AppConfig
 )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, claimType: Option[ClaimType], error: Option[FormError] = None)(implicit request: Request[_], messages: Messages)
+@(upscanInitiateResponse : UpscanInitiateResponse, claimType: Option[ClaimType], isFirstUpload: Boolean, error: Option[FormError] = None)(implicit request: Request[_], messages: Messages)
 
 @formContent = {
     <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
@@ -47,7 +47,7 @@
                 "accept" -> appConfig.upscan.approvedFileExtensions
             ),
             label = Label(
-                content = Text(messages("upload_documents.first.label"))
+                content = Text(messages(if(isFirstUpload) "upload_documents.first.label" else "upload_documents.next.label"))
             ),
             errorMessage = error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
         ))

@@ -16,10 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
-import play.api.data.FormError
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Airworthiness,
@@ -27,57 +25,33 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Preference,
   Quota
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryPage
 
 import scala.collection.JavaConverters._
 
-class UploadFormPageViewSpec extends UnitViewSpec with TestData {
+class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
 
-  private val page      = instanceOf[UploadFormPage]
-  private val appConfig = instanceOf[AppConfig]
+  private val page = instanceOf[UploadSummaryPage]
 
-  private def view(
-    claimType: Option[ClaimType] = None,
-    isFirst: Boolean = true,
-    error: Option[FormError] = None
-  ): Html =
-    page(upscanInitiateResponse, claimType, isFirst, error)
+  private def view(claimType: Option[ClaimType] = None, uploadedDocuments: Seq[UploadedFile] = Seq.empty): Html =
+    page(claimType, uploadedDocuments)
 
-  "UploadFormPage" should {
+  "UploadSummaryPage" should {
 
     "have correct title" in {
-      view().title() must startWith(messages("upload_documents.title"))
+      view().title() must startWith(messages("upload_documents_summary.title.multiple", 0))
     }
 
     "have correct heading" in {
-      view().getElementsByTag("h1") must containMessage("upload_documents.title")
+      view().getElementsByTag("h1") must containMessage("upload_documents_summary.title.multiple", 0)
     }
 
-    "render hidden input fields" in {
-      view().getElementsByAttributeValue("name", "field-hidden").size() mustBe 1
-    }
-
-    "render input file with correct file-types" in {
-      view().getElementById("upload-file").attr("type") mustBe "file"
-      view().getElementById("upload-file").attr("accept") mustBe appConfig.upscan.approvedFileExtensions
-    }
-
-    "display error when no choice is made" in {
-      val errorView = view(error = Some(FormError("key", "error.file-upload.required")))
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("error.file-upload.required")
-    }
-
-    "have label for file selector" when {
-      "this is the first upload" in {
-        view(isFirst = true).getElementsByAttributeValue("for", "upload-file") must containMessage(
-          "upload_documents.first.label"
-        )
-      }
-      "this is not the first upload" in {
-        view(isFirst = false).getElementsByAttributeValue("for", "upload-file") must containMessage(
-          "upload_documents.next.label"
-        )
-      }
+    "have the uploaded file names" in {
+      val summaryText =
+        view(uploadedDocuments = Seq(uploadAnswer, uploadAnswer2)).getElementsByClass("govuk-summary-list").text()
+      summaryText must include(uploadAnswer.fileName)
+      summaryText must include(uploadAnswer2.fileName)
     }
 
     "have correct document types" when {

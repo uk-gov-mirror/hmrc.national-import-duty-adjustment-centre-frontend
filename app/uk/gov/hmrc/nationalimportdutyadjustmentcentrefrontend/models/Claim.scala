@@ -48,7 +48,7 @@ object Claim {
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
-      uploads = userAnswers.uploads.getOrElse(missing(UploadPage)),
+      uploads = userAnswers.uploads.getOrElse(missing(UploadSummaryPage)),
       reclaimDutyPayments = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)).map(
         dutyType =>
           dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))

@@ -27,7 +27,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadStatus
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.MongoBackedUploadProgressTracker
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
@@ -53,7 +52,6 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       mockInitiateConnector,
       cacheDataService,
       appConfig,
-      navigator,
       formPage,
       progressPage
     )(executionContext)
@@ -69,7 +67,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
     when(mockUploadRepository.add(any())).thenReturn(Future.successful(true))
 
-    when(formPage.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(formPage.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(progressPage.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
@@ -114,13 +112,13 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       )
     }
 
-    "update UserAnswers and redirect when upload succeeds" in {
+    "update UserAnswers and redirect to summary when upload succeeds" in {
 
       givenUploadStatus(uploadFileSuccess)
       val result = controller.onProgress(uploadId)(fakeGetRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(navigator.nextPage(UploadPage, emptyAnswers).url)
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad().url)
 
       theUpdatedUserAnswers.uploads mustBe Some(Seq(uploadFileSuccess))
     }

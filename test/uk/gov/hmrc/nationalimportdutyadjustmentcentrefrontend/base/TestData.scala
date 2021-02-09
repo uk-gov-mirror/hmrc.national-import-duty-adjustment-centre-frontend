@@ -40,6 +40,9 @@ trait TestData {
   val uploadAnswer: UploadedFile =
     UploadedFile("reference", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
 
+  val uploadAnswer2: UploadedFile =
+    UploadedFile("reference2", "/url2", ZonedDateTime.now(), "checksum2", "filename2", "mime/type2")
+
   val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat, Other)
 
   val customsDutyRepaymentAnswer: DutyPaid = DutyPaid("100", "9.99")

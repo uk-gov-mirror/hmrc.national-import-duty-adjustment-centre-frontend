@@ -26,9 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, JourneyId, UploadId, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -43,7 +41,6 @@ class UploadFormController @Inject() (
   upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
   appConfig: AppConfig,
-  navigator: Navigator,
   uploadFormPage: UploadFormPage,
   uploadProgressPage: UploadProgressPage
 )(implicit ec: ExecutionContext)
@@ -66,7 +63,7 @@ class UploadFormController @Inject() (
       uploadProgressTracker.getUploadResult(uploadId, answers.journeyId) flatMap {
         case Some(successUpload: UploadedFile) =>
           data.updateAnswers(answers => addUpload(answers, successUpload)) map {
-            updatedAnswers => Redirect(navigator.nextPage(UploadPage, updatedAnswers))
+            _ => Redirect(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad())
           }
         case Some(failed: Failed) =>
           Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
@@ -97,7 +94,7 @@ class UploadFormController @Inject() (
         answers.journeyId,
         Reference(upscanInitiateResponse.fileReference.reference)
       )
-    } yield Ok(uploadFormPage(upscanInitiateResponse, answers.claimType, maybeError))
+    } yield Ok(uploadFormPage(upscanInitiateResponse, answers.claimType, answers.uploads.forall(_.isEmpty), maybeError))
   }
 
   private def addUpload(userAnswers: UserAnswers, successUpload: UploadedFile) = {
