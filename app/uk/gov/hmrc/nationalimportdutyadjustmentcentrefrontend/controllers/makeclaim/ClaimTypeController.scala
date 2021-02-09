@@ -42,11 +42,9 @@ class ClaimTypeController @Inject() (
 
   private val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
-      val preparedForm = answers.claimType.fold(form)(form.fill)
+  def onPageLoad(): Action[AnyContent] = identify { implicit request =>
+      val preparedForm = request.answers.claimType.fold(form)(form.fill)
       Ok(claimTypePage(preparedForm))
-    }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>

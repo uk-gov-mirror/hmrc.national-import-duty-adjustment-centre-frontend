@@ -39,6 +39,7 @@
 )
 @(pageTitle: Title,
         headBlock: Option[Html] = None,
+        includeBackLink: Boolean = true,
         navigatorPage: Option[Page] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
