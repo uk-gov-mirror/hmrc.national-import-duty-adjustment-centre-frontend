@@ -26,7 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, JourneyId, UploadId, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
@@ -57,7 +57,7 @@ class UploadFormController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers flatMap { answers =>
-      initiateForm(answers.journeyId)
+      initiateForm(answers)
     }
   }
 
@@ -70,7 +70,7 @@ class UploadFormController @Inject() (
           }
         case Some(failed: Failed) =>
           Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
-        case Some(_) => Future(Ok(uploadProgressPage()))
+        case Some(_) => Future(Ok(uploadProgressPage(answers.claimType)))
         case None    => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
       }
     }
@@ -78,26 +78,26 @@ class UploadFormController @Inject() (
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers flatMap { answers =>
-      initiateForm(answers.journeyId, Some(mapError(errorCode)))
+      initiateForm(answers, Some(mapError(errorCode)))
     }
   }
 
-  private def initiateForm(journeyId: JourneyId, maybeError: Option[FormError] = None)(implicit
+  private def initiateForm(answers: UserAnswers, maybeError: Option[FormError] = None)(implicit
     request: IdentifierRequest[_]
   ) = {
     val uploadId = UploadId.generate
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
-        journeyId: JourneyId,
+        answers.journeyId: JourneyId,
         Some(successRedirectUrl(uploadId)),
         Some(errorRedirectUrl)
       )
       _ <- uploadProgressTracker.requestUpload(
         uploadId,
-        journeyId,
+        answers.journeyId,
         Reference(upscanInitiateResponse.fileReference.reference)
       )
-    } yield Ok(uploadFormPage(upscanInitiateResponse, maybeError, appConfig))
+    } yield Ok(uploadFormPage(upscanInitiateResponse, answers.claimType, maybeError))
   }
 
   private def addUpload(userAnswers: UserAnswers, successUpload: UploadedFile) = {

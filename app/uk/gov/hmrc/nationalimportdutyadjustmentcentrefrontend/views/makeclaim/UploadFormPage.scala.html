@@ -16,18 +16,22 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBody
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
         govukFileUpload : GovukFileUpload,
+        uploadBody: uploadBody,
         errorSummary: errorSummary,
-        continueButton: components.continueButton
+        continueButton: components.continueButton,
+        appConfig: AppConfig
 )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, error: Option[FormError] = None, appConfig: AppConfig)(implicit request: Request[_], messages: Messages)
+@(upscanInitiateResponse : UpscanInitiateResponse, claimType: Option[ClaimType], error: Option[FormError] = None)(implicit request: Request[_], messages: Messages)
 
 @formContent = {
     <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
@@ -57,6 +61,6 @@
 
     @components.heading(messages("upload_documents.title"))
 
-    @components.uploadBody(formContent)
+    @uploadBody(formContent, claimType)
 
 }

@@ -14,12 +14,14 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBody
 
-@this(layout: Layout, continueButton: components.continueButton)
+@this(layout: Layout, continueButton: components.continueButton,uploadBody: uploadBody)
 
-@()(implicit request: Request[_], messages: Messages)
+@(claimType: Option[ClaimType])(implicit request: Request[_], messages: Messages)
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="1"/>
@@ -36,6 +38,6 @@
 
     @components.heading(messages("upload_documents.title"))
 
-    @components.uploadBody( inProgressContent )
+    @uploadBody(inProgressContent, claimType)
 
 }

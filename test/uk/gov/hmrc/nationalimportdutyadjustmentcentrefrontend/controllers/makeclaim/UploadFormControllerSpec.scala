@@ -70,7 +70,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
     when(mockUploadRepository.add(any())).thenReturn(Future.successful(true))
 
     when(formPage.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(progressPage.apply()(any(), any())).thenReturn(HtmlFormat.empty)
+    when(progressPage.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {

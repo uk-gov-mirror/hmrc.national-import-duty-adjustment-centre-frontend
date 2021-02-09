@@ -18,15 +18,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadProgressPage
 
 class UploadProgressPageViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[UploadProgressPage]
 
-  private val view: Html = page()
+  private val view: Html = page(Some(Quota))
 
-  "UploadProgresPage" should {
+  "UploadProgressPage" should {
 
     "have correct title" in {
       view.title() must startWith(messages("upload_documents.title"))

@@ -20,14 +20,24 @@ import play.api.data.FormError
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
+  Airworthiness,
+  AntiDumping,
+  Preference,
+  Quota
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormPage
+
+import scala.collection.JavaConverters._
 
 class UploadFormPageViewSpec extends UnitViewSpec with TestData {
 
   private val page      = instanceOf[UploadFormPage]
   private val appConfig = instanceOf[AppConfig]
 
-  private def view(error: Option[FormError] = None): Html = page(upscanInitiateResponse, error, appConfig)
+  private def view(claimType: Option[ClaimType] = None, error: Option[FormError] = None): Html =
+    page(upscanInitiateResponse, claimType, error)
 
   "UploadFormPage" should {
 
@@ -49,8 +59,34 @@ class UploadFormPageViewSpec extends UnitViewSpec with TestData {
     }
 
     "display error when no choice is made" in {
-      val errorView = view(Some(FormError("key", "error.file-upload.required")))
+      val errorView = view(error = Some(FormError("key", "error.file-upload.required")))
       errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("error.file-upload.required")
+    }
+
+    "have correct document types" when {
+
+      def documentTypes(claimType: ClaimType) =
+        view(Some(claimType)).getElementById("document-type-list").children().eachText().asScala
+
+      "claim type is Preference" in {
+        val types = documentTypes(Preference)
+        types mustBe List("C88", "commercial invoice", "E2", "preference certificate (EUR, ATR or other)")
+      }
+
+      "claim type is Quota" in {
+        val types = documentTypes(Quota)
+        types mustBe List("C88", "commercial invoice", "E2", "preference certificate (EUR, ATR or other)")
+      }
+
+      "claim type is Airworthiness" in {
+        val types = documentTypes(Airworthiness)
+        types mustBe List("air worthiness certificate", "C88", "commercial invoice", "E2")
+      }
+
+      "claim type is AntiDumping" in {
+        val types = documentTypes(AntiDumping)
+        types mustBe List("C88", "commercial invoice", "E2")
+      }
     }
   }
 }
