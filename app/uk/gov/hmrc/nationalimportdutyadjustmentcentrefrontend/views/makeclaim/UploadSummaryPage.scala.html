@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
@@ -41,7 +42,7 @@
 
 @layout(pageTitle = Title(title)) {
 
-    @components.heading(title)
+    @heading(title)
 
     @formHelper(action = UploadFormSummaryController.onSubmit(), 'autoComplete -> "off") {
 
@@ -49,12 +50,21 @@
             rows = uploadedDocuments.zipWithIndex.map(doc =>
                 SummaryListRow(
                     key = Key(content = Text(s"${doc._2 + 1}.")),
-                    value = Value(content = Text(doc._1.fileName))
+                    value = Value(content = Text(doc._1.fileName)),
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = UploadFormSummaryController.onRemove(doc._1.upscanReference).url,
+                                content = HtmlContent(linkContent(messages("upload_documents_summary.remove.label"))),
+                                visuallyHiddenText = Some(messages("upload_documents_summary.remove.label.hidden", doc._1.fileName))
+                            )
+                        )
+                    ))
                 )
             )
         ))
 
-        @components.uploadDocumentTypes(claimType)
+        @uploadDocumentTypes(claimType)
 
         @continueButton()
     }

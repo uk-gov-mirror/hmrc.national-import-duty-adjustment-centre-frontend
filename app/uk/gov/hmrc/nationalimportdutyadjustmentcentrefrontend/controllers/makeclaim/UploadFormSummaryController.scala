@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -52,7 +53,18 @@ class UploadFormSummaryController @Inject() (
     data.getAnswers map { answers =>
       Redirect(navigator.nextPage(UploadSummaryPage, answers))
     }
-
   }
+
+  def onRemove(documentReference: String): Action[AnyContent] = identify.async { implicit request =>
+    data.updateAnswers(removeDocument(documentReference)) map { _ =>
+      Redirect(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad())
+    }
+  }
+
+  def removeDocument: String => UserAnswers => UserAnswers = (ref: String) =>
+    (userAnswers: UserAnswers) => {
+      val remainingFiles = userAnswers.uploads.map(_.filterNot(_.upscanReference == ref))
+      userAnswers.copy(uploads = remainingFiles)
+    }
 
 }

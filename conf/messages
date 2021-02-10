@@ -53,6 +53,8 @@ upload_documents.body.files.bullet.4 = MS Excel spreadsheet (.xls or .xlsx)
 
 upload_documents_summary.title.single = You have uploaded 1 file
 upload_documents_summary.title.multiple = You have uploaded {0} files
+upload_documents_summary.remove.label = Remove
+upload_documents_summary.remove.label.hidden = Remove file {0}
 
 reclaimDutyType.title = What do you want to reclaim?
 reclaimDutyType.hint = Select all that apply.

@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Airworthiness,
@@ -52,6 +53,13 @@ class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
         view(uploadedDocuments = Seq(uploadAnswer, uploadAnswer2)).getElementsByClass("govuk-summary-list").text()
       summaryText must include(uploadAnswer.fileName)
       summaryText must include(uploadAnswer2.fileName)
+    }
+
+    "have a remove link" in {
+      val link = view(uploadedDocuments = Seq(uploadAnswer)).getElementsByClass("govuk-link").first()
+      link must includeMessage("upload_documents_summary.remove.label")
+      link must includeMessage("upload_documents_summary.remove.label.hidden", uploadAnswer.fileName)
+      link must haveAttribute("href", routes.UploadFormSummaryController.onRemove(uploadAnswer.upscanReference).url)
     }
 
     "have correct document types" when {
