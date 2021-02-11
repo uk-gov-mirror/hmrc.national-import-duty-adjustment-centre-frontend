@@ -6,6 +6,8 @@ site.back = Back
 site.error.summary = There is a problem.
 site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
 site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
+site.yes = Yes
+site.no = No
 
 date.day = Day
 date.month = Month
@@ -55,6 +57,8 @@ upload_documents_summary.title.single = You have uploaded 1 file
 upload_documents_summary.title.multiple = You have uploaded {0} files
 upload_documents_summary.remove.label = Remove
 upload_documents_summary.remove.label.hidden = Remove file {0}
+upload_documents_summary.add.label = Do you need to upload another file?
+upload_documents_summary.add.required = Select yes if you need to upload another file
 
 reclaimDutyType.title = What do you want to reclaim?
 reclaimDutyType.hint = Select all that apply.
@@ -171,6 +175,7 @@ error.file-upload.invalid-size-large=File size cannot be over 6mb
 error.file-upload.invalid-type=Upload a valid file type
 error.file-upload.quarantine=This file contains a virus and cannot be uploaded
 error.file-upload.unknown=The selected file could not be uploaded
+error.file-upload.duplicate=This file has already been uploaded
 error.file-upload.try-again=The selected file could not be uploaded - try again
 
 check_answers.title = Check your answers before sending your application

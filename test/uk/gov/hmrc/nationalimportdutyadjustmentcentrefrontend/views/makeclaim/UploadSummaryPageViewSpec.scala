@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import play.api.data.Form
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Airworthiness,
@@ -34,9 +36,14 @@ import scala.collection.JavaConverters._
 class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[UploadSummaryPage]
+  private val form = new YesNoFormProvider().apply("upload_documents_summary.add.required")
 
-  private def view(claimType: Option[ClaimType] = None, uploadedDocuments: Seq[UploadedFile] = Seq.empty): Html =
-    page(claimType, uploadedDocuments)
+  private def view(
+    form: Form[Boolean] = form,
+    claimType: Option[ClaimType] = None,
+    uploadedDocuments: Seq[UploadedFile] = Seq.empty
+  ): Html =
+    page(form, claimType, uploadedDocuments)
 
   "UploadSummaryPage" should {
 
@@ -65,7 +72,7 @@ class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
     "have correct document types" when {
 
       def documentTypes(claimType: ClaimType) =
-        view(Some(claimType)).getElementById("document-type-list").children().eachText().asScala
+        view(claimType = Some(claimType)).getElementById("document-type-list").children().eachText().asScala
 
       "claim type is Preference" in {
         val types = documentTypes(Preference)
@@ -87,5 +94,25 @@ class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
         types mustBe List("C88", "commercial invoice", "E2")
       }
     }
+  }
+
+  "UploadSummaryPage on filled form" should {
+
+    "have populated fields" in {
+      val filledView = view(form.bind(Map("yesOrNo" -> "yes")))
+
+      filledView.getElementById("yesOrNo") must haveValue("yes")
+    }
+
+    "display error when " when {
+
+      "answer missing" in {
+        view(form.bind(Map("yesOrNo" -> ""))).getElementsByClass("govuk-error-summary") must containMessage(
+          "upload_documents_summary.add.required"
+        )
+      }
+
+    }
+
   }
 }

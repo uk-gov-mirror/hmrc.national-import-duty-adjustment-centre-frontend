@@ -38,10 +38,10 @@ trait TestData {
   val claimTypeAnswer: ClaimType = AntiDumping
 
   val uploadAnswer: UploadedFile =
-    UploadedFile("reference", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
+    UploadedFile("upscanRef1", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
 
   val uploadAnswer2: UploadedFile =
-    UploadedFile("reference2", "/url2", ZonedDateTime.now(), "checksum2", "filename2", "mime/type2")
+    UploadedFile("upscanRef2", "/url2", ZonedDateTime.now(), "checksum2", "filename2", "mime/type2")
 
   val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat, Other)
 
@@ -91,6 +91,6 @@ trait TestData {
   val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")
 
   val uploadFileSuccess: UploadStatus =
-    UploadedFile("reference", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
+    UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
 
 }

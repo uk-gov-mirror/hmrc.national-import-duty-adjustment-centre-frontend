@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{never, reset, verify, when}
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
@@ -52,6 +52,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       mockInitiateConnector,
       cacheDataService,
       appConfig,
+      navigator,
       formPage,
       progressPage
     )(executionContext)
@@ -110,6 +111,18 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(
         controllers.makeclaim.routes.UploadFormController.onError(Quarantine.toString).url
       )
+    }
+
+    "redirect when uploading a duplicate file" in {
+
+      withCacheUserAnswers(completeAnswers.copy(uploads = Some(Seq(uploadAnswer))))
+      givenUploadStatus(uploadFileSuccess)
+      val result = controller.onProgress(uploadId)(fakeGetRequest)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE").url)
+
+      verify(dataRepository, never()).set(any())
     }
 
     "update UserAnswers and redirect to summary when upload succeeds" in {

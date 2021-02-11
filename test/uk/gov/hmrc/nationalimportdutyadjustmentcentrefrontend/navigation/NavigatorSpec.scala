@@ -20,6 +20,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
@@ -169,6 +170,40 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     "going back" should {
       "go to address page" in {
         previousPage(answers()) mustBe routes.AddressController.onPageLoad()
+      }
+    }
+  }
+
+  "Navigating around file uploads" when {
+
+    def answers(uploads: Seq[UploadedFile]): UserAnswers =
+      completeAnswers.copy(uploads = Some(uploads))
+
+    val nextPage     = navigator.nextPage(OtherDutyRepaymentPage, _)
+    val previousPage = back(ContactDetailsPage, _)
+
+    "going forward" when {
+      "no files have been uploaded" should {
+        "goto upload page" in {
+          nextPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()
+        }
+      }
+      "files have been uploaded" should {
+        "goto upload summary page" in {
+          nextPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
+        }
+      }
+    }
+    "going back" when {
+      "no files have been uploaded" should {
+        "goto upload page" in {
+          previousPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()
+        }
+      }
+      "files have been uploaded" should {
+        "goto upload summary page" in {
+          previousPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
+        }
       }
     }
   }

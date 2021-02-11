@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
@@ -35,15 +36,18 @@ class UploadFormSummaryController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   data: CacheDataService,
+  formProvider: YesNoFormProvider,
   navigator: Navigator,
   summaryPage: UploadSummaryPage
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
+  private val form = formProvider("upload_documents_summary.add.required")
+
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       answers.uploads match {
-        case Some(documents) if documents.nonEmpty => Ok(summaryPage(answers.claimType, documents))
+        case Some(documents) if documents.nonEmpty => Ok(summaryPage(form, answers.claimType, documents))
         case _                                     => Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
       }
     }
@@ -51,7 +55,15 @@ class UploadFormSummaryController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      Redirect(navigator.nextPage(UploadSummaryPage, answers))
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          BadRequest(summaryPage(formWithErrors, answers.claimType, answers.uploads.getOrElse(Seq.empty))),
+        addAnother =>
+          if (addAnother)
+            Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
+          else
+            Redirect(navigator.nextPage(UploadSummaryPage, answers))
+      )
     }
   }
 

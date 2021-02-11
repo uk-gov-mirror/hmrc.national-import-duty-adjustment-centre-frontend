@@ -26,12 +26,13 @@
         layout: Layout,
         formHelper: FormWithCSRF,
         govukSummaryList: GovukSummaryList,
+        inputYesNo: inputYesNo,
         errorSummary: errorSummary,
         continueButton: components.continueButton,
         appConfig: AppConfig
 )
 
-@(claimType: Option[ClaimType], uploadedDocuments: Seq[UploadedFile])(implicit request: Request[_], messages: Messages)
+@(form: Form[Boolean], claimType: Option[ClaimType], uploadedDocuments: Seq[UploadedFile])(implicit request: Request[_], messages: Messages)
 
 @title = @{
   if(uploadedDocuments.size == 1)
@@ -45,6 +46,7 @@
     @heading(title)
 
     @formHelper(action = UploadFormSummaryController.onSubmit(), 'autoComplete -> "off") {
+        @errorSummary(form.errors)
 
         @govukSummaryList(SummaryList(
             rows = uploadedDocuments.zipWithIndex.map(doc =>
@@ -65,6 +67,14 @@
         ))
 
         @uploadDocumentTypes(claimType)
+
+        @inputYesNo(
+            form = form,
+            label = messages("upload_documents_summary.add.label"),
+            legendAsHeading = false,
+            legendClass = Some("govuk-fieldset__legend--m"),
+            inline = true
+        )
 
         @continueButton()
     }

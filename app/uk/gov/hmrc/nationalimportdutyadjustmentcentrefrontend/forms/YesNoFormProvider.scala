@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
-trait Page
+import javax.inject.Inject
+import play.api.data.Form
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
 
-case object FirstPage            extends Page
-case object UploadPage           extends Page
-case object CheckYourAnswersPage extends Page
-case object ConfirmationPage     extends Page
+class YesNoFormProvider @Inject() extends Mappings {
+
+  def apply(requiredKey: String): Form[Boolean] =
+    Form("yesOrNo" -> boolean(requiredKey))
+
+}

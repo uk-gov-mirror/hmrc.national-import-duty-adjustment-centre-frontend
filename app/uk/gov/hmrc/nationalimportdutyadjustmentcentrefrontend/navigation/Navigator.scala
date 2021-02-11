@@ -37,7 +37,8 @@ class Navigator @Inject() () extends Conditions with Ordering {
     P(CustomsDutyRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty, hasDutyType(Customs)),
     P(ImportVatRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadImportVat, hasDutyType(Vat)),
     P(OtherDutyRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty, hasDutyType(Other)),
-    P(UploadSummaryPage, makeclaim.routes.UploadFormSummaryController.onPageLoad, always),
+    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads),
+    P(UploadSummaryPage, makeclaim.routes.UploadFormSummaryController.onPageLoad, hasUploads),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always),
     P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always),
@@ -67,6 +68,12 @@ protected trait Conditions {
         case Some(duties) => duties.contains(dutyType)
         case _            => false
       }
+
+  protected val hasNoUploads: UserAnswers => Boolean = (userAnswers: UserAnswers) =>
+    userAnswers.uploads.forall(_.isEmpty)
+
+  protected val hasUploads: UserAnswers => Boolean = (userAnswers: UserAnswers) =>
+    userAnswers.uploads.exists(_.nonEmpty)
 
 }
 

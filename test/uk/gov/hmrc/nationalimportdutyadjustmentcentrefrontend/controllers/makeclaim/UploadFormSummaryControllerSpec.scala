@@ -22,25 +22,24 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
-  BankDetailsPage,
-  ItemNumbersPage,
-  UploadSummaryPage
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
-  private val formPage = mock[UploadSummaryPage]
+  private val formPage     = mock[UploadSummaryPage]
+  private val formProvider = new YesNoFormProvider
 
   private def controller =
     new UploadFormSummaryController(
       stubMessagesControllerComponents(),
       fakeAuthorisedIdentifierAction,
       cacheDataService,
+      formProvider,
       navigator,
       formPage
     )(executionContext)
@@ -50,7 +49,7 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
     withCacheUserAnswers(emptyAnswers)
 
-    when(formPage.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(formPage.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -78,11 +77,21 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
   "onSubmit" should {
 
-    "redirect to next question" in {
+    "redirect to document upload when user wants to upload another" in {
+      val result = controller.onSubmit()(postRequest(("yesOrNo", "yes")))
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
+    }
 
-      val result = controller.onSubmit()(postRequest())
+    "redirect to next question when user does not want to upload another" in {
+      val result = controller.onSubmit()(postRequest(("yesOrNo", "no")))
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(navigator.nextPage(UploadSummaryPage, emptyAnswers).url)
+    }
+
+    "error when user does answer the question" in {
+      val result = controller.onSubmit()(postRequest())
+      status(result) mustEqual BAD_REQUEST
     }
   }
 
