@@ -29,6 +29,7 @@ case class Claim(
   contactDetails: ContactDetails,
   importerAddress: Address,
   claimType: ClaimType,
+  claimReason: ClaimReason,
   uploads: Seq[UploadedFile],
   reclaimDutyPayments: Map[ReclaimDutyType, DutyPaid],
   bankDetails: BankDetails,
@@ -48,6 +49,7 @@ object Claim {
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
+      claimReason = userAnswers.claimReason.getOrElse(missing(ClaimReasonPage)),
       uploads = userAnswers.uploads.getOrElse(missing(UploadSummaryPage)),
       reclaimDutyPayments = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)).map(
         dutyType =>

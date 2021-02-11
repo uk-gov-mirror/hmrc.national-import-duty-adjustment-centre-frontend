@@ -14,46 +14,33 @@
  * limitations under the License.
  *@
 
-@this(govukInput: GovukInput)
+@this(govukCharacterCount : GovukCharacterCount)
 
 @(
     form: Form[_],
     id: String,
     name: String,
     label: String,
-    hiddenLabel: Option[String] = None,
     isPageHeading: Boolean = false,
-    headingMessageArgs: Seq[String] = Seq(),
     hint: Option[String] = None,
-    classes: Option[String] = None,
-    autocomplete: Option[String] = None,
-    inputType: String = "text",
-    attributes: Map[String, String] = Map.empty,
-    prefix: Option[PrefixOrSuffix] = None
+    maxLength: Option[Int],
+    threshold: Option[Int] = Some(80),
 )(implicit messages: Messages)
 
 
-@labelContent = {
-    @{if(label.nonEmpty){messages(label, headingMessageArgs: _*)}}
-    @hiddenLabel.map { hidden => <span class="govuk-visually-hidden">@messages(hidden)</span>}
-}
-
-@govukInput(Input(
+@govukCharacterCount(CharacterCount(
     id,
     name,
-    classes = classes.fold("")(x => x),
+    maxLength = maxLength,
+    threshold = threshold,
     label = Label(
-        content = HtmlContent(labelContent),
-        isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--l" else ""
+        content = Text(label),
+        isPageHeading = true,
+        classes = "govuk-label--l"
     ),
-    hint = hint.map(hintHtml => Hint(
-        content = HtmlContent(hintHtml)
+    hint = hint.map(text => Hint(
+        content = Text(text)
     )),
     value = form(name).value,
-    autocomplete = autocomplete.map(value => value),
-    inputType = inputType,
-    attributes = attributes,
-    prefix = prefix,
     errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
 ))

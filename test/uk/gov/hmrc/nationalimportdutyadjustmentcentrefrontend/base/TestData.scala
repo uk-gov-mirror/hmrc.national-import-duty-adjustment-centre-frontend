@@ -57,6 +57,8 @@ trait TestData {
 
   val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
 
+  val claimReasonAnswer: ClaimReason = ClaimReason("some valid reason")
+
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
 
   val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "PCode")
@@ -67,6 +69,7 @@ trait TestData {
 
   val completeAnswers: UserAnswers = UserAnswers(
     claimType = Some(claimTypeAnswer),
+    claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
     importerAddress = Some(addressAnswer),
     uploads = Some(Seq(uploadAnswer)),

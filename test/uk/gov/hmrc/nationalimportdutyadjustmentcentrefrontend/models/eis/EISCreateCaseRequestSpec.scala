@@ -24,6 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDuty
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   BankDetails,
   Claim,
+  ClaimReason,
   ContactDetails,
   DutyPaid,
   EntryDetails,
@@ -37,6 +38,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
     importerAddress = UkAddress("Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     claimType = AntiDumping,
+    claimReason = ClaimReason("A reason for the claim"),
     uploads = Seq.empty,
     reclaimDutyPayments =
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
@@ -61,7 +63,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     PayTo = "Importer",
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
     ItemNumber = "1, 2, 5-10",
-    ClaimReason = "TBC",
+    ClaimReason = "A reason for the claim",
     FirstName = "Adam",
     LastName = "Smith",
     SubmissionDate = "20210131"

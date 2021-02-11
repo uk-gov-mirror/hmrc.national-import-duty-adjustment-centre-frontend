@@ -28,7 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.Id
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ReclaimDutyTypePage, UploadPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController

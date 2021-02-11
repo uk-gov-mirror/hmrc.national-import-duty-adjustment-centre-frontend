@@ -89,8 +89,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
       "go to other duty page when Other duty selected and VAT duty not selected" in {
         nextPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
-      "go to upload page when neither VAT or Other duty selected" in {
-        nextPage(answers(Customs)) mustBe routes.UploadFormSummaryController.onPageLoad()
+      "go to claim reason page when neither VAT or Other duty selected" in {
+        nextPage(answers(Customs)) mustBe routes.ClaimReasonController.onPageLoad()
       }
     }
     "going back" should {
@@ -112,9 +112,9 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
         nextPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
-      "go to upload page when Other duty not selected" in {
-        nextPage(answers(Customs, Vat)) mustBe routes.UploadFormSummaryController.onPageLoad()
-        nextPage(answers(Vat)) mustBe routes.UploadFormSummaryController.onPageLoad()
+      "go to claim reason page when Other duty not selected" in {
+        nextPage(answers(Customs, Vat)) mustBe routes.ClaimReasonController.onPageLoad()
+        nextPage(answers(Vat)) mustBe routes.ClaimReasonController.onPageLoad()
       }
     }
     "going back" should {
@@ -135,11 +135,11 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(OtherDutyRepaymentPage, _)
 
     "going forward" should {
-      "go to upload page" in {
-        nextPage(answers(Customs, Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
-        nextPage(answers(Vat, Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
-        nextPage(answers(Customs, Vat, Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
-        nextPage(answers(Other)) mustBe routes.UploadFormSummaryController.onPageLoad()
+      "go to claim reason page" in {
+        nextPage(answers(Customs, Other)) mustBe routes.ClaimReasonController.onPageLoad()
+        nextPage(answers(Vat, Other)) mustBe routes.ClaimReasonController.onPageLoad()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.ClaimReasonController.onPageLoad()
+        nextPage(answers(Other)) mustBe routes.ClaimReasonController.onPageLoad()
       }
     }
     "going back" should {
@@ -179,10 +179,10 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     def answers(uploads: Seq[UploadedFile]): UserAnswers =
       completeAnswers.copy(uploads = Some(uploads))
 
-    val nextPage     = navigator.nextPage(OtherDutyRepaymentPage, _)
+    val nextPage     = navigator.nextPage(ClaimReasonPage, _)
     val previousPage = back(ContactDetailsPage, _)
 
-    "going forward" when {
+    "going forward (from the question before file uploads)" when {
       "no files have been uploaded" should {
         "goto upload page" in {
           nextPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()
@@ -194,7 +194,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         }
       }
     }
-    "going back" when {
+    "going back (from the question after file uploads)" when {
       "no files have been uploaded" should {
         "goto upload page" in {
           previousPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()

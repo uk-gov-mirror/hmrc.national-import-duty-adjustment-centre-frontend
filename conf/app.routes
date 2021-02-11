@@ -44,6 +44,9 @@ POST        /enter-other-duties                 uk.gov.hmrc.nationalimportdutyad
 GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
 POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()
 
+GET         /claim-reason                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimReasonController.onPageLoad()
+POST        /claim-reason                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimReasonController.onSubmit()
+
 GET         /entry-details                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.EntryDetailsController.onPageLoad()
 POST        /entry-details                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.EntryDetailsController.onSubmit()
 

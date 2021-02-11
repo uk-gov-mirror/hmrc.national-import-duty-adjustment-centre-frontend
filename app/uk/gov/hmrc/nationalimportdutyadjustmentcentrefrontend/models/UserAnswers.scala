@@ -24,6 +24,7 @@ final case class UserAnswers(
   contactDetails: Option[ContactDetails] = None,
   importerAddress: Option[Address] = None,
   claimType: Option[ClaimType] = None,
+  claimReason: Option[ClaimReason] = None,
   reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
   reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
   bankDetails: Option[BankDetails] = None,

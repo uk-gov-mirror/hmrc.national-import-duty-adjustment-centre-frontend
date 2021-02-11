@@ -111,6 +111,16 @@
                 actions = None
             )),
             Some(SummaryListRow(
+                classes = "claim_reason_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.reason"))
+                ),
+                value = Value(
+                    content = Text(claim.claimReason.reason)
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
                 classes = "upload_row",
                 key = Key(
                     content = Text(messages("check_answers.claim.uploaded"))

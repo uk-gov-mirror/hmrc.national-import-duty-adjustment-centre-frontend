@@ -69,7 +69,7 @@ object EISCreateCaseRequest {
         PayTo = "Importer", // TODO NF-204 - hard code values
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
         ItemNumber = claim.itemNumbers.numbers,
-        ClaimReason = "TBC", // TODO NF-204 - hard code values
+        ClaimReason = claim.claimReason.reason,
         FirstName = claim.contactDetails.firstName,
         LastName = claim.contactDetails.lastName,
         SubmissionDate = eisDateFormatter.format(claim.submissionDate)

@@ -30,6 +30,11 @@ claim_type.Preference = Preference
 claim_type.Quota = Quota
 claim_type.Airworthiness = Airworthiness
 
+claim_reason.title = Why are you making this claim?
+claim_reason.hint = Use this space to tell us about your claim. Do not include any payment amounts or calculations.
+claim_reason.error.required = Enter a claim reason
+claim_reason.error.length = Claim reason must be 500 characters or fewer
+
 upload_documents.title = Upload your supporting documentation
 upload_documents.intro.1 = You can upload as many files as you need to support your application.
 upload_documents.intro.2 = You can only upload one file at a time.
@@ -192,6 +197,7 @@ check_answers.claim.entryDetails.entryDate = Entry date: {0}
 check_answers.claim.claimType = Claim type
 check_answers.claim.itemNumbers = Item numbers
 check_answers.claim.uploaded = Supporting documents
+check_answers.claim.reason = Why are you making this claim?
 check_answers.repayment.title = Repayment request
 check_answers.repayment.reclaimDutyType = What do you want to reclaim?
 check_answers.repayment.reclaimDutyType.01 = Customs duty
