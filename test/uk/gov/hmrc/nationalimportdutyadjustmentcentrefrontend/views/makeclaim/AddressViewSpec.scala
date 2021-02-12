@@ -21,14 +21,14 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Address
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
 
-class AddressPageViewSpec extends UnitViewSpec with TestData {
+class AddressViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[AddressPage]
+  private val page = instanceOf[AddressView]
   private val form = new AddressFormProvider().apply()
 
-  private def view(form: Form[Address] = form): Document = page(form)
+  private def view(form: Form[Address] = form): Document = page(form, navigatorBack)
 
   "AddressPage on empty form" should {
 
@@ -41,7 +41,7 @@ class AddressPageViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have label for name" in {

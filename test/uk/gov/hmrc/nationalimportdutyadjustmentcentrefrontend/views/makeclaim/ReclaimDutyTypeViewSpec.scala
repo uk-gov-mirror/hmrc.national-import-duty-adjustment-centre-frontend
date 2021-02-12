@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -23,14 +24,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Customs
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
 
-class ReclaimDutyTypePageViewSpec extends UnitViewSpec {
+class ReclaimDutyTypeViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ReclaimDutyTypePage]
+  private val page = instanceOf[ReclaimDutyTypeView]
   private val form = new ReclaimDutyTypeFormProvider().apply()
 
-  private def view(form: Form[Set[ReclaimDutyType]] = form): Html = page(form)
+  private def view(form: Form[Set[ReclaimDutyType]] = form): Document = page(form, navigatorBack)
 
   "ReclaimDutyTypePage on empty form" should {
 
@@ -43,7 +44,7 @@ class ReclaimDutyTypePageViewSpec extends UnitViewSpec {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have checkbox for each claim type" in {

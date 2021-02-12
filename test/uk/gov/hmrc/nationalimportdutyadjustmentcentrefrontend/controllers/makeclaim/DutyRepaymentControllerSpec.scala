@@ -32,12 +32,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
   ImportVatRepaymentPage,
   OtherDutyRepaymentPage
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[DutyRepaymentPage]
+  private val page         = mock[DutyRepaymentView]
   private val formProvider = new DutyPaidFormProvider
 
   private def controller =
@@ -53,7 +53,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -63,7 +63,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[DutyPaid] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[DutyPaid]])
-    verify(page).apply(captor.capture(), any(), any())(any(), any())
+    verify(page).apply(captor.capture(), any(), any(), any())(any(), any())
     captor.getValue
   }
 

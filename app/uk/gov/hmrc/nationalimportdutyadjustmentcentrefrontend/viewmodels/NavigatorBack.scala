@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels
 
-@this(layout: Layout)
+import play.api.mvc.Call
 
-@()(implicit request: Request[_], messages: Messages)
-
-    @layout(pageTitle = Title(messages("session_expired.title")), NavigatorBack(None)) {
-
-        @components.heading(messages("session_expired.title"))
-        @components.paragraph(messages("session_expired.guidance"))
-    }
+case class NavigatorBack(maybeCall: Option[Call])

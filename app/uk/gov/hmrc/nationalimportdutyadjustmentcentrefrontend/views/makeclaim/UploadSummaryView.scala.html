@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
@@ -32,7 +33,7 @@
         appConfig: AppConfig
 )
 
-@(form: Form[Boolean], claimType: Option[ClaimType], uploadedDocuments: Seq[UploadedFile])(implicit request: Request[_], messages: Messages)
+@(form: Form[Boolean], claimType: Option[ClaimType], uploadedDocuments: Seq[UploadedFile], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @title = @{
   if(uploadedDocuments.size == 1)
@@ -41,7 +42,7 @@
       messages("upload_documents_summary.title.multiple", uploadedDocuments.size)
 }
 
-@layout(pageTitle = Title(title)) {
+@layout(pageTitle = Title(title), backLink) {
 
     @heading(title)
 

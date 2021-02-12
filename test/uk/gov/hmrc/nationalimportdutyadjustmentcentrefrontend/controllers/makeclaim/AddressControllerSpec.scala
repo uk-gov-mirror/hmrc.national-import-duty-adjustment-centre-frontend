@@ -27,12 +27,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Address, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class AddressControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[AddressPage]
+  private val page         = mock[AddressView]
   private val formProvider = new AddressFormProvider
 
   private def controller =
@@ -48,7 +48,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -58,7 +58,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[Address] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[Address]])
-    verify(page).apply(captor.capture())(any(), any())
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 

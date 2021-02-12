@@ -25,7 +25,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, CreateClaimResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CreateClaimService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
@@ -33,13 +33,13 @@ import scala.util.Random
 
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
-  val page: CheckYourAnswersPage  = mock[CheckYourAnswersPage]
+  val page: CheckYourAnswersView  = mock[CheckYourAnswersView]
   val service: CreateClaimService = mock[CreateClaimService]
   val claimRef                    = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(service.submitClaim(any())(any())).thenReturn(
       Future.successful(CreateClaimResponse("id", None, Some(CreateClaimResult(claimRef, Seq.empty))))
     )
@@ -56,6 +56,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       service,
+      navigator,
       page
     )
 

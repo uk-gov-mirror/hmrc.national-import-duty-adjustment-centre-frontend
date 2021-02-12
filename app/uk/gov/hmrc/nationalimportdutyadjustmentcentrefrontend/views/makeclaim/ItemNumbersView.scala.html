@@ -18,30 +18,33 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ItemNumbers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
-        inputCheckboxes: components.inputCheckboxes,
+        inputText: components.inputText,
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[Set[ReclaimDutyType]])(implicit request: Request[_], messages: Messages)
+@(form: Form[ItemNumbers], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("reclaimDutyType.title"))) {
+@layout(pageTitle = Title(form, messages("itemNumbers.title")), backLink) {
 
-    @formHelper(action = ReclaimDutyTypeController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ItemNumbersController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
-        @inputCheckboxes(
-            field = form("reclaimDutyType"),
-            legendAsHeading = true,
-            legend = messages("reclaimDutyType.title"),
-            items = ReclaimDutyType.options(form, "reclaimDutyType[]"),
-            hint = Some(Html(messages("reclaimDutyType.hint")))
+        @inputText(
+            form = form,
+            id = "itemNumbers",
+            name = "itemNumbers",
+            isPageHeading = true,
+            label = "itemNumbers.title",
+            hint = Some(messages("itemNumbers.hint")),
+            attributes = Map("autocomplete" -> "off")
         )
 
       @continueButton()

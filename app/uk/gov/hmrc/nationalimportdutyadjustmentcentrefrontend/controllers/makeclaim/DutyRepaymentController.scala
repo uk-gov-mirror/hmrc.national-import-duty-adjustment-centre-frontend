@@ -24,14 +24,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class DutyRepaymentController @Inject() (
@@ -40,7 +40,7 @@ class DutyRepaymentController @Inject() (
   formProvider: DutyPaidFormProvider,
   val controllerComponents: MessagesControllerComponents,
   navigator: Navigator,
-  repaymentPage: DutyRepaymentPage
+  repaymentView: DutyRepaymentView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
@@ -53,7 +53,7 @@ class DutyRepaymentController @Inject() (
   private def onPageLoad(dutyType: ReclaimDutyType): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       val preparedForm = answers.reclaimDutyPayments.get(dutyType).fold(form)(form.fill)
-      Ok(page(dutyType, preparedForm))
+      Ok(page(dutyType, preparedForm, answers))
     }
   }
 
@@ -63,7 +63,7 @@ class DutyRepaymentController @Inject() (
 
   private def onSubmit(dutyType: ReclaimDutyType): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => Future(BadRequest(page(dutyType, formWithErrors))),
+      formWithErrors => data.getAnswers map { answers => BadRequest(page(dutyType, formWithErrors, answers)) },
       value =>
         data.updateAnswers(
           answers => answers.copy(reclaimDutyPayments = answers.reclaimDutyPayments.updated(dutyType, value))
@@ -80,11 +80,16 @@ class DutyRepaymentController @Inject() (
     case _       => FirstPage
   }
 
-  private def page(dutyType: ReclaimDutyType, form: Form[DutyPaid])(implicit request: IdentifierRequest[_]) =
+  private def page(dutyType: ReclaimDutyType, form: Form[DutyPaid], answers: UserAnswers)(implicit
+    request: IdentifierRequest[_]
+  ) = {
+    val backLink = navigator.previousPage(currentPage(dutyType), answers)
     dutyType match {
-      case Customs => repaymentPage(form, routes.DutyRepaymentController.onSubmitCustomsDuty(), "customsDutyPaid")
-      case Vat     => repaymentPage(form, routes.DutyRepaymentController.onSubmitImportVat(), "importVatPaid")
-      case Other   => repaymentPage(form, routes.DutyRepaymentController.onSubmitOtherDuty(), "otherDutyPaid")
+      case Customs =>
+        repaymentView(form, routes.DutyRepaymentController.onSubmitCustomsDuty(), "customsDutyPaid", backLink)
+      case Vat   => repaymentView(form, routes.DutyRepaymentController.onSubmitImportVat(), "importVatPaid", backLink)
+      case Other => repaymentView(form, routes.DutyRepaymentController.onSubmitOtherDuty(), "otherDutyPaid", backLink)
     }
+  }
 
 }

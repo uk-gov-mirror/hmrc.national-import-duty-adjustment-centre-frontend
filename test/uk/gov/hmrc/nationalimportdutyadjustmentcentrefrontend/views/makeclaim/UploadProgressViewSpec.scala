@@ -16,16 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadProgressPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadProgressView
 
-class UploadProgressPageViewSpec extends UnitViewSpec with TestData {
+class UploadProgressViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[UploadProgressPage]
+  private val page = instanceOf[UploadProgressView]
 
-  private val view: Html = page(Some(Quota))
+  private val view: Document = page(Some(Quota), navigatorBack)
 
   "UploadProgressPage" should {
 
@@ -43,6 +44,10 @@ class UploadProgressPageViewSpec extends UnitViewSpec with TestData {
 
     "have auto refresh " in {
       view.getElementsByAttributeValue("http-equiv", "refresh").size() mustBe 1
+    }
+
+    "have back link" in {
+      view must haveNavigatorBackLink(navigatorBackUrl)
     }
   }
 }

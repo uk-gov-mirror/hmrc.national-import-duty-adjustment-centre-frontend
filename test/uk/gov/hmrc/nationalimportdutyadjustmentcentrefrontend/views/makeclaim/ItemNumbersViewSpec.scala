@@ -21,14 +21,14 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ItemNumbers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersView
 
-class ItemNumbersPageViewSpec extends UnitViewSpec with TestData {
+class ItemNumbersViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[ItemNumbersPage]
+  private val page = instanceOf[ItemNumbersView]
   private val form = new ItemNumbersFormProvider().apply()
 
-  private def view(form: Form[ItemNumbers] = form): Document = page(form)
+  private def view(form: Form[ItemNumbers] = form): Document = page(form, navigatorBack)
 
   "ItemNumbersPage on empty form" should {
 
@@ -41,7 +41,7 @@ class ItemNumbersPageViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have label for item numbers" in {

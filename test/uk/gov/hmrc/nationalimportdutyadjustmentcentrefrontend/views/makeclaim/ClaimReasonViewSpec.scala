@@ -21,14 +21,14 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimReasonFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimReason
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonView
 
-class ClaimReasonPageViewSpec extends UnitViewSpec with TestData {
+class ClaimReasonViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[ClaimReasonPage]
+  private val page = instanceOf[ClaimReasonView]
   private val form = new ClaimReasonFormProvider().apply()
 
-  private def view(form: Form[ClaimReason] = form): Document = page(form)
+  private def view(form: Form[ClaimReason] = form): Document = page(form, navigatorBack)
 
   "ClaimReasonPage on empty form" should {
 
@@ -41,7 +41,7 @@ class ClaimReasonPageViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have label for claim reason" in {

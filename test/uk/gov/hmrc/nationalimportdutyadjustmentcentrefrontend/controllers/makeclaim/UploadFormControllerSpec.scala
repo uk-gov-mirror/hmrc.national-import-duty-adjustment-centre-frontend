@@ -16,28 +16,31 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, reset, verify, when}
+import play.api.data.Form
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadStatus
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.MongoBackedUploadProgressTracker
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormView, UploadProgressView}
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
 
 class UploadFormControllerSpec extends ControllerSpec with TestData {
 
-  private val formPage     = mock[UploadFormPage]
-  private val progressPage = mock[UploadProgressPage]
+  private val formView     = mock[UploadFormView]
+  private val progressView = mock[UploadProgressView]
 
   private val mockInitiateConnector = mock[UpscanInitiateConnector]
   private val appConfig             = instanceOf[AppConfig]
@@ -53,8 +56,8 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       cacheDataService,
       appConfig,
       navigator,
-      formPage,
-      progressPage
+      formView,
+      progressView
     )(executionContext)
 
   override protected def beforeEach(): Unit = {
@@ -68,17 +71,29 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
     when(mockUploadRepository.add(any())).thenReturn(Future.successful(true))
 
-    when(formPage.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(progressPage.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(formView.apply(any(), any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(progressView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
-    reset(formPage, progressPage, mockInitiateConnector, mockUploadRepository)
+    reset(formView, progressView, mockInitiateConnector, mockUploadRepository)
     super.afterEach()
   }
 
   private def givenUploadStatus(status: UploadStatus): Unit =
     when(mockUploadRepository.findUploadDetails(any(), any())).thenReturn(Future.successful(Some(uploadResult(status))))
+
+  def theFormViewBackLink: NavigatorBack = {
+    val captor = ArgumentCaptor.forClass(classOf[NavigatorBack])
+    verify(formView).apply(any(), any(), any(), any(), captor.capture())(any(), any())
+    captor.getValue
+  }
+
+  def theProgressViewBackLink: NavigatorBack = {
+    val captor = ArgumentCaptor.forClass(classOf[NavigatorBack])
+    verify(progressView).apply(any(), captor.capture())(any(), any())
+    captor.getValue
+  }
 
   "onPageLoad" should {
 
@@ -88,6 +103,25 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
       verify(mockInitiateConnector).initiateV2(any(), any(), any())(any())
       verify(mockUploadRepository).add(any())
+    }
+
+    "produce back link" when {
+
+      "user has not uploaded any files" in {
+        withCacheUserAnswers(completeAnswers.copy(uploads = None))
+        val result = controller.onPageLoad()(fakeGetRequest)
+        status(result) mustBe OK
+
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+      }
+
+      "user has uploaded some files" in {
+        withCacheUserAnswers(completeAnswers)
+        val result = controller.onPageLoad()(fakeGetRequest)
+        status(result) mustBe OK
+
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
+      }
     }
 
   }
@@ -134,6 +168,27 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad().url)
 
       theUpdatedUserAnswers.uploads mustBe Some(Seq(uploadFileSuccess))
+    }
+
+    "produce back link" when {
+
+      "user has not uploaded any files" in {
+        withCacheUserAnswers(completeAnswers.copy(uploads = None))
+        givenUploadStatus(uploadInProgress)
+        val result = controller.onProgress(uploadId)(fakeGetRequest)
+        status(result) mustBe OK
+
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+      }
+
+      "user has uploaded some files" in {
+        withCacheUserAnswers(completeAnswers)
+        givenUploadStatus(uploadInProgress)
+        val result = controller.onProgress(uploadId)(fakeGetRequest)
+        status(result) mustBe OK
+
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
+      }
     }
 
   }

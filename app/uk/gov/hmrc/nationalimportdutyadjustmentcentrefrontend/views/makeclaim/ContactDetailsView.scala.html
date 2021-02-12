@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ContactDetails
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
@@ -30,9 +31,9 @@
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[ContactDetails])(implicit request: Request[_], messages: Messages)
+@(form: Form[ContactDetails], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("contactDetails.title"))) {
+@layout(pageTitle = Title(form, messages("contactDetails.title")), backLink) {
 
     @formHelper(action = ContactDetailsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)

@@ -24,12 +24,12 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, CreateClaimResult}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ConfirmationControllerSpec extends ControllerSpec {
 
-  val page: ConfirmationPage = mock[ConfirmationPage]
+  val page: ConfirmationView = mock[ConfirmationView]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

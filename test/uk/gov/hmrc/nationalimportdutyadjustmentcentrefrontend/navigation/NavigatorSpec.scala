@@ -33,7 +33,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     completeAnswers.copy(reclaimDutyTypes = Some(Set(reclaim: _*)))
 
   private def back(page: Page, userAnswers: UserAnswers): Call =
-    navigator.previousPage(page, userAnswers).getOrElse(Call("GET", "No back page"))
+    navigator.previousPage(page, userAnswers).maybeCall.getOrElse(Call("GET", "No back page"))
 
   "Navigator from address page" when {
     val nextPage     = navigator.nextPage(AddressPage, _)

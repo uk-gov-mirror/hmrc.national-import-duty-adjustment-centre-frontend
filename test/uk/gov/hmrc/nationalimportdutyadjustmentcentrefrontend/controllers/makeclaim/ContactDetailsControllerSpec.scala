@@ -27,12 +27,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ContactDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ContactDetails, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ContactDetailsPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ContactDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ContactDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ContactDetailsControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ContactDetailsPage]
+  private val page         = mock[ContactDetailsView]
   private val formProvider = new ContactDetailsFormProvider
 
   private def controller =
@@ -48,7 +48,7 @@ class ContactDetailsControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -58,7 +58,7 @@ class ContactDetailsControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[ContactDetails] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[ContactDetails]])
-    verify(page).apply(captor.capture())(any(), any())
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 

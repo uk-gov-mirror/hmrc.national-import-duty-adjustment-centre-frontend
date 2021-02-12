@@ -21,14 +21,14 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.BankDetails
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
 
-class BankDetailsPageViewSpec extends UnitViewSpec with TestData {
+class BankDetailsViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[BankDetailsPage]
+  private val page = instanceOf[BankDetailsView]
   private val form = new BankDetailsFormProvider().apply()
 
-  private def view(form: Form[BankDetails] = form): Document = page(form)
+  private def view(form: Form[BankDetails] = form): Document = page(form, navigatorBack)
 
   "BankDetailsPage on empty form" should {
 
@@ -41,7 +41,7 @@ class BankDetailsPageViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have label for account name" in {

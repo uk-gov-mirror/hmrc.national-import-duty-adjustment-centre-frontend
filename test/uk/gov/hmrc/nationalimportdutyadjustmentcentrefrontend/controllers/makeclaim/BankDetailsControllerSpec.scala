@@ -27,12 +27,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class BankDetailsControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[BankDetailsPage]
+  private val page         = mock[BankDetailsView]
   private val formProvider = new BankDetailsFormProvider
 
   private def controller =
@@ -48,7 +48,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -58,7 +58,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[BankDetails] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[BankDetails]])
-    verify(page).apply(captor.capture())(any(), any())
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 

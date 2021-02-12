@@ -26,12 +26,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
-  private val formPage     = mock[UploadSummaryPage]
+  private val formPage     = mock[UploadSummaryView]
   private val formProvider = new YesNoFormProvider
 
   private def controller =
@@ -49,7 +49,7 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
     withCacheUserAnswers(emptyAnswers)
 
-    when(formPage.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(formPage.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {

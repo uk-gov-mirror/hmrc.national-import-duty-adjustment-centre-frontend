@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
+import org.jsoup.nodes.Element
+import org.scalatest.Assertion
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, Call, Request}
 import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 trait UnitViewSpec extends UnitSpec with ViewMatchers with Injector {
 
@@ -33,6 +36,9 @@ trait UnitViewSpec extends UnitSpec with ViewMatchers with Injector {
 
   protected def messages(key: String, args: Any*)(implicit request: Request[_]): String =
     messages(request)(key, args: _*)
+
+  protected val navigatorBackUrl             = "/fixed/url"
+  protected val navigatorBack: NavigatorBack = NavigatorBack(Some(Call("GET", navigatorBackUrl)))
 
 }
 

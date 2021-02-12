@@ -18,35 +18,33 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimReason
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.inputCharacterCount
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
-        characterCount : inputCharacterCount,
+        inputCheckboxes: components.inputCheckboxes,
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[ClaimReason])(implicit request: Request[_], messages: Messages)
+@(form: Form[Set[ReclaimDutyType]], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("claim_reason.title"))) {
+@layout(pageTitle = Title(form, messages("reclaimDutyType.title")), backLink) {
 
-    @formHelper(action = ClaimReasonController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ReclaimDutyTypeController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
-        @characterCount(
-            form = form,
-            id = "claimReason",
-            name = "claimReason",
-            label = messages("claim_reason.title"),
-            isPageHeading = true,
-            hint = Some(messages("claim_reason.hint")),
-            maxLength = Some(500)
+        @inputCheckboxes(
+            field = form("reclaimDutyType"),
+            legendAsHeading = true,
+            legend = messages("reclaimDutyType.title"),
+            items = ReclaimDutyType.options(form, "reclaimDutyType[]"),
+            hint = Some(Html(messages("reclaimDutyType.hint")))
         )
 
-        @continueButton()
+      @continueButton()
     }
 }

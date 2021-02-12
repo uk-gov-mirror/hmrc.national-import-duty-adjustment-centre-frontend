@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
@@ -29,9 +30,9 @@
         continueButton: components.continueButton
 )
 
-@(claim: Claim)(implicit request: Request[_], messages: Messages)
+@(claim: Claim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("check_answers.title"))) {
+@layout(pageTitle = Title(messages("check_answers.title")), backLink) {
 
     @components.heading(messages("check_answers.title"))
 

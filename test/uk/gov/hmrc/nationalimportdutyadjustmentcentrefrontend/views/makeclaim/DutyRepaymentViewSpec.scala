@@ -23,18 +23,18 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.DutyPaid
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 
-class DutyRepaymentPageViewSpec extends UnitViewSpec with TestData {
+class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[DutyRepaymentPage]
+  private val page = instanceOf[DutyRepaymentView]
   private val form = new DutyPaidFormProvider().apply()
 
   private def view(
     messagePrefix: String,
     form: Form[DutyPaid] = form,
     submit: Call = routes.DutyRepaymentController.onSubmitCustomsDuty()
-  ): Document = page(form, submit, messagePrefix)
+  ): Document = page(form, submit, messagePrefix, navigatorBack)
 
   private val messagePrefixs = Seq("customsDutyPaid", "importVatPaid", "otherDutyPaid")
 
@@ -49,9 +49,7 @@ class DutyRepaymentPageViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      messagePrefixs.foreach(
-        prefix => view(prefix).getElementsByClass("govuk-back-link") must containMessage("site.back")
-      )
+      messagePrefixs.foreach(prefix => view(prefix) must haveNavigatorBackLink(navigatorBackUrl))
     }
 
     "have label for duty paid" in {

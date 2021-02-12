@@ -23,14 +23,16 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.{Reference, UpscanInitiateConnector}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormView, UploadProgressView}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,11 +45,19 @@ class UploadFormController @Inject() (
   upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
   appConfig: AppConfig,
-  navigator: Navigator,
-  uploadFormPage: UploadFormPage,
-  uploadProgressPage: UploadProgressPage
+  val navigator: Navigator,
+  uploadFormView: UploadFormView,
+  uploadProgressView: UploadProgressView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport {
+    extends FrontendController(mcc) with I18nSupport with Navigation {
+
+  override val page: Page = UploadPage
+
+  override def backLink: UserAnswers => NavigatorBack = (answers: UserAnswers) =>
+    answers.uploads match {
+      case Some(files) if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
+      case _                             => super.backLink(answers)
+    }
 
   private val errorRedirectUrl =
     appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/upload-supporting-documents/error"
@@ -68,7 +78,7 @@ class UploadFormController @Inject() (
           processSuccessfulUpload(successUpload)
         case Some(failed: Failed) =>
           Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
-        case Some(_) => Future(Ok(uploadProgressPage(answers.claimType)))
+        case Some(_) => Future(Ok(uploadProgressView(answers.claimType, backLink(answers))))
         case None    => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
       }
     }
@@ -95,7 +105,15 @@ class UploadFormController @Inject() (
         answers.journeyId,
         Reference(upscanInitiateResponse.fileReference.reference)
       )
-    } yield Ok(uploadFormPage(upscanInitiateResponse, answers.claimType, answers.uploads.forall(_.isEmpty), maybeError))
+    } yield Ok(
+      uploadFormView(
+        upscanInitiateResponse,
+        answers.claimType,
+        answers.uploads.forall(_.isEmpty),
+        maybeError,
+        backLink(answers)
+      )
+    )
   }
 
   private def processSuccessfulUpload(successUpload: UploadedFile)(implicit request: IdentifierRequest[_]) =
@@ -105,7 +123,7 @@ class UploadFormController @Inject() (
         Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE")))
       else
         data.updateAnswers(answers => answers.copy(uploads = Some(uploads :+ successUpload))) map {
-          updatedAnswers => Redirect(navigator.nextPage(UploadPage, updatedAnswers))
+          updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     }
 

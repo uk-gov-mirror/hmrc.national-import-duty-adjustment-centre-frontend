@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.FormError
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
@@ -27,21 +28,21 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Preference,
   Quota
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormView
 
 import scala.collection.JavaConverters._
 
-class UploadFormPageViewSpec extends UnitViewSpec with TestData {
+class UploadFormViewSpec extends UnitViewSpec with TestData {
 
-  private val page      = instanceOf[UploadFormPage]
+  private val page      = instanceOf[UploadFormView]
   private val appConfig = instanceOf[AppConfig]
 
   private def view(
     claimType: Option[ClaimType] = None,
     isFirst: Boolean = true,
     error: Option[FormError] = None
-  ): Html =
-    page(upscanInitiateResponse, claimType, isFirst, error)
+  ): Document =
+    page(upscanInitiateResponse, claimType, isFirst, error, navigatorBack)
 
   "UploadFormPage" should {
 
@@ -55,6 +56,10 @@ class UploadFormPageViewSpec extends UnitViewSpec with TestData {
 
     "render hidden input fields" in {
       view().getElementsByAttributeValue("name", "field-hidden").size() mustBe 1
+    }
+
+    "have back link" in {
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "render input file with correct file-types" in {

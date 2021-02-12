@@ -21,18 +21,20 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Address
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
-        layout: Layout,
-        formHelper: FormWithCSRF,
-        fieldSet: components.fieldSet,
-        inputText: components.inputText,
-        errorSummary: errorSummary,
-        continueButton: components.continueButton )
+    layout: Layout,
+    formHelper: FormWithCSRF,
+    fieldSet: components.fieldSet,
+    inputText: components.inputText,
+    errorSummary: errorSummary,
+    continueButton: components.continueButton
+)
 
-@(form: Form[Address])(implicit request: Request[_], messages: Messages)
+@(form: Form[Address], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("address.title"))) {
+@layout(pageTitle = Title(form, messages("address.title")), backLink) {
 
     @formHelper(action = AddressController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)

@@ -20,11 +20,14 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, CreateClaimService}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
@@ -35,13 +38,16 @@ class CheckYourAnswersController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
   service: CreateClaimService,
-  checkYourAnswersPage: CheckYourAnswersPage
+  val navigator: Navigator,
+  checkYourAnswersView: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport {
+    extends FrontendController(mcc) with I18nSupport with Navigation {
+
+  override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      Ok(checkYourAnswersPage(Claim(answers)))
+      Ok(checkYourAnswersView(Claim(answers), backLink(answers)))
     } recover {
       case _: MissingUserAnswersException =>
         Redirect(controllers.routes.StartController.start())
@@ -55,7 +61,7 @@ class CheckYourAnswersController @Inject() (
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>
           data.updateResponse(response) map {
-            _ => Redirect(routes.ConfirmationController.onPageLoad())
+            _ => Redirect(nextPage(answers))
           }
       }
     } recover {

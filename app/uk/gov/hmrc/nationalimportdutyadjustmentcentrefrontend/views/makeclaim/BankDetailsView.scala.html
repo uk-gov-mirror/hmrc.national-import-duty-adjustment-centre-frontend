@@ -18,60 +18,58 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EntryDetails
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.BankDetails
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
         fieldSet: components.fieldSet,
         inputText: components.inputText,
-        inputDate: components.inputDate,
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[EntryDetails])(implicit request: Request[_], messages: Messages)
+@(form: Form[BankDetails], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("entryDetails.title"))) {
+@layout(pageTitle = Title(form, messages("bankDetails.title")), backLink) {
 
-    @formHelper(action = EntryDetailsController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = BankDetailsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
         @fieldSet(
-            legend = "entryDetails.title",
-            hint = Some(Html(messages("entryDetails.hint")))
+            legend = "bankDetails.title",
+            hint = Some(Html(messages("bankDetails.hint")))
         ) {
 
             @inputText(
                 form = form,
-                id = "entryProcessingUnit",
-                name = "entryProcessingUnit",
-                label = "entryDetails.claimEpu.heading",
-                classes = Some("govuk-input--width-3"),
-                hint = Some(messages("entryDetails.claimEpu.hint")),
-                attributes = Map(
-                    "autocomplete" -> "off",
-                    "inputmode" -> "numeric",
-                    "pattern" -> "[0-9]*"
-                )
+                id = "accountName",
+                name = "accountName",
+                label = "bankDetails.name.heading",
+                hint = Some(messages("bankDetails.name.hint")),
+                attributes = Map("autocomplete" -> "off")
             )
 
             @inputText(
                 form = form,
-                id = "entryNumber",
-                name = "entryNumber",
-                label = "entryDetails.entryNumber.heading",
-                classes = Some("govuk-input--width-10"),
-                hint = Some(messages("entryDetails.entryNumber.hint")),
+                id = "sortCode",
+                name = "sortCode",
+                label = "bankDetails.sortCode.heading",
+                hint = Some(messages("bankDetails.sortCode.hint")),
+                classes = Some("govuk-input--width-5"),
                 attributes = Map("autocomplete" -> "off")
             )
 
-            @inputDate(
+            @inputText(
                 form = form,
-                fieldName = "entryDate",
-                labelKey = "entryDetails.entryDate.heading",
-                hintKey = Some("entryDetails.entryDate.hint")
+                id = "accountNumber",
+                name = "accountNumber",
+                label = "bankDetails.accountNumber.heading",
+                hint = Some(messages("bankDetails.accountNumber.hint")),
+                classes = Some("govuk-input--width-10"),
+                attributes = Map("autocomplete" -> "off")
             )
         }
 

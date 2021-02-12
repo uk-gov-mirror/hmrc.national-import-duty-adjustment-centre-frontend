@@ -18,33 +18,36 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimReason
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.inputCharacterCount
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
-        inputRadio: components.inputRadio,
+        characterCount : inputCharacterCount,
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[ClaimReason], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("claim_type.title"))) {
+@layout(pageTitle = Title(form, messages("claim_reason.title")), backLink) {
 
-    @formHelper(action = ClaimTypeController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ClaimReasonController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
-        @inputRadio(
+        @characterCount(
             form = form,
-            name = "claim_type",
-            items = ClaimType.options(form, "claim_type"),
-            inline = false,
-            legendAsHeading = true,
-            legend = Some(messages("claim_type.title"))
+            id = "claimReason",
+            name = "claimReason",
+            label = messages("claim_reason.title"),
+            isPageHeading = true,
+            hint = Some(messages("claim_reason.hint")),
+            maxLength = Some(500)
         )
 
-      @continueButton()
+        @continueButton()
     }
 }

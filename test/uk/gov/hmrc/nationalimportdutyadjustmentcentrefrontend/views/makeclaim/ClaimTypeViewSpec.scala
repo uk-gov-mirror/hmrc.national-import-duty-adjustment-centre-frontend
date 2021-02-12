@@ -23,14 +23,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypeView
 
-class ClaimTypePageViewSpec extends UnitViewSpec {
+class ClaimTypeViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ClaimTypePage]
+  private val page = instanceOf[ClaimTypeView]
   private val form = new ClaimTypeFormProvider().apply()
 
-  private def view(form: Form[ClaimType] = form): Html = page(form)
+  private def view(form: Form[ClaimType] = form): Html = page(form, navigatorBack)
 
   "ClaimTypePage on empty form" should {
 

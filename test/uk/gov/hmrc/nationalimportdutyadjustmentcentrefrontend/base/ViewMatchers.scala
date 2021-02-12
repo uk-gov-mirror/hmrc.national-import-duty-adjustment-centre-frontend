@@ -48,6 +48,9 @@ trait ViewMatchers extends Matchers {
   def haveAttribute(key: String, value: String): Matcher[Element] = new ElementHasAttributeValueMatcher(key, value)
   def haveValue(value: String): Matcher[Element]                  = new ElementHasAttributeValueMatcher("value", value)
 
+  def haveNavigatorBackLink(href: String)(implicit messages: Messages): Matcher[Element] =
+    new ElementHasNavigatorBacklinkMatcher(href)
+
   def haveFieldError(fieldName: String, content: String)(implicit messages: Messages): Matcher[Element] =
     new ContainElementWithIDMatcher(s"$fieldName-error") and new ElementContainsGovukFieldError(
       fieldName,
@@ -107,6 +110,23 @@ trait ViewMatchers extends Matchers {
         left != null && left.attr(key) == value,
         s"Element attribute {$key} had value {${left.attr(key)}}, expected {$value}",
         s"Element attribute {$key} had value {$value}"
+      )
+
+  }
+
+  class ElementHasNavigatorBacklinkMatcher(href: String)(implicit messages: Messages) extends Matcher[Element] {
+
+    protected def hasNavigatorBacklink: Element => Boolean = (view: Element) => {
+      val link = view.getElementsByClass("govuk-back-link").first()
+      link.text() == messages("site.back") &&
+      link.attr("href") == href
+    }
+
+    override def apply(left: Element): MatchResult =
+      MatchResult(
+        left != null && hasNavigatorBacklink(left),
+        s"Element did not have NavigatorBackLink",
+        s"Element had NavigatorBackLink"
       )
 
   }

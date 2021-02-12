@@ -18,10 +18,11 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBody
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(layout: Layout, continueButton: components.continueButton,uploadBody: uploadBody)
 
-@(claimType: Option[ClaimType])(implicit request: Request[_], messages: Messages)
+@(claimType: Option[ClaimType], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="1"/>
@@ -34,7 +35,7 @@
     <div>@continueButton(disabled = true)</div>
 }
 
-@layout(pageTitle = Title(messages("upload_documents.title")), headBlock = Some(refreshHeader)) {
+@layout(pageTitle = Title(messages("upload_documents.title")), headBlock = Some(refreshHeader), backLink = backLink) {
 
     @components.heading(messages("upload_documents.title"))
 

@@ -18,32 +18,32 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ItemNumbers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
-        inputText: components.inputText,
+        inputRadio: components.inputRadio,
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[ItemNumbers])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("itemNumbers.title"))) {
+@layout(pageTitle = Title(form, messages("claim_type.title")), backLink) {
 
-    @formHelper(action = ItemNumbersController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ClaimTypeController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
-        @inputText(
+        @inputRadio(
             form = form,
-            id = "itemNumbers",
-            name = "itemNumbers",
-            isPageHeading = true,
-            label = "itemNumbers.title",
-            hint = Some(messages("itemNumbers.hint")),
-            attributes = Map("autocomplete" -> "off")
+            name = "claim_type",
+            items = ClaimType.options(form, "claim_type"),
+            inline = false,
+            legendAsHeading = true,
+            legend = Some(messages("claim_type.title"))
         )
 
       @continueButton()

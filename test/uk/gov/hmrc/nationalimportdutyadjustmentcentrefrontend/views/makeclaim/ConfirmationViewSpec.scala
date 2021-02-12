@@ -18,13 +18,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationView
 
 import scala.util.Random
 
-class ConfirmationPageViewSpec extends UnitViewSpec {
+class ConfirmationViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ConfirmationPage]
+  private val page = instanceOf[ConfirmationView]
 
   private val claimReference = Random.alphanumeric.take(16).mkString
   private val view: Html     = page(claimReference)

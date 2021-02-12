@@ -28,12 +28,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyT
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Customs
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ReclaimDutyTypePage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ReclaimDutyTypePage]
+  private val page         = mock[ReclaimDutyTypeView]
   private val formProvider = new ReclaimDutyTypeFormProvider
 
   private def controller =
@@ -49,7 +49,7 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -59,7 +59,7 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[Set[ReclaimDutyType]] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[Set[ReclaimDutyType]]])
-    verify(page).apply(captor.capture())(any(), any())
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 
