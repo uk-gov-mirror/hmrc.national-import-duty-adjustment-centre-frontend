@@ -30,7 +30,8 @@ final case class UserAnswers(
   bankDetails: Option[BankDetails] = None,
   entryDetails: Option[EntryDetails] = None,
   itemNumbers: Option[ItemNumbers] = None,
-  uploads: Option[Seq[UploadedFile]] = None
+  uploads: Option[Seq[UploadedFile]] = None,
+  uploadAnotherFile: Option[Boolean] = None
 )
 
 object UserAnswers {

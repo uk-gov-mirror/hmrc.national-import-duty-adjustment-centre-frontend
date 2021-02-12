@@ -31,14 +31,14 @@
     name = "yesOrNo",
     items = Seq(
         RadioItem(
-            value = Some("yes"),
+            value = Some("true"),
             content = Text(messages("site.yes")),
-            checked = form("yesOrNo").value.contains("yes")
+            checked = form("yesOrNo").value.contains("true")
         ),
         RadioItem(
-            value = Some("no"),
+            value = Some("false"),
             content = Text(messages("site.no")),
-            checked = form("yesOrNo").value.contains("no")
+            checked = form("yesOrNo").value.contains("false")
         )
     ),
     inline = inline,

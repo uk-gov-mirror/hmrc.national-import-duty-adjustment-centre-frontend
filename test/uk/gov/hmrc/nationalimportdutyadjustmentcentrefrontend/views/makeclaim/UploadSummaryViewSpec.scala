@@ -18,17 +18,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import play.api.data.Form
-import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
-  Airworthiness,
-  AntiDumping,
-  Preference,
-  Quota
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 
@@ -104,9 +98,9 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
   "UploadSummaryPage on filled form" should {
 
     "have populated fields" in {
-      val filledView = view(form.bind(Map("yesOrNo" -> "yes")))
+      val filledView = view(form.bind(Map("yesOrNo" -> "true")))
 
-      filledView.getElementById("yesOrNo") must haveValue("yes")
+      filledView.getElementById("yesOrNo") must haveValue("true")
     }
 
     "display error when " when {

@@ -78,13 +78,13 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
   "onSubmit" should {
 
     "redirect to document upload when user wants to upload another" in {
-      val result = controller.onSubmit()(postRequest(("yesOrNo", "yes")))
+      val result = controller.onSubmit()(postRequest(("yesOrNo", "true")))
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
     }
 
     "redirect to next question when user does not want to upload another" in {
-      val result = controller.onSubmit()(postRequest(("yesOrNo", "no")))
+      val result = controller.onSubmit()(postRequest(("yesOrNo", "false")))
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(navigator.nextPage(UploadSummaryPage, emptyAnswers).url)
     }

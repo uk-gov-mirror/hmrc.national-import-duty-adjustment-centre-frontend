@@ -50,9 +50,9 @@ trait Formatters {
         baseFormatter
           .bind(key, data)
           .right.flatMap {
-            case "true" | "yes" => Right(true)
-            case "false" | "no" => Right(false)
-            case _              => Left(Seq(FormError(key, invalidKey)))
+            case "true"  => Right(true)
+            case "false" => Right(false)
+            case _       => Left(Seq(FormError(key, invalidKey)))
           }
 
       def unbind(key: String, value: Boolean) = Map(key -> value.toString)

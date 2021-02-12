@@ -30,7 +30,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheData
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UploadFormSummaryController @Inject() (
@@ -51,24 +51,36 @@ class UploadFormSummaryController @Inject() (
     data.getAnswers map { answers =>
       answers.uploads match {
         case Some(documents) if documents.nonEmpty =>
-          Ok(summaryView(form, answers.claimType, documents, backLink(answers)))
+          Ok(
+            summaryView(
+              answers.uploadAnotherFile.fold(form)(form.fill),
+              answers.claimType,
+              documents,
+              backLink(answers)
+            )
+          )
         case _ => Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
       }
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getAnswers flatMap { answers =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          BadRequest(
-            summaryView(formWithErrors, answers.claimType, answers.uploads.getOrElse(Seq.empty), backLink(answers))
+          Future(
+            BadRequest(
+              summaryView(formWithErrors, answers.claimType, answers.uploads.getOrElse(Seq.empty), backLink(answers))
+            )
           ),
         addAnother =>
-          if (addAnother)
-            Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
-          else
-            Redirect(nextPage(answers))
+          data.updateAnswers(answers => answers.copy(uploadAnotherFile = Some(addAnother))) map {
+            _ =>
+              if (addAnother)
+                Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
+              else
+                Redirect(navigator.nextPage(UploadSummaryPage, answers))
+          }
       )
     }
   }
