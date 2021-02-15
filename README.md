@@ -11,6 +11,21 @@
 
 Open the app in your browser at `http://localhost:8490/national-import-duty-adjustment-centre`
 
+## Tampermonkey
+
+[Tampermonkey](https://www.tampermonkey.net/) scripts are provided for testing / demonstration purposes.
+
+Note:  The scripts are not a deliverable part of this project and are not guaranteed to be kept up to date with changes in the UI.
+
+Use the following urls to install the scripts into the Tampermonkey browser plugin.
+
+Auth Login Stub
+https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Auth_Stub.js
+
+
+Create Case Journey
+https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
+
 ### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
