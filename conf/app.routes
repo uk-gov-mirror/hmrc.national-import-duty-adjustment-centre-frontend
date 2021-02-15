@@ -12,14 +12,17 @@ GET         /language/:lang                     uk.gov.hmrc.nationalimportdutyad
 GET         /assets/*file                       controllers.Assets.versioned(path = "/public", file: Asset)
 
 # make claim
+GET         /importer-representative            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onPageLoad()
+POST        /importer-representative            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onSubmit()
+
+GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
+POST        /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onSubmit()
+
 GET         /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onPageLoad()
 POST        /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onSubmit()
 
 GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
 POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()
-
-GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
-POST        /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onSubmit()
 
 GET         /upload-supporting-documents        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onPageLoad()
 GET         /upload-supporting-documents/progress uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onProgress(uploadId: UploadId)

@@ -20,6 +20,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 
 trait QuestionPage[A] extends Page
 
+case object RepresentationTypePage   extends QuestionPage[RepresentationType]
 case object ClaimTypePage            extends QuestionPage[ClaimType]
 case object ContactDetailsPage       extends QuestionPage[ContactDetails]
 case object AddressPage              extends QuestionPage[Address]

@@ -37,6 +37,23 @@
     @components.heading(messages("check_answers.title"))
 
     @summaryList(
+        id = "important_information_section",
+        heading = Some(messages("check_answers.information.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "representation_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.information.representation.type"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("check_answers.information.representation", claim.representationType.toString))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @summaryList(
         id = "your_details_section",
         heading = Some(messages("check_answers.yourDetails.title")),
         summaryListRows = Seq(

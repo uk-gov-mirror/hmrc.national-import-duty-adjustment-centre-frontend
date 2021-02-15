@@ -23,6 +23,7 @@ final case class UserAnswers(
   journeyId: JourneyId = JourneyId.generate,
   contactDetails: Option[ContactDetails] = None,
   importerAddress: Option[Address] = None,
+  representationType: Option[RepresentationType] = None,
   claimType: Option[ClaimType] = None,
   claimReason: Option[ClaimReason] = None,
   reclaimDutyTypes: Set[ReclaimDutyType] = Set.empty,

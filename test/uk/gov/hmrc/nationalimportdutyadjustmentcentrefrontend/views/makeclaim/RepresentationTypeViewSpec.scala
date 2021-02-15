@@ -16,39 +16,34 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
-import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypeView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepresentationTypeFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepresentationTypeView
 
-class ClaimTypeViewSpec extends UnitViewSpec {
+class RepresentationTypeViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ClaimTypeView]
-  private val form = new ClaimTypeFormProvider().apply()
+  private val page = instanceOf[RepresentationTypeView]
+  private val form = new RepresentationTypeFormProvider().apply()
 
-  private def view(form: Form[ClaimType] = form): Document = page(form, navigatorBack)
+  private def view(form: Form[RepresentationType] = form): Html = page(form, navigatorBack)
 
-  "ClaimTypePage on empty form" should {
+  "RepresentationTypePage on empty form" should {
 
     "have correct title" in {
-      view().title() must startWith(messages("claim_type.title"))
+      view().title() must startWith(messages("representation_type.title"))
     }
 
     "have correct heading" in {
-      view().getElementsByTag("h1") must containMessage("claim_type.title")
+      view().getElementsByTag("h1") must containMessage("representation_type.title")
     }
 
-    "have back link" in {
-      view() must haveNavigatorBackLink(navigatorBackUrl)
-    }
-
-    "have radio option for each claim type" in {
-      ClaimType.options(form, "claim_type").foreach { item =>
+    "have radio option for each representation type" in {
+      RepresentationType.options(form, "representation_type").foreach { item =>
         val inputId = view().getElementsByAttributeValue("value", item.value.get).get(0).id()
         Text(view().getElementsByAttributeValue("for", inputId).text()) mustBe item.content
         view().getElementById(inputId).attr("checked") mustBe empty
@@ -62,19 +57,21 @@ class ClaimTypeViewSpec extends UnitViewSpec {
 
   }
 
-  "ClaimTypePage on filled form" should {
+  "RepresentationTypePage on filled form" should {
 
     "have selected radio option" in {
-      val checked = view(form.fill(Quota)).getElementsByAttribute("checked")
+      val checked = view(form.fill(Importer)).getElementsByAttribute("checked")
 
-      checked.attr("value") mustBe Quota.toString
+      checked.attr("value") mustBe Importer.toString
     }
 
     "display error when no choice is made" in {
 
-      val errorView = view(form.bind(Map("claim-type" -> "")))
+      val errorView = view(form.bind(Map("representation_type" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("claim_type.error.required")
+      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages(
+        "representation_type.error.required"
+      )
 
     }
 

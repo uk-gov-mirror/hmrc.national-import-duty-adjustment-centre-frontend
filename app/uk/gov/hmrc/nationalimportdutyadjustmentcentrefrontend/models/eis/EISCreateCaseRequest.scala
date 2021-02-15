@@ -59,7 +59,7 @@ object EISCreateCaseRequest {
 
     def apply(claim: Claim): Content =
       Content(
-        RepresentationType = "Importer", // TODO NF-204 - hard code values
+        RepresentationType = claim.representationType.toString,
         ClaimType = claim.claimType.toString,
         ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress),
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,

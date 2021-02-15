@@ -28,6 +28,7 @@ import scala.util.Try
 case class Claim(
   contactDetails: ContactDetails,
   importerAddress: Address,
+  representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,
   uploads: Seq[UploadedFile],
@@ -50,6 +51,7 @@ object Claim {
     new Claim(
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
+      representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       claimReason = userAnswers.claimReason.getOrElse(missing(ClaimReasonPage)),
       uploads = userAnswers.uploads,

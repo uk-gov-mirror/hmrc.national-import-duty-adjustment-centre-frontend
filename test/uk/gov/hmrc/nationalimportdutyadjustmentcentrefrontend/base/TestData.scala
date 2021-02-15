@@ -22,6 +22,7 @@ import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
@@ -34,6 +35,8 @@ trait TestData {
 
   // UserAnswers
   val emptyAnswers: UserAnswers = UserAnswers()
+
+  val representationTypeAnswer: RepresentationType = Representative
 
   val claimTypeAnswer: ClaimType = AntiDumping
 
@@ -68,6 +71,7 @@ trait TestData {
   var itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
 
   val completeAnswers: UserAnswers = UserAnswers(
+    representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),

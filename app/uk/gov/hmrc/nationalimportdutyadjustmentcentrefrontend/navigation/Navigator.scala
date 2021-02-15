@@ -30,6 +30,7 @@ protected case class P(page: Page, destination: () => Call, canAccessGiven: User
 class Navigator @Inject() () extends Conditions with Ordering {
 
   private val pageOrder: Seq[P] = Seq(
+    P(RepresentationTypePage, makeclaim.routes.RepresentationTypeController.onPageLoad, always),
     P(ClaimTypePage, makeclaim.routes.ClaimTypeController.onPageLoad, always),
     P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always),
     P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always),

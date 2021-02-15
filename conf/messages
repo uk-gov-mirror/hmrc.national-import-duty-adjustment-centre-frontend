@@ -23,6 +23,11 @@ session_expired.guidance = The details you have given have been deleted because 
 
 unauthorised.title = You can’t access this service with this account
 
+representation_type.title = Are you the importer or their representative?
+representation_type.error.required = Select if you are the importer or their representative
+representation_type.Importer = I am the importer
+representation_type.Representative_of_importer = I am a representative of the importer
+
 claim_type.title = What type of claim you are making?
 claim_type.error.required = Select type of claim you are making
 claim_type.Anti-Dumping = Anti-Dumping
@@ -186,6 +191,10 @@ error.file-upload.try-again=The selected file could not be uploaded - try again
 check_answers.title = Check your answers before sending your application
 check_answers.change = Change
 check_answers.submit = Accept and send
+check_answers.information.title = Important information
+check_answers.information.representation.type = Are you the importer or representative?
+check_answers.information.representation.Importer = Importer
+check_answers.information.representation.Representative_of_importer = Representative
 check_answers.yourDetails.title = Your details
 check_answers.yourDetails.contactDetails = Contact details
 check_answers.yourDetails.yourAddress = Your address

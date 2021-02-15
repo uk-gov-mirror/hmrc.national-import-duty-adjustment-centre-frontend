@@ -21,6 +21,7 @@ import java.time.LocalDate
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   BankDetails,
   Claim,
@@ -37,6 +38,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   val claim: Claim = Claim(
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
     importerAddress = UkAddress("Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    representationType = Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
     uploads = Seq.empty,
@@ -49,7 +51,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   )
 
   val content: EISCreateCaseRequest.Content = EISCreateCaseRequest.Content(
-    RepresentationType = "Importer",
+    RepresentationType = "Representative of importer",
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
       "Import Co Ltd",
