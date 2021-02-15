@@ -55,8 +55,8 @@ class UploadFormController @Inject() (
 
   override def backLink: UserAnswers => NavigatorBack = (answers: UserAnswers) =>
     answers.uploads match {
-      case Some(files) if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
-      case _                             => super.backLink(answers)
+      case files if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
+      case _                       => super.backLink(answers)
     }
 
   private val errorRedirectUrl =
@@ -106,23 +106,17 @@ class UploadFormController @Inject() (
         Reference(upscanInitiateResponse.fileReference.reference)
       )
     } yield Ok(
-      uploadFormView(
-        upscanInitiateResponse,
-        answers.claimType,
-        answers.uploads.forall(_.isEmpty),
-        maybeError,
-        backLink(answers)
-      )
+      uploadFormView(upscanInitiateResponse, answers.claimType, answers.uploads.isEmpty, maybeError, backLink(answers))
     )
   }
 
   private def processSuccessfulUpload(successUpload: UploadedFile)(implicit request: IdentifierRequest[_]) =
     data.getAnswers flatMap { answers =>
-      val uploads = answers.uploads.getOrElse(Seq.empty)
+      val uploads = answers.uploads
       if (uploads.exists(_.checksum == successUpload.checksum))
         Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE")))
       else
-        data.updateAnswers(answers => answers.copy(uploads = Some(uploads :+ successUpload))) map {
+        data.updateAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     }

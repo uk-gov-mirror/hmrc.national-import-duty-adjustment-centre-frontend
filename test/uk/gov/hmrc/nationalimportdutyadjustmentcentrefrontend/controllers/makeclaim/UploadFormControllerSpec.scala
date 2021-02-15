@@ -19,14 +19,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, reset, verify, when}
-import play.api.data.Form
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadStatus
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
@@ -108,7 +107,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
     "produce back link" when {
 
       "user has not uploaded any files" in {
-        withCacheUserAnswers(completeAnswers.copy(uploads = None))
+        withCacheUserAnswers(completeAnswers.copy(uploads = Seq.empty))
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
@@ -149,7 +148,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
     "redirect when uploading a duplicate file" in {
 
-      withCacheUserAnswers(completeAnswers.copy(uploads = Some(Seq(uploadAnswer))))
+      withCacheUserAnswers(completeAnswers.copy(uploads = Seq(uploadAnswer)))
       givenUploadStatus(uploadFileSuccess)
       val result = controller.onProgress(uploadId)(fakeGetRequest)
 
@@ -167,13 +166,13 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad().url)
 
-      theUpdatedUserAnswers.uploads mustBe Some(Seq(uploadFileSuccess))
+      theUpdatedUserAnswers.uploads mustBe Seq(uploadFileSuccess)
     }
 
     "produce back link" when {
 
       "user has not uploaded any files" in {
-        withCacheUserAnswers(completeAnswers.copy(uploads = None))
+        withCacheUserAnswers(completeAnswers.copy(uploads = Seq.empty))
         givenUploadStatus(uploadInProgress)
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK

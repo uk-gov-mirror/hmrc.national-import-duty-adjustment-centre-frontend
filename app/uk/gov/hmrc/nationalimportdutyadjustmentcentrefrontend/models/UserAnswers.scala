@@ -25,12 +25,12 @@ final case class UserAnswers(
   importerAddress: Option[Address] = None,
   claimType: Option[ClaimType] = None,
   claimReason: Option[ClaimReason] = None,
-  reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
+  reclaimDutyTypes: Set[ReclaimDutyType] = Set.empty,
   reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
   bankDetails: Option[BankDetails] = None,
   entryDetails: Option[EntryDetails] = None,
   itemNumbers: Option[ItemNumbers] = None,
-  uploads: Option[Seq[UploadedFile]] = None,
+  uploads: Seq[UploadedFile] = Seq.empty,
   uploadAnotherFile: Option[Boolean] = None
 )
 

@@ -47,7 +47,7 @@ class ReclaimDutyTypeController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      val preparedForm = answers.reclaimDutyTypes.fold(form)(form.fill)
+      val preparedForm = form.fill(answers.reclaimDutyTypes)
       Ok(reclaimDutyTypeView(preparedForm, backLink(answers)))
     }
   }
@@ -57,7 +57,7 @@ class ReclaimDutyTypeController @Inject() (
       formWithErrors =>
         data.getAnswers map { answers => BadRequest(reclaimDutyTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(reclaimDutyTypes = Some(value))) map {
+        data.updateAnswers(answers => answers.copy(reclaimDutyTypes = value)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

@@ -50,7 +50,7 @@ class UploadFormSummaryController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       answers.uploads match {
-        case Some(documents) if documents.nonEmpty =>
+        case documents if documents.nonEmpty =>
           Ok(
             summaryView(
               answers.uploadAnotherFile.fold(form)(form.fill),
@@ -68,11 +68,7 @@ class UploadFormSummaryController @Inject() (
     data.getAnswers flatMap { answers =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future(
-            BadRequest(
-              summaryView(formWithErrors, answers.claimType, answers.uploads.getOrElse(Seq.empty), backLink(answers))
-            )
-          ),
+          Future(BadRequest(summaryView(formWithErrors, answers.claimType, answers.uploads, backLink(answers)))),
         addAnother =>
           data.updateAnswers(answers => answers.copy(uploadAnotherFile = Some(addAnother))) map {
             _ =>
@@ -93,7 +89,7 @@ class UploadFormSummaryController @Inject() (
 
   def removeDocument: String => UserAnswers => UserAnswers = (ref: String) =>
     (userAnswers: UserAnswers) => {
-      val remainingFiles = userAnswers.uploads.map(_.filterNot(_.upscanReference == ref))
+      val remainingFiles = userAnswers.uploads.filterNot(_.upscanReference == ref)
       userAnswers.copy(uploads = remainingFiles)
     }
 

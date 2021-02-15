@@ -61,17 +61,11 @@ protected trait Conditions {
   protected val always: UserAnswers => Boolean = (_: UserAnswers) => true
 
   protected val hasDutyType: ReclaimDutyType => UserAnswers => Boolean = (dutyType: ReclaimDutyType) =>
-    (userAnswers: UserAnswers) =>
-      userAnswers.reclaimDutyTypes match {
-        case Some(duties) => duties.contains(dutyType)
-        case _            => false
-      }
+    _.reclaimDutyTypes.contains(dutyType)
 
-  protected val hasNoUploads: UserAnswers => Boolean = (userAnswers: UserAnswers) =>
-    userAnswers.uploads.forall(_.isEmpty)
+  protected val hasNoUploads: UserAnswers => Boolean = _.uploads.isEmpty
 
-  protected val hasUploads: UserAnswers => Boolean = (userAnswers: UserAnswers) =>
-    userAnswers.uploads.exists(_.nonEmpty)
+  protected val hasUploads: UserAnswers => Boolean = _.uploads.nonEmpty
 
 }
 

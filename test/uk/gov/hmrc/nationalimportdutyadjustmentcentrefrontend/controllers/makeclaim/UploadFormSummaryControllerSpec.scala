@@ -61,13 +61,13 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
     "display page when cache contains uploads" in {
 
-      withCacheUserAnswers(UserAnswers(uploads = Some(Seq(uploadAnswer))))
+      withCacheUserAnswers(UserAnswers(uploads = Seq(uploadAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
     }
 
     "redirect when cache does not contain uploads" in {
-      withCacheUserAnswers(UserAnswers(uploads = Some(Seq.empty)))
+      withCacheUserAnswers(UserAnswers(uploads = Seq.empty))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
@@ -98,12 +98,12 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
   "onDelete" should {
 
     "remove uploaded document" in {
-      withCacheUserAnswers(UserAnswers(uploads = Some(Seq(uploadAnswer, uploadAnswer2))))
+      withCacheUserAnswers(UserAnswers(uploads = Seq(uploadAnswer, uploadAnswer2)))
       val result = controller.onRemove(uploadAnswer.upscanReference)(postRequest())
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad().url)
 
-      theUpdatedUserAnswers.uploads mustBe Some(Seq(uploadAnswer2))
+      theUpdatedUserAnswers.uploads mustBe Seq(uploadAnswer2)
     }
   }
 

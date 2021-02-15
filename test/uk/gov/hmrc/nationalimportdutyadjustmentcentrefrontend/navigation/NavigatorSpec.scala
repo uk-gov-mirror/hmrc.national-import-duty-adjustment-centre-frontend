@@ -30,7 +30,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   private val navigator = instanceOf[Navigator]
 
   private def answers(reclaim: ReclaimDutyType*): UserAnswers =
-    completeAnswers.copy(reclaimDutyTypes = Some(Set(reclaim: _*)))
+    completeAnswers.copy(reclaimDutyTypes = Set(reclaim: _*))
 
   private def back(page: Page, userAnswers: UserAnswers): Call =
     navigator.previousPage(page, userAnswers).maybeCall.getOrElse(Call("GET", "No back page"))
@@ -177,7 +177,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   "Navigating around file uploads" when {
 
     def answers(uploads: Seq[UploadedFile]): UserAnswers =
-      completeAnswers.copy(uploads = Some(uploads))
+      completeAnswers.copy(uploads = uploads)
 
     val nextPage     = navigator.nextPage(ClaimReasonPage, _)
     val previousPage = back(ContactDetailsPage, _)

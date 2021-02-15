@@ -44,14 +44,16 @@ case class Claim(
 
 object Claim {
 
-  def apply(userAnswers: UserAnswers): Claim =
+  def apply(userAnswers: UserAnswers): Claim = {
+    if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
+    if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       claimReason = userAnswers.claimReason.getOrElse(missing(ClaimReasonPage)),
-      uploads = userAnswers.uploads.getOrElse(missing(UploadSummaryPage)),
-      reclaimDutyPayments = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)).map(
+      uploads = userAnswers.uploads,
+      reclaimDutyPayments = userAnswers.reclaimDutyTypes.map(
         dutyType =>
           dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
       ).toMap,
@@ -60,6 +62,7 @@ object Claim {
       itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),
       submissionDate = LocalDate.now()
     )
+  }
 
   private def missing(answer: Any) = {
     val message = s"Missing answer - $answer"

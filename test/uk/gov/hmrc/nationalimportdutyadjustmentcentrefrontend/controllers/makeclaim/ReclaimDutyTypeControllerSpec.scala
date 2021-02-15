@@ -69,11 +69,11 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe None
+      theResponseForm.value mustBe Some(Set.empty)
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(reclaimDutyTypes = Some(reclaimDutyTypesAnswer)))
+      withCacheUserAnswers(UserAnswers(reclaimDutyTypes = reclaimDutyTypesAnswer))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -91,7 +91,7 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.reclaimDutyTypes mustBe Some(Set(Customs))
+      theUpdatedUserAnswers.reclaimDutyTypes mustBe Set(Customs)
       redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedUserAnswers).url)
     }
 
