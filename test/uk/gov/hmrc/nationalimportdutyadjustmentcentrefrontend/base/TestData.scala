@@ -22,8 +22,7 @@ import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
@@ -36,7 +35,7 @@ trait TestData {
   // UserAnswers
   val emptyAnswers: UserAnswers = UserAnswers()
 
-  val representationTypeAnswer: RepresentationType = Representative
+  val representationTypeAnswer: RepresentationType = RepresentationType.Representative
 
   val claimTypeAnswer: ClaimType = AntiDumping
 
@@ -60,6 +59,8 @@ trait TestData {
 
   val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
 
+  val repayToAnswer = RepayTo.Importer
+
   val claimReasonAnswer: ClaimReason = ClaimReason("some valid reason")
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
@@ -79,6 +80,7 @@ trait TestData {
     uploads = Seq(uploadAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
+    repayTo = Some(repayToAnswer),
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer)

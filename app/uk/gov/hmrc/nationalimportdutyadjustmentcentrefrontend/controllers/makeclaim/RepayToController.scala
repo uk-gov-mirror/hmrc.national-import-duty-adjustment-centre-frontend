@@ -21,52 +21,46 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepayToFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BankDetailsPage, Page}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, RepayToPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepayToView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class BankDetailsController @Inject() (
+class RepayToController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
-  formProvider: BankDetailsFormProvider,
+  formProvider: RepayToFormProvider,
   val controllerComponents: MessagesControllerComponents,
   val navigator: Navigator,
-  bankDetailsView: BankDetailsView
+  representationTypeView: RepayToView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Navigation {
 
-  override val page: Page = BankDetailsPage
+  override val page: Page = RepayToPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      val preparedForm = answers.bankDetails.fold(form)(form.fill)
-      Ok(bankDetailsView(preparedForm, importersBankDetails(answers), backLink(answers)))
+      val preparedForm = answers.repayTo.fold(form)(form.fill)
+      Ok(representationTypeView(preparedForm, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers =>
-          BadRequest(bankDetailsView(formWithErrors, importersBankDetails(answers), backLink(answers)))
-        },
+        data.getAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+        data.updateAnswers(answers => answers.copy(repayTo = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }
-
-  private def importersBankDetails: UserAnswers => Boolean = (answers: UserAnswers) =>
-    answers.isRepresentative && answers.repayTo.contains(RepayTo.Importer)
 
 }

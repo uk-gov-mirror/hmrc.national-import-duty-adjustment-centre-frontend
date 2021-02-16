@@ -24,19 +24,20 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepayToFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo.Representative
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.RepayToPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepayToView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class BankDetailsControllerSpec extends ControllerSpec with TestData {
+class RepayToControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[BankDetailsView]
-  private val formProvider = new BankDetailsFormProvider
+  private val page         = mock[RepayToView]
+  private val formProvider = new RepayToFormProvider
 
   private def controller =
-    new BankDetailsController(
+    new RepayToController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       formProvider,
@@ -48,7 +49,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -56,9 +57,9 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
     super.afterEach()
   }
 
-  def theResponseForm: Form[BankDetails] = {
-    val captor = ArgumentCaptor.forClass(classOf[Form[BankDetails]])
-    verify(page).apply(captor.capture(), any(), any())(any(), any())
+  def theResponseForm: Form[RepayTo] = {
+    val captor = ArgumentCaptor.forClass(classOf[Form[RepayTo]])
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 
@@ -72,21 +73,17 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(bankDetails = Some(bankDetailsAnswer)))
+      withCacheUserAnswers(UserAnswers(repayTo = Some(Representative)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe Some(bankDetailsAnswer)
+      theResponseForm.value mustBe Some(Representative)
     }
   }
 
   "POST" should {
 
-    val validRequest = postRequest(
-      "accountName"   -> bankDetailsAnswer.accountName,
-      "sortCode"      -> bankDetailsAnswer.sortCode,
-      "accountNumber" -> bankDetailsAnswer.accountNumber
-    )
+    val validRequest = postRequest(("repay_to", Representative.toString))
 
     "update cache and redirect when valid answer is submitted" in {
 
@@ -94,8 +91,8 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.bankDetails mustBe Some(bankDetailsAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(BankDetailsPage, emptyAnswers).url)
+      theUpdatedUserAnswers.repayTo mustBe Some(Representative)
+      redirectLocation(result) mustBe Some(navigator.nextPage(RepayToPage, emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

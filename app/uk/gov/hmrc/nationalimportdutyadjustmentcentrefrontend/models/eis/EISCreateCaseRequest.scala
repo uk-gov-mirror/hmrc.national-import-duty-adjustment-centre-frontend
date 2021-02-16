@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter
 
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo.Importer
 
 /**
   * Create specified case in the PEGA system.
@@ -66,7 +67,7 @@ object EISCreateCaseRequest {
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
         DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
-        PayTo = "Importer", // TODO NF-204 - hard code values
+        PayTo = claim.repayTo.getOrElse(Importer).toString,
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
         ItemNumber = claim.itemNumbers.numbers,
         ClaimReason = claim.claimReason.reason,

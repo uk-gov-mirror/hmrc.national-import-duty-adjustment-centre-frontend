@@ -44,6 +44,9 @@ POST        /enter-import-vat                   uk.gov.hmrc.nationalimportdutyad
 GET         /enter-other-duties                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onPageLoadOtherDuty()
 POST        /enter-other-duties                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onSubmitOtherDuty()
 
+GET         /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onPageLoad()
+POST        /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onSubmit()
+
 GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
 POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()
 

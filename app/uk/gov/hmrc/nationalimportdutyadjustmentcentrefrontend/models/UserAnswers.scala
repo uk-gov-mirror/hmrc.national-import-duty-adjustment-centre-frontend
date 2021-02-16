@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 final case class UserAnswers(
@@ -29,11 +30,15 @@ final case class UserAnswers(
   reclaimDutyTypes: Set[ReclaimDutyType] = Set.empty,
   reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
   bankDetails: Option[BankDetails] = None,
+  repayTo: Option[RepayTo] = None,
   entryDetails: Option[EntryDetails] = None,
   itemNumbers: Option[ItemNumbers] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
   uploadAnotherFile: Option[Boolean] = None
-)
+) {
+
+  val isRepresentative: Boolean = representationType.contains(Representative)
+}
 
 object UserAnswers {
 

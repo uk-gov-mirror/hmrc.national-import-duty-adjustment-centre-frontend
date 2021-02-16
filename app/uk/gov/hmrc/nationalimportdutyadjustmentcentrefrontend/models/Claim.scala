@@ -33,6 +33,7 @@ case class Claim(
   claimReason: ClaimReason,
   uploads: Seq[UploadedFile],
   reclaimDutyPayments: Map[ReclaimDutyType, DutyPaid],
+  repayTo: Option[RepayTo],
   bankDetails: BankDetails,
   entryDetails: EntryDetails,
   itemNumbers: ItemNumbers,
@@ -59,6 +60,7 @@ object Claim {
         dutyType =>
           dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
       ).toMap,
+      repayTo = if (userAnswers.isRepresentative) Some(userAnswers.repayTo.getOrElse(missing(RepayToPage))) else None,
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
       entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage)),
       itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
 
@@ -50,6 +49,15 @@ class ClaimSpec extends UnitSpec with TestData {
         }.getMessage mustBe s"Missing answer - DutyPayment $Other"
 
       }
+
+      "representation type is 'representative' but 'repay to' is missing" in {
+        val invalidAnswer =
+          completeAnswers.copy(representationType = Some(RepresentationType.Representative), repayTo = None)
+        intercept[MissingUserAnswersException] {
+          Claim(invalidAnswer)
+        }.getMessage mustBe s"Missing answer - RepayToPage"
+
+      }
     }
 
     "calculate the correct total repayment" in {
@@ -57,6 +65,14 @@ class ClaimSpec extends UnitSpec with TestData {
         customsDutyRepaymentAnswer.dueAmount + importVatRepaymentAnswer.dueAmount + otherDutyRepaymentAnswer.dueAmount
 
       Claim(completeAnswers).repaymentTotal mustBe expected
+    }
+
+    "ignore 'repay to' answer when representation type is 'importer'" in {
+      val answersWithRepayTo = completeAnswers.copy(
+        representationType = Some(RepresentationType.Importer),
+        repayTo = Some(RepayTo.Representative)
+      )
+      Claim(answersWithRepayTo).repayTo mustBe None
     }
   }
 

@@ -31,15 +31,19 @@
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[BankDetails], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(form: Form[BankDetails], importersBank: Boolean,  backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("bankDetails.title")), backLink) {
+@titleKey = @{
+    if(importersBank) "bankDetails.importer.title" else "bankDetails.title"
+}
+
+@layout(pageTitle = Title(form, messages(titleKey)), backLink) {
 
     @formHelper(action = BankDetailsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
         @fieldSet(
-            legend = "bankDetails.title",
+            legend = titleKey,
             hint = Some(Html(messages("bankDetails.hint")))
         ) {
 

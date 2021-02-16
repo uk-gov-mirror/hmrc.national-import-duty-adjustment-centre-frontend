@@ -135,7 +135,13 @@ address.postcode.error.required = Enter a postcode
 address.postcode.error.length = Postcode must be 7 characters or fewer
 address.postcode.error.invalid = Enter a real postcode
 
+repay_to.title = Who is to be repaid?
+repay_to.Importer = Importer
+repay_to.Representative_of_importer = Representative
+repay_to.error.required = Select who is to be repaid
+
 bankDetails.title = Enter your UK bank details
+bankDetails.importer.title = Enter the importer’s business bank details
 bankDetails.hint = This must be a UK business account. The bank must also accept Bacs payments.
 bankDetails.name.heading = Name on the business account
 bankDetails.name.hint = Enter the name as it appears on your business bank statements.
@@ -213,8 +219,11 @@ check_answers.repayment.reclaimDutyType.01 = Customs duty
 check_answers.repayment.reclaimDutyType.02 = VAT
 check_answers.repayment.reclaimDutyType.03 = Other
 check_answers.repayment.total = Repayment request total
-check_answers.payment.title = Payment details
-check_answers.payment.bankDetails = Importer bank details
+check_answers.payment.title = Payment information
+check_answers.payment.payTo = Who is to be repaid?
+check_answers.payment.payTo.Importer = Importer
+check_answers.payment.payTo.Representative_of_importer = Representative
+check_answers.payment.bankDetails = Bank details
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>

@@ -28,16 +28,19 @@ class BankDetailsViewSpec extends UnitViewSpec with TestData {
   private val page = instanceOf[BankDetailsView]
   private val form = new BankDetailsFormProvider().apply()
 
-  private def view(form: Form[BankDetails] = form): Document = page(form, navigatorBack)
+  private def view(form: Form[BankDetails] = form, isImporter: Boolean = false): Document =
+    page(form, isImporter, navigatorBack)
 
   "BankDetailsPage on empty form" should {
 
     "have correct title" in {
       view().title() must startWith(messages("bankDetails.title"))
+      view(isImporter = true).title() must startWith(messages("bankDetails.importer.title"))
     }
 
     "have correct heading" in {
       view().getElementsByTag("h1") must containMessage("bankDetails.title")
+      view(isImporter = true).getElementsByTag("h1") must containMessage("bankDetails.importer.title")
     }
 
     "have back link" in {

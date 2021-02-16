@@ -21,7 +21,8 @@ import java.time.LocalDate
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   BankDetails,
   Claim,
@@ -38,12 +39,13 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   val claim: Claim = Claim(
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
     importerAddress = UkAddress("Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
-    representationType = Representative,
+    representationType = RepresentationType.Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
     uploads = Seq.empty,
     reclaimDutyPayments =
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
+    repayTo = Some(RepayTo.Representative),
     bankDetails = BankDetails("account name", "001122", "12345678"),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
     itemNumbers = ItemNumbers("1, 2, 5-10"),
@@ -62,7 +64,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     EntryDate = "20201231",
     DutyDetails =
       Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
-    PayTo = "Importer",
+    PayTo = "Representative of importer",
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
     ItemNumber = "1, 2, 5-10",
     ClaimReason = "A reason for the claim",

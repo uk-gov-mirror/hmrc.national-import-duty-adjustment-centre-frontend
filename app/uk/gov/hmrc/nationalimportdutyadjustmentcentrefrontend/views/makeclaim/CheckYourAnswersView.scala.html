@@ -182,6 +182,18 @@
         id = "payment_section",
         heading = Some(messages("check_answers.payment.title")),
         summaryListRows = Seq(
+            claim.repayTo.map(payTo =>
+                SummaryListRow(
+                    classes = "pay_to_row",
+                    key = Key(
+                        content = Text(messages("check_answers.payment.payTo"))
+                    ),
+                    value = Value(
+                        content = Text(MessageKey.apply("check_answers.payment.payTo", payTo.toString))
+                    ),
+                    actions = None
+                )
+            ),
             Some(SummaryListRow(
                 classes = "bank_details_type_row",
                 key = Key(
