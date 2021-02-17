@@ -22,9 +22,9 @@ import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -69,7 +69,11 @@ trait TestData {
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
-  var itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+  val itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+
+  val importerHasEoriAnswer = true
+
+  val importerEoriAnswer = Eori("GB123456789012")
 
   val completeAnswers: UserAnswers = UserAnswers(
     representationType = Some(representationTypeAnswer),
@@ -83,7 +87,9 @@ trait TestData {
     repayTo = Some(repayToAnswer),
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
-    itemNumbers = Some(itemNumbersAnswer)
+    itemNumbers = Some(itemNumbersAnswer),
+    importerHasEori = Some(importerHasEoriAnswer),
+    importerEori = Some(importerEoriAnswer)
   )
 
   // Upscan
