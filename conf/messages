@@ -135,6 +135,9 @@ address.postcode.error.required = Enter a postcode
 address.postcode.error.length = Postcode must be 7 characters or fewer
 address.postcode.error.invalid = Enter a real postcode
 
+importer.has.eori.title = Does the importer have an EORI number?
+importer.has.eori.required = Select yes if the importer has an EORI number
+
 repay_to.title = Who is to be repaid?
 repay_to.Importer = Importer
 repay_to.Representative_of_importer = Representative
