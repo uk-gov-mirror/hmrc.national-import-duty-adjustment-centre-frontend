@@ -43,6 +43,7 @@ class Navigator @Inject() () extends Conditions with Ordering {
     P(UploadSummaryPage, makeclaim.routes.UploadFormSummaryController.onPageLoad, hasUploads),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always),
+    P(ImporterHasEoriPage, makeclaim.routes.ImporterHasEoriController.onPageLoad, isRepresentative),
     P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative),
     P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always),
     P(CheckYourAnswersPage, makeclaim.routes.CheckYourAnswersController.onPageLoad, always),
@@ -70,6 +71,8 @@ protected trait Conditions {
   protected val hasUploads: UserAnswers => Boolean = _.uploads.nonEmpty
 
   protected val isRepresentative: UserAnswers => Boolean = _.isRepresentative
+
+  protected val importerHasEori: UserAnswers => Boolean = _.doesImporterHaveEori
 
 }
 

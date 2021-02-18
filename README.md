@@ -22,7 +22,6 @@ Use the following urls to install the scripts into the Tampermonkey browser plug
 Auth Login Stub
 https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Auth_Stub.js
 
-
 Create Case Journey
 https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 
