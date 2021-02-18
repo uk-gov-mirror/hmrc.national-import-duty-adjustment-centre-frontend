@@ -72,6 +72,8 @@ protected trait Conditions {
 
   protected val isRepresentative: UserAnswers => Boolean = _.isRepresentative
 
+  protected val importerHasEori: UserAnswers => Boolean = _.doesImporterHaveEori
+
 }
 
 protected trait Ordering {
