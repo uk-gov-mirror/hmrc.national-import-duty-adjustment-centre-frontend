@@ -39,6 +39,7 @@ final case class UserAnswers(
 ) {
 
   val isRepresentative: Boolean = representationType.contains(Representative)
+  val doesImporterHaveEori: Boolean = importerHasEori.contains(true)
 }
 
 object UserAnswers {
