@@ -31,13 +31,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ImporterHasEoriController @Inject()(
-                                           identify: IdentifierAction,
-                                           data: CacheDataService,
-                                           formProvider: YesNoFormProvider,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           val navigator: Navigator,
-                                           importerHasEoriView: ImporterHasEoriView
+class ImporterHasEoriController @Inject() (
+  identify: IdentifierAction,
+  data: CacheDataService,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  val navigator: Navigator,
+  importerHasEoriView: ImporterHasEoriView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Navigation {
 

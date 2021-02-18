@@ -72,9 +72,7 @@ class ImporterHasEoriViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("yesOrNo" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages(
-        "importer.has.eori.required"
-      )
+      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("importer.has.eori.required")
 
     }
 

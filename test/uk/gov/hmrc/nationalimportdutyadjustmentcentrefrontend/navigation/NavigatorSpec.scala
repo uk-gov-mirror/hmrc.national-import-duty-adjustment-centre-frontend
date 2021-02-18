@@ -64,12 +64,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
     "going forward" should {
       "go to repay page" in {
-        nextPage(
-          answers().copy(importerHasEori = Some(true))
-        ) mustBe routes.RepayToController.onPageLoad()
-        nextPage(
-          answers().copy(importerHasEori = Some(false))
-        ) mustBe routes.RepayToController.onPageLoad()
+        nextPage(answers().copy(importerHasEori = Some(true))) mustBe routes.RepayToController.onPageLoad()
+        nextPage(answers().copy(importerHasEori = Some(false))) mustBe routes.RepayToController.onPageLoad()
       }
     }
     "going back" should {

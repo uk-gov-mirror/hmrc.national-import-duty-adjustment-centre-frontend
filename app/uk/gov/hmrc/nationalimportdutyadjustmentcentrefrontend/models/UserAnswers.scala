@@ -38,7 +38,7 @@ final case class UserAnswers(
   importerHasEori: Option[Boolean] = None
 ) {
 
-  val isRepresentative: Boolean = representationType.contains(Representative)
+  val isRepresentative: Boolean     = representationType.contains(Representative)
   val doesImporterHaveEori: Boolean = importerHasEori.contains(true)
 }
 
