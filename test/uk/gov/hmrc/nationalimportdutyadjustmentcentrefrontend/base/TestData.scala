@@ -22,9 +22,9 @@ import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -75,12 +75,22 @@ trait TestData {
 
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
+  val importerContactDetailsAnswer = ImporterContactDetails(
+    "Importer Name",
+    "Importer Line 1",
+    Some("Importer Line 2"),
+    "Importer City",
+    "PCode",
+    "importer@example.com",
+    "01234567890"
+  )
+
   val completeAnswers: UserAnswers = UserAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
-    importerAddress = Some(addressAnswer),
+    claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
@@ -89,7 +99,8 @@ trait TestData {
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer),
     importerHasEori = Some(importerHasEoriAnswer),
-    importerEori = Some(importerEoriNumberAnswer)
+    importerEori = Some(importerEoriNumberAnswer),
+    importerContactDetails = Some(importerContactDetailsAnswer)
   )
 
   // Upscan

@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Claim, RepresentationType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 
@@ -82,19 +82,23 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       }
     }
 
+    "not have importer details when claimant is importer" in {
+      view(completeClaim.copy(representationType = RepresentationType.Importer)).getElementById(
+        "importer_section"
+      ) must notBePresent
+    }
+
     "have import details section" which {
+      val importerSection = view().getElementById("importer_section")
 
       "contains does import have Eori" in {
-        val importerSection = view().getElementById("importer_section")
-        val eoriRow         = importerSection.getElementsByClass("importer_has_eori_row")
-
+        val eoriRow = importerSection.getElementsByClass("importer_has_eori_row")
         eoriRow must haveSummaryKey(messages("check_answers.importer.hasEori"))
         eoriRow must haveSummaryValue(MessageKey.apply("check_answers.importer.hasEori", true.toString))
       }
 
       "contains Eori number when importer has EORI" in {
-        val importerSection = view().getElementById("importer_section")
-        val eoriRow         = importerSection.getElementsByClass("importer_eori_row")
+        val eoriRow = importerSection.getElementsByClass("importer_eori_row")
 
         eoriRow must haveSummaryKey(messages("check_answers.importer.eori"))
         eoriRow must haveSummaryValue(importerEoriNumberAnswer.number)
@@ -102,8 +106,26 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
       "does not contains Eori number when importer does not have EORI" in {
         val importerSection = view(completeClaim.copy(importerEoriNumber = None)).getElementById("importer_section")
-        val eoriRow         = importerSection.getElementsByClass("importer_eori_row")
+
+        val eoriRow = importerSection.getElementsByClass("importer_eori_row")
         eoriRow must beEmpty
+      }
+
+      "contains importer contact details" in {
+        val eoriRow = importerSection.getElementsByClass("importer_contact_details_row")
+
+        eoriRow must haveSummaryKey(messages("check_answers.importer.contactDetails"))
+        eoriRow must haveSummaryValue(
+          Seq(
+            importerContactDetailsAnswer.name,
+            importerContactDetailsAnswer.addressLine1,
+            importerContactDetailsAnswer.addressLine2.getOrElse(""),
+            importerContactDetailsAnswer.city,
+            importerContactDetailsAnswer.postCode,
+            importerContactDetailsAnswer.emailAddress,
+            importerContactDetailsAnswer.telephoneNumber
+          ).mkString(" ")
+        )
       }
     }
 

@@ -64,6 +64,10 @@ trait ViewMatchers extends Matchers {
     MatchResult(left.size() == 0, "Elements was not empty", "Elements was empty")
   }
 
+  def notBePresent: Matcher[Element] = (left: Element) => {
+    MatchResult(left == null, "Element was present", "Element was not present")
+  }
+
   class ElementContainsMessageMatcher(key: String, args: Seq[Any])(implicit messages: Messages)
       extends Matcher[Element] {
 

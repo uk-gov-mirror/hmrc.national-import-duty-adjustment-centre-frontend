@@ -29,6 +29,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   DutyPaid,
   EntryDetails,
   EoriNumber,
+  ImporterContactDetails,
   ItemNumbers,
   RepayTo,
   RepresentationType,
@@ -37,9 +38,22 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
 
 class EISCreateCaseRequestSpec extends UnitSpec {
 
-  val claim: Claim = Claim(
+  "EISCreateCaseRequest" should {
+
+    "create Content for Representative Claim" in {
+
+      EISCreateCaseRequest.Content(claimByRepresentative) must be(contentForRepresentativeClaim)
+    }
+
+    "create Content for Importer Claim" in {
+
+      EISCreateCaseRequest.Content(claimByImporter) must be(contentForImporterClaim)
+    }
+  }
+
+  val claimByRepresentative: Claim = Claim(
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
-    importerAddress = UkAddress("Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    claimantAddress = UkAddress("Representative Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
@@ -48,20 +62,45 @@ class EISCreateCaseRequestSpec extends UnitSpec {
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
     repayTo = Some(RepayTo.Representative),
     bankDetails = BankDetails("account name", "001122", "12345678"),
-    importerHasEoriNumber = Some(true),
     importerEoriNumber = Some(EoriNumber("GB098765432123")),
+    importerContactDetails = Some(
+      ImporterContactDetails(
+        "Import Co Ltd",
+        "Importer Address Line 1",
+        Some("Importer Address Line 2"),
+        "Importer City",
+        "IM12CD",
+        "contact@importer.com",
+        "99999999999"
+      )
+    ),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
     itemNumbers = ItemNumbers("1, 2, 5-10"),
     submissionDate = LocalDate.of(2021, 1, 31)
   )
 
-  val content: EISCreateCaseRequest.Content = EISCreateCaseRequest.Content(
+  val contentForRepresentativeClaim: EISCreateCaseRequest.Content = EISCreateCaseRequest.Content(
     RepresentationType = "Representative of importer",
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
+      Some("GB098765432123"),
       "Import Co Ltd",
-      Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com"),
-      Some("GB098765432123")
+      Address(
+        "Importer Address Line 1",
+        Some("Importer Address Line 2"),
+        "Importer City",
+        "IM12CD",
+        "GB",
+        "99999999999",
+        "contact@importer.com"
+      )
+    ),
+    AgentDetails = Some(
+      AgentDetails(
+        None,
+        "Representative Co Ltd",
+        Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+      )
     ),
     EntryProcessingUnit = "012",
     EntryNumber = "123456Q",
@@ -77,12 +116,45 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     SubmissionDate = "20210131"
   )
 
-  "EISCreateCaseRequest" should {
+  val claimByImporter: Claim = Claim(
+    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
+    claimantAddress = UkAddress("Acme Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    representationType = RepresentationType.Importer,
+    claimType = AntiDumping,
+    claimReason = ClaimReason("A reason for the claim"),
+    uploads = Seq.empty,
+    reclaimDutyPayments =
+      Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
+    repayTo = None,
+    bankDetails = BankDetails("account name", "001122", "12345678"),
+    importerEoriNumber = None,
+    importerContactDetails = None,
+    entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
+    itemNumbers = ItemNumbers("1, 2, 5-10"),
+    submissionDate = LocalDate.of(2021, 1, 31)
+  )
 
-    "create Content from valid Claim" in {
-
-      EISCreateCaseRequest.Content(claim) must be(content)
-    }
-  }
+  val contentForImporterClaim: EISCreateCaseRequest.Content = EISCreateCaseRequest.Content(
+    RepresentationType = "Importer",
+    ClaimType = "Anti-Dumping",
+    ImporterDetails = ImporterDetails(
+      None,
+      "Acme Import Co Ltd",
+      Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+    ),
+    AgentDetails = None,
+    EntryProcessingUnit = "012",
+    EntryNumber = "123456Q",
+    EntryDate = "20201231",
+    DutyDetails =
+      Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
+    PayTo = "Importer",
+    PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
+    ItemNumber = "1, 2, 5-10",
+    ClaimReason = "A reason for the claim",
+    FirstName = "Adam",
+    LastName = "Smith",
+    SubmissionDate = "20210131"
+  )
 
 }

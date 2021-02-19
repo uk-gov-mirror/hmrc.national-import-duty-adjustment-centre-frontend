@@ -17,15 +17,33 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ContactDetails, EoriNumber, Address => UkAddress}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.{Importer, Representative}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  Claim,
+  ContactDetails,
+  EoriNumber,
+  ImporterContactDetails,
+  Address => UkAddress
+}
 
-case class ImporterDetails(Name: String, Address: Address, EORI: Option[String])
+case class ImporterDetails(EORI: Option[String], Name: String, Address: Address)
 
 object ImporterDetails {
   implicit val format: OFormat[ImporterDetails] = Json.format[ImporterDetails]
 
-  def apply(contactDetails: ContactDetails, address: UkAddress, eoriNumber: Option[EoriNumber]): ImporterDetails =
+  def forClaim(claim: Claim): ImporterDetails = claim.representationType match {
+    case Representative =>
+      forRepresentativeApplicant(
+        claim.importerEoriNumber,
+        claim.importerContactDetails.getOrElse(throw new MissingUserAnswersException("Missing ImporterContactDetails"))
+      )
+    case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)
+  }
+
+  private def forImporterApplicant(contactDetails: ContactDetails, address: UkAddress): ImporterDetails =
     new ImporterDetails(
+      EORI = None, // TODO - capture applicant's EORI
       Name = address.name,
       Address = Address(
         AddressLine1 = address.addressLine1,
@@ -35,8 +53,25 @@ object ImporterDetails {
         CountryCode = "GB",
         EmailAddress = contactDetails.emailAddress,
         TelephoneNumber = contactDetails.telephoneNumber
-      ),
-      EORI = eoriNumber.map(_.number)
+      )
+    )
+
+  def forRepresentativeApplicant(
+    importerEoriNumber: Option[EoriNumber],
+    importer: ImporterContactDetails
+  ): ImporterDetails =
+    new ImporterDetails(
+      EORI = importerEoriNumber.map(_.number),
+      Name = importer.name,
+      Address = Address(
+        AddressLine1 = importer.addressLine1,
+        AddressLine2 = importer.addressLine2,
+        City = importer.city,
+        PostalCode = importer.postCode,
+        CountryCode = "GB",
+        EmailAddress = importer.emailAddress,
+        TelephoneNumber = importer.telephoneNumber
+      )
     )
 
 }

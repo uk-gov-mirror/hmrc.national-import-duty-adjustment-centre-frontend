@@ -40,6 +40,7 @@ object EISCreateCaseRequest {
     RepresentationType: String,
     ClaimType: String,
     ImporterDetails: ImporterDetails,
+    AgentDetails: Option[AgentDetails],
     EntryProcessingUnit: String,
     EntryNumber: String,
     EntryDate: String,
@@ -62,7 +63,8 @@ object EISCreateCaseRequest {
       Content(
         RepresentationType = claim.representationType.toString,
         ClaimType = claim.claimType.toString,
-        ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress, claim.importerEoriNumber),
+        ImporterDetails = ImporterDetails.forClaim(claim),
+        AgentDetails = AgentDetails.forClaim(claim),
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),

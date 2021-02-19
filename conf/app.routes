@@ -50,6 +50,9 @@ POST        /enter-other-duties                 uk.gov.hmrc.nationalimportdutyad
 GET         /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onPageLoad()
 POST        /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onSubmit()
 
+GET         /importer-correspondence-address    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onPageLoad()
+POST        /importer-correspondence-address    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onSubmit()
+
 GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
 POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()
 

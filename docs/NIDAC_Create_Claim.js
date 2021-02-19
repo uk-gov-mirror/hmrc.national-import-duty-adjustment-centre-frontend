@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
 // @match        http*://*/national-import-duty-adjustment-centre*
@@ -119,6 +119,16 @@ function completePage() {
         document.getElementById("accountName").value = "ACME Importers Ltd";
         document.getElementById("sortCode").value = "400731";
         document.getElementById("accountNumber").value = "52173018";
+        submit();
+    }
+    if (currentPageIs("/national-import-duty-adjustment-centre/importer-correspondence-address")) {
+        document.getElementById("name").value = "Representatives Client Importer";
+        document.getElementById("addressLine1").value = "Unit 17";
+        document.getElementById("addressLine2").value = "North Industrial Estate";
+        document.getElementById("city").value = "Southwich";
+        document.getElementById("postcode").value = "SO123KD";
+        document.getElementById("emailAddress").value = "client@importer.com";
+        document.getElementById("telephoneNumber").value = "01234567890";
         submit();
     }
 }

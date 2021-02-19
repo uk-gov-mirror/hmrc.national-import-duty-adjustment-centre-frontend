@@ -24,19 +24,19 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.AddressFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Address, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ImporterDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ImporterContactDetails, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class AddressControllerSpec extends ControllerSpec with TestData {
+class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[AddressView]
-  private val formProvider = new AddressFormProvider
+  private val page         = mock[ImporterDetailsView]
+  private val formProvider = new ImporterDetailsFormProvider
 
   private def controller =
-    new AddressController(
+    new ImporterDetailsController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       formProvider,
@@ -56,8 +56,8 @@ class AddressControllerSpec extends ControllerSpec with TestData {
     super.afterEach()
   }
 
-  def theResponseForm: Form[Address] = {
-    val captor = ArgumentCaptor.forClass(classOf[Form[Address]])
+  def theResponseForm: Form[ImporterContactDetails] = {
+    val captor = ArgumentCaptor.forClass(classOf[Form[ImporterContactDetails]])
     verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
@@ -72,22 +72,24 @@ class AddressControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(claimantAddress = Some(addressAnswer)))
+      withCacheUserAnswers(UserAnswers(importerContactDetails = Some(importerContactDetailsAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe Some(addressAnswer)
+      theResponseForm.value mustBe Some(importerContactDetailsAnswer)
     }
   }
 
   "POST" should {
 
     val validRequest = postRequest(
-      "name"         -> addressAnswer.name,
-      "addressLine1" -> addressAnswer.addressLine1,
-      "addressLine2" -> addressAnswer.addressLine2.getOrElse(""),
-      "city"         -> addressAnswer.city,
-      "postcode"     -> addressAnswer.postCode
+      "name"            -> importerContactDetailsAnswer.name,
+      "addressLine1"    -> importerContactDetailsAnswer.addressLine1,
+      "addressLine2"    -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
+      "city"            -> importerContactDetailsAnswer.city,
+      "postcode"        -> importerContactDetailsAnswer.postCode,
+      "emailAddress"    -> importerContactDetailsAnswer.emailAddress,
+      "telephoneNumber" -> importerContactDetailsAnswer.telephoneNumber
     )
 
     "update cache and redirect when valid answer is submitted" in {
@@ -96,8 +98,8 @@ class AddressControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.claimantAddress mustBe Some(addressAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
+      theUpdatedUserAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

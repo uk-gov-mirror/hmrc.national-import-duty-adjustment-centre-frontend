@@ -79,11 +79,11 @@
                 ),
                 value = Value(
                     content = HtmlContent(Seq(
-                        Some(claim.importerAddress.name),
-                        Some(claim.importerAddress.addressLine1),
-                        claim.importerAddress.addressLine2,
-                        Some(claim.importerAddress.city),
-                        Some(claim.importerAddress.postCode)
+                        Some(claim.claimantAddress.name),
+                        Some(claim.claimantAddress.addressLine1),
+                        claim.claimantAddress.addressLine2,
+                        Some(claim.claimantAddress.city),
+                        Some(claim.claimantAddress.postCode)
                     ).flatten.mkString("<br>"))
                 ),
                 actions = None
@@ -184,14 +184,14 @@
             id = "importer_section",
             heading = Some(messages("check_answers.importer.title")),
             summaryListRows = Seq(
-                claim.importerHasEoriNumber.map(hasEori =>
+                Some(
                     SummaryListRow(
                         classes = "importer_has_eori_row",
                         key = Key(
                             content = Text(messages("check_answers.importer.hasEori"))
                         ),
                         value = Value(
-                            content = Text(MessageKey.apply("check_answers.importer.hasEori", hasEori.toString))
+                            content = Text(MessageKey.apply("check_answers.importer.hasEori", claim.importerEoriNumber.isDefined.toString))
                         ),
                         actions = None
                     )
@@ -204,6 +204,26 @@
                         ),
                         value = Value(
                             content = Text(eori.number)
+                        ),
+                        actions = None
+                    )
+                ),
+                claim.importerContactDetails.map(contactDetails =>
+                    SummaryListRow(
+                        classes = "importer_contact_details_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.contactDetails"))
+                        ),
+                        value = Value(
+                            content = HtmlContent(Seq(
+                                Some(contactDetails.name),
+                                Some(contactDetails.addressLine1),
+                                contactDetails.addressLine2,
+                                Some(contactDetails.city),
+                                Some(contactDetails.postCode),
+                                Some(contactDetails.emailAddress),
+                                Some(contactDetails.telephoneNumber)
+                            ).flatten.mkString("<br>"))
                         ),
                         actions = None
                     )

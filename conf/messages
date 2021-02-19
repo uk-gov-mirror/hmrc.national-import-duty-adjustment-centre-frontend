@@ -138,6 +138,9 @@ address.postcode.error.invalid = Enter a real postcode
 importer.has.eori.title = Does the importer have an EORI number?
 importer.has.eori.required = Select yes if the importer has an EORI number
 
+importer-details.title = What are the importer’s UK correspondence details?
+importer-details.hint = We may use these details to contact the importer about this claim.
+
 repay_to.title = Who is to be repaid?
 repay_to.Importer = Importer
 repay_to.Representative_of_importer = Representative
@@ -235,6 +238,7 @@ check_answers.importer.hasEori = Does the importer have an EORI number?
 check_answers.importer.hasEori.true = Yes
 check_answers.importer.hasEori.false = No
 check_answers.importer.eori = Importer’s EORI
+check_answers.importer.contactDetails = Importer’s details
 check_answers.payment.title = Payment information
 check_answers.payment.payTo = Who is to be repaid?
 check_answers.payment.payTo.Importer = Importer

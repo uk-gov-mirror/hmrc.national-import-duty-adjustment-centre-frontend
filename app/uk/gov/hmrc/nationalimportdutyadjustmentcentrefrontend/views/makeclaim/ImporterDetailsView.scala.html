@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Address
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ImporterContactDetails
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
@@ -27,23 +27,43 @@
     layout: Layout,
     formHelper: FormWithCSRF,
     fieldSet: components.fieldSet,
+    inputText: components.inputText,
     addressFields: components.addressInputFields,
     errorSummary: errorSummary,
     continueButton: components.continueButton
 )
 
-@(form: Form[Address], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(form: Form[ImporterContactDetails], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("address.title")), backLink) {
+@layout(pageTitle = Title(form, messages("importer-details.title")), backLink) {
 
-    @formHelper(action = AddressController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ImporterDetailsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
         @fieldSet(
-            legend = "address.title",
-            hint = Some(Html(messages("address.hint")))
+            legend = "importer-details.title",
+            hint = Some(Html(messages("importer-details.hint")))
         ) {
-          @addressFields(form)
+
+            @addressFields(form)
+
+            @inputText(
+                form = form,
+                id = "emailAddress",
+                name = "emailAddress",
+                inputType = "email",
+                label = "contactDetails.emailAddress.heading",
+                autocomplete = Some("email")
+            )
+
+            @inputText(
+                form = form,
+                id = "telephoneNumber",
+                name = "telephoneNumber",
+                label = "contactDetails.telephoneNumber.heading",
+                classes = Some("govuk-input--width-20"),
+                autocomplete = Some("tel")
+            )
         }
 
         @continueButton()
