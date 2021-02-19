@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
+
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
 // @match        http*://*/national-import-duty-adjustment-centre*
@@ -105,6 +106,10 @@ function completePage() {
         document.getElementById("addressLine2").value = "West Industrial Estate";
         document.getElementById("city").value = "Middlewich";
         document.getElementById("postcode").value = "MD123KD";
+        submit();
+    }
+    if (currentPageIs("/national-import-duty-adjustment-centre/eori-number")) {
+        document.getElementById("yesOrNo").checked = true;
         submit();
     }
     if (currentPageIs("/national-import-duty-adjustment-centre/enter-eori-number")) {
