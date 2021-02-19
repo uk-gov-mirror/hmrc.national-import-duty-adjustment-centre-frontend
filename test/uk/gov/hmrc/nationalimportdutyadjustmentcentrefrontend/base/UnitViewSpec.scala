@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
-import org.jsoup.nodes.Element
-import org.scalatest.Assertion
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{AnyContent, Call, Request}
 import play.api.test.CSRFTokenHelper.CSRFRequest

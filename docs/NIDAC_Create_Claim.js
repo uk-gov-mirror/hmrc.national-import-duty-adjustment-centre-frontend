@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
 // @match        http*://*/national-import-duty-adjustment-centre*
@@ -105,6 +105,10 @@ function completePage() {
         document.getElementById("addressLine2").value = "West Industrial Estate";
         document.getElementById("city").value = "Middlewich";
         document.getElementById("postcode").value = "MD123KD";
+        submit();
+    }
+    if (currentPageIs("/national-import-duty-adjustment-centre/enter-eori-number")) {
+        document.getElementById("eoriNumber").value = "GB123456789536";
         submit();
     }
     if (currentPageIs("/national-import-duty-adjustment-centre/who-to-repay")) {

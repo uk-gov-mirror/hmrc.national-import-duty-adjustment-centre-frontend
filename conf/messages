@@ -165,6 +165,14 @@ itemNumbers.hint = Tell us the item numbers as they appear on your declaration. 
 itemNumbers.error.required = Enter an item number
 itemNumbers.error.length = Item numbers must be 500 characters or fewer
 
+importer.eori.title = What is the importer’s EORI number?
+importer.eori.hint = The number starts with GB and is followed by 12 digits. For example, GB345834921000.
+importer.eori.details.summary = The importer’s EORI doesn’t start with GB
+importer.eori.details.getEori = If the importer’s EORI number does not start with GB, they will need to {0} (opens in a new tab).
+importer.eori.details.getEori.linktext = apply for a new EORI number
+importer.eori.error.required = Enter the importer’s EORI number
+importer.eori.error.invalid = Enter an EORI number in the correct format
+
 entryDetails.title = Entry details
 entryDetails.hint = These can be found on Single Administrative Document (C88) or Import Entry Acceptance Advice (E2) documents.
 entryDetails.claimEpu.heading = Entry processing unit (EPU)
@@ -222,6 +230,11 @@ check_answers.repayment.reclaimDutyType.01 = Customs duty
 check_answers.repayment.reclaimDutyType.02 = VAT
 check_answers.repayment.reclaimDutyType.03 = Other
 check_answers.repayment.total = Repayment request total
+check_answers.importer.title = Importer’s details
+check_answers.importer.hasEori = Does the importer have an EORI number?
+check_answers.importer.hasEori.true = Yes
+check_answers.importer.hasEori.false = No
+check_answers.importer.eori = Importer’s EORI
 check_answers.payment.title = Payment information
 check_answers.payment.payTo = Who is to be repaid?
 check_answers.payment.payTo.Importer = Importer

@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
@@ -177,6 +178,39 @@
             ))
         )
     )
+
+    @if(claim.representationType == RepresentationType.Representative) {
+        @summaryList(
+            id = "importer_section",
+            heading = Some(messages("check_answers.importer.title")),
+            summaryListRows = Seq(
+                claim.importerHasEoriNumber.map(hasEori =>
+                    SummaryListRow(
+                        classes = "importer_has_eori_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.hasEori"))
+                        ),
+                        value = Value(
+                            content = Text(MessageKey.apply("check_answers.importer.hasEori", hasEori.toString))
+                        ),
+                        actions = None
+                    )
+                ),
+                claim.importerEoriNumber.map(eori =>
+                    SummaryListRow(
+                        classes = "importer_eori_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.eori"))
+                        ),
+                        value = Value(
+                            content = Text(eori.number)
+                        ),
+                        actions = None
+                    )
+                )
+            )
+        )
+    }
 
     @summaryList(
         id = "payment_section",

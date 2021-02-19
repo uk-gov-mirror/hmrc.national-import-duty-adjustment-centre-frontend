@@ -49,6 +49,8 @@ class AppConfig @Inject() (
   val loginContinueUrl: String = loadConfig("urls.loginContinue")
   val signOutUrl: String       = loadConfig("urls.signout")
 
+  val getEoriUrl: String = loadConfig("urls.external.getEori")
+
   private val sessionTimeoutSeconds: Int = sessionTimeoutConfig.timeoutDuration.getSeconds.toInt
 
   val timeoutDialogTimeout: Int   = sessionTimeoutSeconds

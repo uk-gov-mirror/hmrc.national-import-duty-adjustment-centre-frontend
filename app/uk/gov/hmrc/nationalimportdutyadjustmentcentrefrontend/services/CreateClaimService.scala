@@ -25,9 +25,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISCrea
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Claim, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.CreateEISClaimRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class CreateClaimService @Inject() (connector: NIDACConnector)(implicit ec: ExecutionContext) {
+class CreateClaimService @Inject() (connector: NIDACConnector) {
   private val acknowledgementReferenceMaxLength = 32
 
   def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {

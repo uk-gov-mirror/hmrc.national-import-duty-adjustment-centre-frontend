@@ -35,7 +35,8 @@ final case class UserAnswers(
   itemNumbers: Option[ItemNumbers] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
   uploadAnotherFile: Option[Boolean] = None,
-  importerHasEori: Option[Boolean] = None
+  importerHasEori: Option[Boolean] = None,
+  importerEori: Option[EoriNumber] = None
 ) {
 
   val isRepresentative: Boolean     = representationType.contains(Representative)

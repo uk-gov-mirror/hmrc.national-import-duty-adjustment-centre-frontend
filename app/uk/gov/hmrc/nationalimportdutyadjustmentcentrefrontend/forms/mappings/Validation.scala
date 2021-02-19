@@ -23,6 +23,7 @@ object Validation {
   val safeInputPattern     = """^[A-Za-z0-9À-ÿ \!\)\(.,_/’'"&-]+$"""
   val entryProcessingUnit  = "^[0-9]{3}$"
   val entryNumber          = "^([0-9]{6}[a-z|A-Z])$"
+  val eoriNumber           = "^([G]{1}[B]{1}[0-9]{15})|([G]{1}[B]{1}[0-9]{12})$"
 
   val emailAddressPattern =
     """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?)*$"""

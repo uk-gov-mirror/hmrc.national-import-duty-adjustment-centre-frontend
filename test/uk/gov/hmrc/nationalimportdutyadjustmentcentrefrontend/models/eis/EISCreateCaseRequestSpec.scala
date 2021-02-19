@@ -21,8 +21,6 @@ import java.time.LocalDate
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   BankDetails,
   Claim,
@@ -30,7 +28,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   ContactDetails,
   DutyPaid,
   EntryDetails,
+  EoriNumber,
   ItemNumbers,
+  RepayTo,
+  RepresentationType,
   Address => UkAddress
 }
 
@@ -47,6 +48,8 @@ class EISCreateCaseRequestSpec extends UnitSpec {
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
     repayTo = Some(RepayTo.Representative),
     bankDetails = BankDetails("account name", "001122", "12345678"),
+    importerHasEoriNumber = Some(true),
+    importerEoriNumber = Some(EoriNumber("GB098765432123")),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
     itemNumbers = ItemNumbers("1, 2, 5-10"),
     submissionDate = LocalDate.of(2021, 1, 31)
@@ -57,7 +60,8 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
       "Import Co Ltd",
-      Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+      Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com"),
+      Some("GB098765432123")
     ),
     EntryProcessingUnit = "012",
     EntryNumber = "123456Q",

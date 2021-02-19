@@ -62,6 +62,9 @@ POST        /entry-details                      uk.gov.hmrc.nationalimportdutyad
 GET         /item-numbers                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ItemNumbersController.onPageLoad()
 POST        /item-numbers                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ItemNumbersController.onSubmit()
 
+GET         /enter-eori-number                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterEoriNumberController.onPageLoad()
+POST        /enter-eori-number                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterEoriNumberController.onSubmit()
+
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
 

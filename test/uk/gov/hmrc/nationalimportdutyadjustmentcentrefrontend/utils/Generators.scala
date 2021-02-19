@@ -147,6 +147,13 @@ trait Generators {
       char   <- listOfN(1, arbitrary[Char])
     } yield s"$digits$char"
 
+  def eoriNumber(): Gen[String] =
+    for {
+      length <- Gen.oneOf(Seq(12, 15))
+      digits <- listOfN(length, arbitrary[Number])
+
+    } yield s"GB$digits"
+
   def datesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 
     def toMillis(date: LocalDate): Long =

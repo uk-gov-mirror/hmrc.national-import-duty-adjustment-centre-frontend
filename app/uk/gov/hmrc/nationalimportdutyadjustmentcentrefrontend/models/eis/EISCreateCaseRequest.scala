@@ -62,7 +62,7 @@ object EISCreateCaseRequest {
       Content(
         RepresentationType = claim.representationType.toString,
         ClaimType = claim.claimType.toString,
-        ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress),
+        ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress, claim.importerEoriNumber),
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),

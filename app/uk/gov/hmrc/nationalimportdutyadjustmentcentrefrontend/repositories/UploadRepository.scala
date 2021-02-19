@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 import java.time.LocalDateTime
 
 import javax.inject.Inject
-import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.indexes.{Index, IndexType}
@@ -29,8 +28,8 @@ import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, JsonFormats, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, JsonFormats, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails._
 
 import scala.concurrent.{ExecutionContext, Future}
