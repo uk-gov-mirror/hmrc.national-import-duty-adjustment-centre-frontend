@@ -22,8 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   Claim,
   ContactDetails,
-  EoriNumber,
-  ImporterContactDetails,
+  ImporterBeingRepresentedDetails,
   Address => UkAddress
 }
 
@@ -35,8 +34,9 @@ object ImporterDetails {
   def forClaim(claim: Claim): ImporterDetails = claim.representationType match {
     case Representative =>
       forRepresentativeApplicant(
-        claim.importerEoriNumber,
-        claim.importerContactDetails.getOrElse(throw new MissingUserAnswersException("Missing ImporterContactDetails"))
+        claim.importerBeingRepresentedDetails.getOrElse(
+          throw new MissingUserAnswersException("Missing ImporterBeingRepresentedDetails")
+        )
       )
     case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)
   }
@@ -56,21 +56,18 @@ object ImporterDetails {
       )
     )
 
-  def forRepresentativeApplicant(
-    importerEoriNumber: Option[EoriNumber],
-    importer: ImporterContactDetails
-  ): ImporterDetails =
+  def forRepresentativeApplicant(importer: ImporterBeingRepresentedDetails): ImporterDetails =
     new ImporterDetails(
-      EORI = importerEoriNumber.map(_.number),
-      Name = importer.name,
+      EORI = importer.eoriNumber.map(_.number),
+      Name = importer.contactDetails.name,
       Address = Address(
-        AddressLine1 = importer.addressLine1,
-        AddressLine2 = importer.addressLine2,
-        City = importer.city,
-        PostalCode = importer.postCode,
+        AddressLine1 = importer.contactDetails.addressLine1,
+        AddressLine2 = importer.contactDetails.addressLine2,
+        City = importer.contactDetails.city,
+        PostalCode = importer.contactDetails.postCode,
         CountryCode = "GB",
-        EmailAddress = importer.emailAddress,
-        TelephoneNumber = importer.telephoneNumber
+        EmailAddress = importer.contactDetails.emailAddress,
+        TelephoneNumber = importer.contactDetails.telephoneNumber
       )
     )
 

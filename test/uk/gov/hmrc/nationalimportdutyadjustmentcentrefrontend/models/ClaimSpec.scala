@@ -67,12 +67,12 @@ class ClaimSpec extends UnitSpec with TestData {
       Claim(completeAnswers).repaymentTotal mustBe expected
     }
 
-    "ignore 'repay to' answer when representation type is 'importer'" in {
+    "ignore 'importer being represented' answers when representation type is 'importer'" in {
       val answersWithRepayTo = completeAnswers.copy(
         representationType = Some(RepresentationType.Importer),
         repayTo = Some(RepayTo.Representative)
       )
-      Claim(answersWithRepayTo).repayTo mustBe None
+      Claim(answersWithRepayTo).importerBeingRepresentedDetails mustBe None
     }
   }
 

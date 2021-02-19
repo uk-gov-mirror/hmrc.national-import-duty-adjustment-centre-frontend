@@ -69,7 +69,7 @@ object EISCreateCaseRequest {
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
         DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
-        PayTo = claim.repayTo.getOrElse(Importer).toString,
+        PayTo = claim.importerBeingRepresentedDetails.map(_.repayTo).getOrElse(Importer).toString,
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
         ItemNumber = claim.itemNumbers.numbers,
         ClaimReason = claim.claimReason.reason,

@@ -21,20 +21,8 @@ import java.time.LocalDate
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
-  BankDetails,
-  Claim,
-  ClaimReason,
-  ContactDetails,
-  DutyPaid,
-  EntryDetails,
-  EoriNumber,
-  ImporterContactDetails,
-  ItemNumbers,
-  RepayTo,
-  RepresentationType,
-  Address => UkAddress
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Address => UkAddress}
 
 class EISCreateCaseRequestSpec extends UnitSpec {
 
@@ -60,20 +48,23 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     uploads = Seq.empty,
     reclaimDutyPayments =
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
-    repayTo = Some(RepayTo.Representative),
-    bankDetails = BankDetails("account name", "001122", "12345678"),
-    importerEoriNumber = Some(EoriNumber("GB098765432123")),
-    importerContactDetails = Some(
-      ImporterContactDetails(
-        "Import Co Ltd",
-        "Importer Address Line 1",
-        Some("Importer Address Line 2"),
-        "Importer City",
-        "IM12CD",
-        "contact@importer.com",
-        "99999999999"
+    importerBeingRepresentedDetails = Some(
+      ImporterBeingRepresentedDetails(
+        repayTo = RepayTo.Representative,
+        eoriNumber = Some(EoriNumber("GB098765432123")),
+        contactDetails =
+          ImporterContactDetails(
+            "Import Co Ltd",
+            "Importer Address Line 1",
+            Some("Importer Address Line 2"),
+            "Importer City",
+            "IM12CD",
+            "contact@importer.com",
+            "99999999999"
+          )
       )
     ),
+    bankDetails = BankDetails("account name", "001122", "12345678"),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
     itemNumbers = ItemNumbers("1, 2, 5-10"),
     submissionDate = LocalDate.of(2021, 1, 31)
@@ -125,10 +116,8 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     uploads = Seq.empty,
     reclaimDutyPayments =
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
-    repayTo = None,
+    importerBeingRepresentedDetails = None,
     bankDetails = BankDetails("account name", "001122", "12345678"),
-    importerEoriNumber = None,
-    importerContactDetails = None,
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),
     itemNumbers = ItemNumbers("1, 2, 5-10"),
     submissionDate = LocalDate.of(2021, 1, 31)

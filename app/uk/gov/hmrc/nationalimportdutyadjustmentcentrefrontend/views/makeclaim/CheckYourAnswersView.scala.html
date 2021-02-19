@@ -179,8 +179,8 @@
         )
     )
 
-    @if(claim.representationType == RepresentationType.Representative) {
-        @summaryList(
+    @claim.importerBeingRepresentedDetails.map(importer =>
+        summaryList(
             id = "importer_section",
             heading = Some(messages("check_answers.importer.title")),
             summaryListRows = Seq(
@@ -191,12 +191,12 @@
                             content = Text(messages("check_answers.importer.hasEori"))
                         ),
                         value = Value(
-                            content = Text(MessageKey.apply("check_answers.importer.hasEori", claim.importerEoriNumber.isDefined.toString))
+                            content = Text(MessageKey.apply("check_answers.importer.hasEori", importer.eoriNumber.isDefined.toString))
                         ),
                         actions = None
                     )
                 ),
-                claim.importerEoriNumber.map(eori =>
+                importer.eoriNumber.map(eori =>
                     SummaryListRow(
                         classes = "importer_eori_row",
                         key = Key(
@@ -208,7 +208,7 @@
                         actions = None
                     )
                 ),
-                claim.importerContactDetails.map(contactDetails =>
+                Some(
                     SummaryListRow(
                         classes = "importer_contact_details_row",
                         key = Key(
@@ -216,13 +216,13 @@
                         ),
                         value = Value(
                             content = HtmlContent(Seq(
-                                Some(contactDetails.name),
-                                Some(contactDetails.addressLine1),
-                                contactDetails.addressLine2,
-                                Some(contactDetails.city),
-                                Some(contactDetails.postCode),
-                                Some(contactDetails.emailAddress),
-                                Some(contactDetails.telephoneNumber)
+                                Some(importer.contactDetails.name),
+                                Some(importer.contactDetails.addressLine1),
+                                importer.contactDetails.addressLine2,
+                                Some(importer.contactDetails.city),
+                                Some(importer.contactDetails.postCode),
+                                Some(importer.contactDetails.emailAddress),
+                                Some(importer.contactDetails.telephoneNumber)
                             ).flatten.mkString("<br>"))
                         ),
                         actions = None
@@ -230,13 +230,14 @@
                 )
             )
         )
-    }
+
+    )
 
     @summaryList(
         id = "payment_section",
         heading = Some(messages("check_answers.payment.title")),
         summaryListRows = Seq(
-            claim.repayTo.map(payTo =>
+            claim.importerBeingRepresentedDetails.map(_.repayTo).map(payTo =>
                 SummaryListRow(
                     classes = "pay_to_row",
                     key = Key(
