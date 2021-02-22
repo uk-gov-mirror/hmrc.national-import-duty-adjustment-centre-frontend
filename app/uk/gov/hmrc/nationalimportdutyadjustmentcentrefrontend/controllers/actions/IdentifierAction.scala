@@ -20,10 +20,11 @@ import com.google.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, internalId}
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -44,11 +45,25 @@ class AuthenticatedIdentifierAction @Inject() (
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map {
-        internalId => block(IdentifierRequest(request, internalId))
-      }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+    authorised().retrieve(internalId and allEnrolments) {
+
+      case userInternalId ~ allUsersEnrolments =>
+
+        val enrolment = allUsersEnrolments.getEnrolment("HMRC-CTS-ORG").getOrElse(
+          throw InsufficientEnrolments("User does not have enroment HMRC-CTS-ORG")
+        )
+
+        val eoriNumber = enrolment.getIdentifier("EORINumber").map(_.value).getOrElse(
+          throw InsufficientEnrolments("Enrolment HMRC-CTS-ORG does not have an associated EORI number")
+        )
+
+        userInternalId.map(internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))).getOrElse(
+          throw UnauthorizedException("Unable to retrieve internalId")
+        )
+
     } recover {
+      case _: InsufficientEnrolments =>
+        Redirect("http://localhost:6750/customs-enrolment-services/nidac/subscribe")
       case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: AuthorisationException =>
