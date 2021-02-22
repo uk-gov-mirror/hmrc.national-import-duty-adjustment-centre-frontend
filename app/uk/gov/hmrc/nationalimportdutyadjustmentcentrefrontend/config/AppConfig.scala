@@ -58,8 +58,9 @@ class AppConfig @Inject() (
 
   val mongoTimeToLiveInSeconds: Int = sessionTimeoutSeconds + 60
 
-  val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
-  val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
+  val nidacServiceBaseUrl: String          = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
+  val upscanInitiateV2Url: String          = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
+  val bankAccountReputationBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),

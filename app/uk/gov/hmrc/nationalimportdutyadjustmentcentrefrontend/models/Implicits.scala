@@ -16,15 +16,12 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+object Implicits {
 
-case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
+  implicit class SanitizedString(unwrap: String) {
+    def stripSpacesAndDashes() = unwrap.replaceAll("""[ \-]""", "")
 
-object BankDetails {
-  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
-
-  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
-    new BankDetails(accountName, sortCode, accountNumber.leftPadAccountNumber())
+    def leftPadAccountNumber() = f"${unwrap.toInt}%08d"
+  }
 
 }

@@ -17,15 +17,18 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
 import javax.inject.{Inject, Singleton}
+import play.api.data.FormError
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, RepayTo, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BankDetailsPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{BankAccountReputationService, CacheDataService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -35,6 +38,7 @@ import scala.concurrent.ExecutionContext
 class BankDetailsController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
+  bankAccountReputationService: BankAccountReputationService,
   formProvider: BankDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   val navigator: Navigator,
@@ -60,10 +64,31 @@ class BankDetailsController @Inject() (
           BadRequest(bankDetailsView(formWithErrors, importersBankDetails(answers), backLink(answers)))
         },
       value =>
-        data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
+        bankAccountReputationService.validate(value) flatMap {
+          case barsResult if barsResult.isValid =>
+            data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+              updatedAnswers => Redirect(nextPage(updatedAnswers))
+            }
+          case barsResult => processBarsFailure(value, barsResult)
         }
     )
+  }
+
+  private def processBarsFailure(bankDetails: BankDetails, barsResult: BARSResult)(implicit
+    request: IdentifierRequest[_]
+  ) = {
+
+    val formWithErrors = barsResult match {
+      case bars if bars.accountNumberWithSortCodeIsValid != "yes" =>
+        form.fill(bankDetails).copy(errors =
+          Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
+        )
+      case _ => form.fill(bankDetails).copy(errors = Seq(FormError("", "bankDetails.bars.validation.failed")))
+    }
+    data.getAnswers map { answers =>
+      BadRequest(bankDetailsView(formWithErrors, importersBankDetails(answers), backLink(answers)))
+    }
+
   }
 
   private def importersBankDetails: UserAnswers => Boolean = (answers: UserAnswers) =>

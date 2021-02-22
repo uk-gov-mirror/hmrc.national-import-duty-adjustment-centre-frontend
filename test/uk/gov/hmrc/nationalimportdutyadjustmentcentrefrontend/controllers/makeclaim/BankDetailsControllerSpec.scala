@@ -19,26 +19,33 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.BankAccountReputationService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
+
+import scala.concurrent.Future
 
 class BankDetailsControllerSpec extends ControllerSpec with TestData {
 
   private val page         = mock[BankDetailsView]
   private val formProvider = new BankDetailsFormProvider
 
+  private val bankAccountReputationService = mock[BankAccountReputationService]
+
   private def controller =
     new BankDetailsController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
+      bankAccountReputationService,
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
@@ -49,10 +56,11 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
     super.beforeEach()
     withEmptyCache()
     when(page.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsSuccessResult))
   }
 
   override protected def afterEach(): Unit = {
-    reset(page)
+    reset(page, bankAccountReputationService)
     super.afterEach()
   }
 
@@ -96,6 +104,15 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.bankDetails mustBe Some(bankDetailsAnswer)
       redirectLocation(result) mustBe Some(navigator.nextPage(BankDetailsPage, emptyAnswers).url)
+    }
+
+    "return 400 (BAD REQUEST) when BARS check fails" in {
+
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsInvalidAccountResult))
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual BAD_REQUEST
+
+      theResponseForm.errors mustBe Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

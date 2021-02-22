@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.BankDetails
 
-case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
+case class ValidateBankDetailsRequest(account: AccountDetails)
 
-object BankDetails {
-  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
+object ValidateBankDetailsRequest {
+  implicit val format: OFormat[ValidateBankDetailsRequest] = Json.format[ValidateBankDetailsRequest]
 
-  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
-    new BankDetails(accountName, sortCode, accountNumber.leftPadAccountNumber())
+  def apply(bankDetails: BankDetails): ValidateBankDetailsRequest = new ValidateBankDetailsRequest(
+    AccountDetails(bankDetails.sortCode, bankDetails.accountNumber)
+  )
 
 }

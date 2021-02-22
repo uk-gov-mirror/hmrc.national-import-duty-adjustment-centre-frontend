@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+case class BARSResult(accountNumberWithSortCodeIsValid: String) {
+  val isValid: Boolean = accountNumberWithSortCodeIsValid == "yes"
+}
 
-case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
+object BARSResult {
 
-object BankDetails {
-  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
-
-  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
-    new BankDetails(accountName, sortCode, accountNumber.leftPadAccountNumber())
+  def apply(validateResponse: ValidateBankDetailsResponse): BARSResult = new BARSResult(
+    validateResponse.accountNumberWithSortCodeIsValid
+  )
 
 }

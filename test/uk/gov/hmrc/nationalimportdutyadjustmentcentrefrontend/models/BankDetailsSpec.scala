@@ -16,15 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 
-case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
+class BankDetailsSpec extends UnitSpec with TestData {
 
-object BankDetails {
-  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
+  "BankDetails" should {
 
-  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
-    new BankDetails(accountName, sortCode, accountNumber.leftPadAccountNumber())
+    "pad a 6 digit account number" in {
+
+      BankDetails("Account", "001122", "123456").accountNumber mustBe "00123456"
+    }
+
+  }
 
 }
