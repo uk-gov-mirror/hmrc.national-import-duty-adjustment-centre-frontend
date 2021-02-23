@@ -52,10 +52,10 @@ class AuthenticatedIdentifierAction @Inject() (
     authorised().retrieve(internalId and allEnrolments) {
 
       case userInternalId ~ allUsersEnrolments =>
-        val eoriNumber = allUsersEnrolments.getEnrolment("HMRC-CTS-ORG")
+        val eoriNumber = allUsersEnrolments.getEnrolment(NidacEnrolment)
           .map(
             enrolment =>
-              enrolment.getIdentifier("EORINumber") match {
+              enrolment.getIdentifier(EoriIdentifier) match {
                 case Some(identifier) => identifier.value
               }
           ).getOrElse(throw InsufficientEnrolments("User does not have enrolment HMRC-CTS-ORG"))
