@@ -67,7 +67,7 @@ class AuthenticatedIdentifierAction @Inject() (
 
     } recover {
       case _: InsufficientEnrolments =>
-        Redirect("http://localhost:6750/customs-enrolment-services/nidac/subscribe")
+        Redirect(config.eoriSubscribeUrl)
       case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: AuthorisationException =>
