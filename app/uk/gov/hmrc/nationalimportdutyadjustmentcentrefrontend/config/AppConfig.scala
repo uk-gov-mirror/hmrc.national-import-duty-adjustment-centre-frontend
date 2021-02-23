@@ -62,7 +62,7 @@ class AppConfig @Inject() (
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
 
   val customsEnrolmentBaseUrl: String = servicesConfig.baseUrl("customs-enrolment")
-  val eoriSubscribeUrl: String = s"$customsEnrolmentBaseUrl${servicesConfig("customs-enrolment.subscribe")}"
+  val eoriSubscribeUrl: String        = s"$customsEnrolmentBaseUrl${servicesConfig("customs-enrolment.subscribe")}"
 
   private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
 

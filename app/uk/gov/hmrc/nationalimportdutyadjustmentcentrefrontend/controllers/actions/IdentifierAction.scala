@@ -52,7 +52,6 @@ class AuthenticatedIdentifierAction @Inject() (
     authorised().retrieve(internalId and allEnrolments) {
 
       case userInternalId ~ allUsersEnrolments =>
-
         val enrolment = allUsersEnrolments.getEnrolment(NidacEnrolment).getOrElse(
           throw InsufficientEnrolments("User does not have enrolment HMRC-CTS-ORG")
         )
@@ -61,9 +60,9 @@ class AuthenticatedIdentifierAction @Inject() (
           throw InsufficientEnrolments("Enrolment HMRC-CTS-ORG does not have an associated EORI number")
         )
 
-        userInternalId.map(internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))).getOrElse(
-          throw new UnauthorizedException("Unable to retrieve internal Id")
-        )
+        userInternalId.map(
+          internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))
+        ).getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
 
     } recover {
       case _: InsufficientEnrolments =>
