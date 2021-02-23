@@ -52,13 +52,13 @@ class AuthenticatedIdentifierAction @Inject() (
     authorised().retrieve(internalId and allEnrolments) {
 
       case userInternalId ~ allUsersEnrolments =>
-        val enrolment = allUsersEnrolments.getEnrolment(NidacEnrolment).getOrElse(
-          throw InsufficientEnrolments("User does not have enrolment HMRC-CTS-ORG")
-        )
-
-        val eoriNumber = enrolment.getIdentifier(EoriIdentifier).map(_.value).getOrElse(
-          throw InsufficientEnrolments("Enrolment HMRC-CTS-ORG does not have an associated EORI number")
-        )
+        val eoriNumber = allUsersEnrolments.getEnrolment("HMRC-CTS-ORG")
+          .map(
+            enrolment =>
+              enrolment.getIdentifier("EORINumber") match {
+                case Some(identifier) => identifier.value
+              }
+          ).getOrElse(throw InsufficientEnrolments("User does not have enrolment HMRC-CTS-ORG"))
 
         userInternalId.map(
           internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))
@@ -73,5 +73,9 @@ class AuthenticatedIdentifierAction @Inject() (
         Redirect(routes.UnauthorisedController.onPageLoad())
     }
   }
+
+  def subscribe(hasEori: Boolean): Unit =
+    if (!hasEori)
+      Redirect(config.eoriSubscribeUrl)
 
 }
