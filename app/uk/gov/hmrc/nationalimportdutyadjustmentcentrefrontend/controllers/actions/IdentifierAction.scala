@@ -74,8 +74,4 @@ class AuthenticatedIdentifierAction @Inject() (
     }
   }
 
-  def subscribe(hasEori: Boolean): Unit =
-    if (!hasEori)
-      Redirect(config.eoriSubscribeUrl)
-
 }
