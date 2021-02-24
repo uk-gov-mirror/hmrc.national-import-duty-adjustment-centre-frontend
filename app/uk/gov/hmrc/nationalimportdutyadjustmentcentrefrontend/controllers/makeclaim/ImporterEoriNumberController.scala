@@ -46,7 +46,7 @@ class ImporterEoriNumberController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.importerEori.fold(form)(form.fill)
       Ok(eoriNumberView(preparedForm, backLink(answers)))
     }
@@ -55,9 +55,9 @@ class ImporterEoriNumberController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(eoriNumberView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(eoriNumberView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(importerEori = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(importerEori = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

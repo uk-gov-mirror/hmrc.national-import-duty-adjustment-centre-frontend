@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,20 +33,22 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
         repository.set(data) map { _ => data }
     }
 
-  def getAnswers(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
-    getCacheData map (_.answers)
+  def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
+    getCacheData map (_.getCreateAnswers)
 
-  def updateAnswers(update: UserAnswers => UserAnswers)(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
+  def updateCreateAnswers(
+    update: CreateAnswers => CreateAnswers
+  )(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData flatMap { data =>
-      val updatedAnswers: UserAnswers = update(data.answers)
-      repository.set(data.copy(answers = updatedAnswers)) map { _ => updatedAnswers }
+      val updatedAnswers: CreateAnswers = update(data.getCreateAnswers)
+      repository.set(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
-  def updateResponse(
+  def updateCreateResponse(
     claimResponse: CreateClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.set(data.copy(answers = UserAnswers(), createClaimResponse = Some(claimResponse)))
+      repository.set(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
     }
 
 }

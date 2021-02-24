@@ -63,7 +63,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
   "GET" should {
 
     "return OK when user has answered all questions" in {
-      withCacheUserAnswers(completeAnswers)
+      withCacheCreateAnswers(completeAnswers)
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK
@@ -78,7 +78,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     }
 
     "redirect to start when answers missing" in {
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onPageLoad()(fakeGetRequest)
 
@@ -90,7 +90,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     "submit and redirect to confirmation page" in {
-      withCacheUserAnswers(completeAnswers)
+      withCacheCreateAnswers(completeAnswers)
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER

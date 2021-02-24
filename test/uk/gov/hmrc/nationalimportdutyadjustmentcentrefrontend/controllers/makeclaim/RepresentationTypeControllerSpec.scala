@@ -26,7 +26,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepresentationTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepresentationType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, RepresentationType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.RepresentationTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepresentationTypeView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -73,7 +73,7 @@ class RepresentationTypeControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(representationType = Some(Representative)))
+      withCacheCreateAnswers(CreateAnswers(representationType = Some(Representative)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -87,11 +87,11 @@ class RepresentationTypeControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.representationType mustBe Some(Representative)
+      theUpdatedCreateAnswers.representationType mustBe Some(Representative)
       redirectLocation(result) mustBe Some(navigator.nextPage(RepresentationTypePage, emptyAnswers).url)
     }
 

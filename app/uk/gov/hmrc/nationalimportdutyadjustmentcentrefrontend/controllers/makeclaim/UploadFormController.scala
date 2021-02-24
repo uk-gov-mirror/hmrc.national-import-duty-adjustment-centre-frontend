@@ -27,7 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Naviga
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
@@ -53,7 +53,7 @@ class UploadFormController @Inject() (
 
   override val page: Page = UploadPage
 
-  override def backLink: UserAnswers => NavigatorBack = (answers: UserAnswers) =>
+  override def backLink: CreateAnswers => NavigatorBack = (answers: CreateAnswers) =>
     answers.uploads match {
       case files if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
       case _                       => super.backLink(answers)
@@ -66,13 +66,13 @@ class UploadFormController @Inject() (
     appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       initiateForm(answers)
     }
   }
 
   def onProgress(uploadId: UploadId): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       uploadProgressTracker.getUploadResult(uploadId, answers.journeyId) flatMap {
         case Some(successUpload: UploadedFile) =>
           processSuccessfulUpload(successUpload)
@@ -85,12 +85,12 @@ class UploadFormController @Inject() (
   }
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       initiateForm(answers, Some(mapError(errorCode)))
     }
   }
 
-  private def initiateForm(answers: UserAnswers, maybeError: Option[FormError] = None)(implicit
+  private def initiateForm(answers: CreateAnswers, maybeError: Option[FormError] = None)(implicit
     request: IdentifierRequest[_]
   ) = {
     val uploadId = UploadId.generate
@@ -111,12 +111,12 @@ class UploadFormController @Inject() (
   }
 
   private def processSuccessfulUpload(successUpload: UploadedFile)(implicit request: IdentifierRequest[_]) =
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       val uploads = answers.uploads
       if (uploads.exists(_.checksum == successUpload.checksum))
         Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE")))
       else
-        data.updateAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
+        data.updateCreateAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     }

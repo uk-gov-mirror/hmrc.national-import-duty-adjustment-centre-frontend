@@ -25,7 +25,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, RepayTo, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, CreateAnswers, RepayTo}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BankDetailsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{BankAccountReputationService, CacheDataService}
@@ -51,7 +51,7 @@ class BankDetailsController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.bankDetails.fold(form)(form.fill)
       Ok(bankDetailsView(preparedForm, importersBankDetails(answers), backLink(answers)))
     }
@@ -60,13 +60,13 @@ class BankDetailsController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers =>
+        data.getCreateAnswers map { answers =>
           BadRequest(bankDetailsView(formWithErrors, importersBankDetails(answers), backLink(answers)))
         },
       value =>
         bankAccountReputationService.validate(value) flatMap {
           case barsResult if barsResult.isValid =>
-            data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+            data.updateCreateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
               updatedAnswers => Redirect(nextPage(updatedAnswers))
             }
           case barsResult => processBarsFailure(value, barsResult)
@@ -85,13 +85,13 @@ class BankDetailsController @Inject() (
         )
       case _ => form.fill(bankDetails).copy(errors = Seq(FormError("", "bankDetails.bars.validation.failed")))
     }
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       BadRequest(bankDetailsView(formWithErrors, importersBankDetails(answers), backLink(answers)))
     }
 
   }
 
-  private def importersBankDetails: UserAnswers => Boolean = (answers: UserAnswers) =>
+  private def importersBankDetails: CreateAnswers => Boolean = (answers: CreateAnswers) =>
     answers.isRepresentative && answers.repayTo.contains(RepayTo.Importer)
 
 }

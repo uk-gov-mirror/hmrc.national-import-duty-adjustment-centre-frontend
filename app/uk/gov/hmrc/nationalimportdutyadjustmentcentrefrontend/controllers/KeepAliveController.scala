@@ -34,7 +34,7 @@ class KeepAliveController @Inject() (
     extends FrontendController(mcc) with I18nSupport {
 
   val keepAlive: Action[AnyContent] = identify.async { implicit request =>
-    cacheData.updateAnswers(answers => answers) map { _ =>
+    cacheData.updateCreateAnswers(answers => answers) map { _ =>
       Ok("Ok")
     }
   }

@@ -46,7 +46,7 @@ class ClaimTypeController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.claimType.fold(form)(form.fill)
       Ok(claimTypeView(preparedForm, backLink(answers)))
     }
@@ -54,9 +54,10 @@ class ClaimTypeController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => data.getAnswers map { answers => BadRequest(claimTypeView(formWithErrors, backLink(answers))) },
+      formWithErrors =>
+        data.getCreateAnswers map { answers => BadRequest(claimTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(claimType = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(claimType = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

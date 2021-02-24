@@ -46,7 +46,7 @@ class ImporterHasEoriController @Inject() (
   private val form = formProvider("importer.has.eori.required")
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.importerHasEori.fold(form)(form.fill)
       Ok(importerHasEoriView(preparedForm, backLink(answers)))
     }
@@ -55,9 +55,9 @@ class ImporterHasEoriController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(importerHasEoriView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(importerHasEoriView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(importerHasEori = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(importerHasEori = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

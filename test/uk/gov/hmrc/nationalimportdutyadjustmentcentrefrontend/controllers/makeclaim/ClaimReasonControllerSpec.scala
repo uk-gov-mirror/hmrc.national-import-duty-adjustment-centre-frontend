@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimReasonFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimReason, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimReason, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimReasonPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -72,7 +72,7 @@ class ClaimReasonControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(claimReason = Some(claimReasonAnswer)))
+      withCacheCreateAnswers(CreateAnswers(claimReason = Some(claimReasonAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -86,12 +86,12 @@ class ClaimReasonControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.claimReason mustBe Some(claimReasonAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ClaimReasonPage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.claimReason mustBe Some(claimReasonAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ClaimReasonPage, theUpdatedCreateAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

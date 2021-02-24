@@ -20,7 +20,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
-final case class UserAnswers(
+final case class CreateAnswers(
   journeyId: JourneyId = JourneyId.generate,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,
@@ -44,7 +44,7 @@ final case class UserAnswers(
   val doesImporterHaveEori: Boolean = importerHasEori.contains(true)
 }
 
-object UserAnswers {
+object CreateAnswers {
 
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+  implicit val formats: OFormat[CreateAnswers] = Json.format[CreateAnswers]
 }

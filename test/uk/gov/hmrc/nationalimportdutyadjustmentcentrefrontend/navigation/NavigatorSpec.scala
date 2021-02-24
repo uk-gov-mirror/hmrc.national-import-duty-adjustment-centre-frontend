@@ -21,7 +21,11 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, RepresentationType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  CreateAnswers,
+  ReclaimDutyType,
+  RepresentationType
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -29,10 +33,10 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   private val navigator = instanceOf[Navigator]
 
-  private def answers(reclaim: ReclaimDutyType*): UserAnswers =
+  private def answers(reclaim: ReclaimDutyType*): CreateAnswers =
     completeAnswers.copy(reclaimDutyTypes = Set(reclaim: _*))
 
-  private def back(page: Page, userAnswers: UserAnswers): Call =
+  private def back(page: Page, userAnswers: CreateAnswers): Call =
     navigator.previousPage(page, userAnswers).maybeCall.getOrElse(Call("GET", "No back page"))
 
   "Navigator from address page" when {
@@ -188,7 +192,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   "Navigating around file uploads" when {
 
-    def answers(uploads: Seq[UploadedFile]): UserAnswers =
+    def answers(uploads: Seq[UploadedFile]): CreateAnswers =
       completeAnswers.copy(uploads = uploads)
 
     val nextPage     = navigator.nextPage(ClaimReasonPage, _)

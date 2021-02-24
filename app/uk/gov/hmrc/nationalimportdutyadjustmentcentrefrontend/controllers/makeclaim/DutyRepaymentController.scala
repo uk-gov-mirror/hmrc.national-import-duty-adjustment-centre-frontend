@@ -24,7 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, ReclaimDutyType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, DutyPaid, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -51,7 +51,7 @@ class DutyRepaymentController @Inject() (
   def onPageLoadOtherDuty(): Action[AnyContent]   = onPageLoad(Other)
 
   private def onPageLoad(dutyType: ReclaimDutyType): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.reclaimDutyPayments.get(dutyType).fold(form)(form.fill)
       Ok(page(dutyType, preparedForm, answers))
     }
@@ -63,9 +63,9 @@ class DutyRepaymentController @Inject() (
 
   private def onSubmit(dutyType: ReclaimDutyType): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => data.getAnswers map { answers => BadRequest(page(dutyType, formWithErrors, answers)) },
+      formWithErrors => data.getCreateAnswers map { answers => BadRequest(page(dutyType, formWithErrors, answers)) },
       value =>
-        data.updateAnswers(
+        data.updateCreateAnswers(
           answers => answers.copy(reclaimDutyPayments = answers.reclaimDutyPayments.updated(dutyType, value))
         ) map {
           updatedAnswers => Redirect(navigator.nextPage(currentPage(dutyType), updatedAnswers))
@@ -80,7 +80,7 @@ class DutyRepaymentController @Inject() (
     case _       => FirstPage
   }
 
-  private def page(dutyType: ReclaimDutyType, form: Form[DutyPaid], answers: UserAnswers)(implicit
+  private def page(dutyType: ReclaimDutyType, form: Form[DutyPaid], answers: CreateAnswers)(implicit
     request: IdentifierRequest[_]
   ) = {
     val backLink = navigator.previousPage(currentPage(dutyType), answers)

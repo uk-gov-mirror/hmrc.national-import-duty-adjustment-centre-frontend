@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 import java.time.LocalDate
 
 import play.api.Logger
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
@@ -46,7 +46,7 @@ case class Claim(
 
 object Claim {
 
-  def apply(userAnswers: UserAnswers): Claim = {
+  def apply(userAnswers: CreateAnswers): Claim = {
     if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
@@ -68,7 +68,7 @@ object Claim {
     )
   }
 
-  private def importerBeingRepresentedDetails(userAnswers: UserAnswers): Option[ImporterBeingRepresentedDetails] =
+  private def importerBeingRepresentedDetails(userAnswers: CreateAnswers): Option[ImporterBeingRepresentedDetails] =
     userAnswers.representationType match {
       case Some(RepresentationType.Importer) => None
       case Some(RepresentationType.Representative) =>
@@ -87,7 +87,7 @@ object Claim {
   private def missing(answer: Any) = {
     val message = s"Missing answer - $answer"
     Logger(this.getClass).warn(message)
-    throw new MissingUserAnswersException(message)
+    throw new MissingAnswersException(message)
   }
 
 }

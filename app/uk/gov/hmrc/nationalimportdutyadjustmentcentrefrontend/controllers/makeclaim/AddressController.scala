@@ -46,7 +46,7 @@ class AddressController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.claimantAddress.fold(form)(form.fill)
       Ok(addressView(preparedForm, backLink(answers)))
     }
@@ -54,9 +54,10 @@ class AddressController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => data.getAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
+      formWithErrors =>
+        data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(claimantAddress = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

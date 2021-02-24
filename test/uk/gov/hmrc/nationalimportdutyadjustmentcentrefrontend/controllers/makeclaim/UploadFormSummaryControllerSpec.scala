@@ -24,7 +24,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -47,7 +47,7 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
 
-    withCacheUserAnswers(emptyAnswers)
+    withCacheCreateAnswers(emptyAnswers)
 
     when(formPage.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
@@ -61,13 +61,13 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
     "display page when cache contains uploads" in {
 
-      withCacheUserAnswers(UserAnswers(uploads = Seq(uploadAnswer)))
+      withCacheCreateAnswers(CreateAnswers(uploads = Seq(uploadAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
     }
 
     "redirect when cache does not contain uploads" in {
-      withCacheUserAnswers(UserAnswers(uploads = Seq.empty))
+      withCacheCreateAnswers(CreateAnswers(uploads = Seq.empty))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
@@ -98,12 +98,12 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
   "onDelete" should {
 
     "remove uploaded document" in {
-      withCacheUserAnswers(UserAnswers(uploads = Seq(uploadAnswer, uploadAnswer2)))
+      withCacheCreateAnswers(CreateAnswers(uploads = Seq(uploadAnswer, uploadAnswer2)))
       val result = controller.onRemove(uploadAnswer.upscanReference)(postRequest())
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad().url)
 
-      theUpdatedUserAnswers.uploads mustBe Seq(uploadAnswer2)
+      theUpdatedCreateAnswers.uploads mustBe Seq(uploadAnswer2)
     }
   }
 

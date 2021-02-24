@@ -16,4 +16,4 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions
 
-class MissingUserAnswersException(message: String) extends RuntimeException(message)
+class MissingAnswersException(message: String) extends RuntimeException(message)

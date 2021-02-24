@@ -26,7 +26,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, DutyPaid}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
   CustomsDutyRepaymentPage,
   ImportVatRepaymentPage,
@@ -79,7 +79,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
     "display page when cache has answer" when {
 
       "loading customs duty" in {
-        withCacheUserAnswers(UserAnswers(reclaimDutyPayments = reclaimDutyPayments))
+        withCacheCreateAnswers(CreateAnswers(reclaimDutyPayments = reclaimDutyPayments))
         val result = controller.onPageLoadCustomsDuty()(fakeGetRequest)
         status(result) mustBe Status.OK
 
@@ -87,7 +87,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       }
 
       "loading import vat" in {
-        withCacheUserAnswers(UserAnswers(reclaimDutyPayments = reclaimDutyPayments))
+        withCacheCreateAnswers(CreateAnswers(reclaimDutyPayments = reclaimDutyPayments))
         val result = controller.onPageLoadImportVat()(fakeGetRequest)
         status(result) mustBe Status.OK
 
@@ -95,7 +95,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       }
 
       "loading other duty" in {
-        withCacheUserAnswers(UserAnswers(reclaimDutyPayments = reclaimDutyPayments))
+        withCacheCreateAnswers(CreateAnswers(reclaimDutyPayments = reclaimDutyPayments))
         val result = controller.onPageLoadOtherDuty()(fakeGetRequest)
         status(result) mustBe Status.OK
 
@@ -112,32 +112,32 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when customs duty answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmitCustomsDuty()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Customs.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(CustomsDutyRepaymentPage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.reclaimDutyPayments mustBe Map(Customs.toString -> dutyPaid)
+      redirectLocation(result) mustBe Some(navigator.nextPage(CustomsDutyRepaymentPage, theUpdatedCreateAnswers).url)
     }
 
     "update cache and redirect when import VAT answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmitImportVat()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Vat.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.reclaimDutyPayments mustBe Map(Vat.toString -> dutyPaid)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage, theUpdatedCreateAnswers).url)
     }
 
     "update cache and redirect when other duty answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmitOtherDuty()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Other.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(OtherDutyRepaymentPage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.reclaimDutyPayments mustBe Map(Other.toString -> dutyPaid)
+      redirectLocation(result) mustBe Some(navigator.nextPage(OtherDutyRepaymentPage, theUpdatedCreateAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

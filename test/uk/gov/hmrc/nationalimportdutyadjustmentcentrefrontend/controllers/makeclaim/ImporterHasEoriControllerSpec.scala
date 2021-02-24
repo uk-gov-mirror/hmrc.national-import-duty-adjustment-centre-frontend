@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.RepayToPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterHasEoriView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -72,7 +72,7 @@ class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has positive answer" in {
-      withCacheUserAnswers(UserAnswers(importerHasEori = Some(true)))
+      withCacheCreateAnswers(CreateAnswers(importerHasEori = Some(true)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -80,7 +80,7 @@ class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has negative answer" in {
-      withCacheUserAnswers(UserAnswers(importerHasEori = Some(false)))
+      withCacheCreateAnswers(CreateAnswers(importerHasEori = Some(false)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -94,11 +94,11 @@ class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.importerHasEori mustBe Some(true)
+      theUpdatedCreateAnswers.importerHasEori mustBe Some(true)
       redirectLocation(result) mustBe Some(navigator.nextPage(RepayToPage, emptyAnswers).url)
     }
 

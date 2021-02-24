@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ItemNumbers, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, ItemNumbers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ItemNumbersPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -72,7 +72,7 @@ class ItemNumbersControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(itemNumbers = Some(itemNumbersAnswer)))
+      withCacheCreateAnswers(CreateAnswers(itemNumbers = Some(itemNumbersAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -86,12 +86,12 @@ class ItemNumbersControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.itemNumbers mustBe Some(itemNumbersAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ItemNumbersPage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.itemNumbers mustBe Some(itemNumbersAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ItemNumbersPage, theUpdatedCreateAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

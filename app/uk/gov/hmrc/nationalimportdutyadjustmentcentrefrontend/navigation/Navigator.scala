@@ -20,11 +20,11 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
-protected case class P(page: Page, destination: () => Call, canAccessGiven: UserAnswers => Boolean)
+protected case class P(page: Page, destination: () => Call, canAccessGiven: CreateAnswers => Boolean)
 
 @Singleton
 class Navigator @Inject() () extends Conditions with Ordering {
@@ -54,34 +54,34 @@ class Navigator @Inject() () extends Conditions with Ordering {
 
   private val reversePageOrder = pageOrder.reverse
 
-  def nextPage(currentPage: Page, userAnswers: UserAnswers): Call =
+  def nextPage(currentPage: Page, userAnswers: CreateAnswers): Call =
     viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(pageOrder.head.destination())
 
-  def previousPage(currentPage: Page, userAnswers: UserAnswers): NavigatorBack =
+  def previousPage(currentPage: Page, userAnswers: CreateAnswers): NavigatorBack =
     NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
 
 }
 
 protected trait Conditions {
-  protected val always: UserAnswers => Boolean = (_: UserAnswers) => true
+  protected val always: CreateAnswers => Boolean = (_: CreateAnswers) => true
 
-  protected val hasDutyType: ReclaimDutyType => UserAnswers => Boolean = (dutyType: ReclaimDutyType) =>
+  protected val hasDutyType: ReclaimDutyType => CreateAnswers => Boolean = (dutyType: ReclaimDutyType) =>
     _.reclaimDutyTypes.contains(dutyType)
 
-  protected val hasNoUploads: UserAnswers => Boolean = _.uploads.isEmpty
+  protected val hasNoUploads: CreateAnswers => Boolean = _.uploads.isEmpty
 
-  protected val hasUploads: UserAnswers => Boolean = _.uploads.nonEmpty
+  protected val hasUploads: CreateAnswers => Boolean = _.uploads.nonEmpty
 
-  protected val isRepresentative: UserAnswers => Boolean = _.isRepresentative
+  protected val isRepresentative: CreateAnswers => Boolean = _.isRepresentative
 
-  protected val enterImporterEori: UserAnswers => Boolean = (answers: UserAnswers) =>
+  protected val enterImporterEori: CreateAnswers => Boolean = (answers: CreateAnswers) =>
     isRepresentative(answers) && answers.doesImporterHaveEori
 
 }
 
 protected trait Ordering {
 
-  protected val nextPageFor: (Seq[P], Page, UserAnswers) => Option[Page] = (pages, currentPage, userAnswers) =>
+  protected val nextPageFor: (Seq[P], Page, CreateAnswers) => Option[Page] = (pages, currentPage, userAnswers) =>
     after(pages, currentPage)
       .find(_.canAccessGiven(userAnswers))
       .map(_.page)

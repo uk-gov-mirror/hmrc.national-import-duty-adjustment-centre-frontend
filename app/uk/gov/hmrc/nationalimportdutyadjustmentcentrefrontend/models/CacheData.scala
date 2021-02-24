@@ -22,12 +22,13 @@ import play.api.libs.json.{Json, OFormat}
 
 final case class CacheData(
   id: String,
-  answers: UserAnswers = UserAnswers(),
+  createAnswers: Option[CreateAnswers] = None,
   createClaimResponse: Option[CreateClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
   def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
+  def getCreateAnswers               = createAnswers.getOrElse(CreateAnswers())
 }
 
 object CacheData {

@@ -23,7 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadSummaryPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -48,7 +48,7 @@ class UploadFormSummaryController @Inject() (
   private val form = formProvider("upload_documents_summary.add.required")
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       answers.uploads match {
         case documents if documents.nonEmpty =>
           Ok(
@@ -65,12 +65,12 @@ class UploadFormSummaryController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       form.bindFromRequest().fold(
         formWithErrors =>
           Future(BadRequest(summaryView(formWithErrors, answers.claimType, answers.uploads, backLink(answers)))),
         addAnother =>
-          data.updateAnswers(answers => answers.copy(uploadAnotherFile = Some(addAnother))) map {
+          data.updateCreateAnswers(answers => answers.copy(uploadAnotherFile = Some(addAnother))) map {
             _ =>
               if (addAnother)
                 Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
@@ -82,13 +82,13 @@ class UploadFormSummaryController @Inject() (
   }
 
   def onRemove(documentReference: String): Action[AnyContent] = identify.async { implicit request =>
-    data.updateAnswers(removeDocument(documentReference)) map { _ =>
+    data.updateCreateAnswers(removeDocument(documentReference)) map { _ =>
       Redirect(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad())
     }
   }
 
-  def removeDocument: String => UserAnswers => UserAnswers = (ref: String) =>
-    (userAnswers: UserAnswers) => {
+  def removeDocument: String => CreateAnswers => CreateAnswers = (ref: String) =>
+    (userAnswers: CreateAnswers) => {
       val remainingFiles = userAnswers.uploads.filterNot(_.upscanReference == ref)
       userAnswers.copy(uploads = remainingFiles)
     }

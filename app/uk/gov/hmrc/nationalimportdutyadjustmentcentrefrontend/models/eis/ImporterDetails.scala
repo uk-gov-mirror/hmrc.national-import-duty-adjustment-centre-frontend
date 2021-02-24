@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.{Importer, Representative}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   Claim,
   ContactDetails,
@@ -35,7 +35,7 @@ object ImporterDetails {
     case Representative =>
       forRepresentativeApplicant(
         claim.importerBeingRepresentedDetails.getOrElse(
-          throw new MissingUserAnswersException("Missing ImporterBeingRepresentedDetails")
+          throw new MissingAnswersException("Missing ImporterBeingRepresentedDetails")
         )
       )
     case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)

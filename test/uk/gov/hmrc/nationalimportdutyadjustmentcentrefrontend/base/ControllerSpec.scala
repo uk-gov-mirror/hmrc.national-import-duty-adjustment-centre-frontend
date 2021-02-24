@@ -24,7 +24,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -59,8 +59,8 @@ trait ControllerSpec
 
   def withEmptyCache(): Unit = when(dataRepository.get(anyString())).thenReturn(Future.successful(None))
 
-  def withCacheUserAnswers(answers: UserAnswers): Unit = {
-    val cacheData: Option[CacheData] = Some(CacheData("id", answers = answers))
+  def withCacheCreateAnswers(answers: CreateAnswers): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", createAnswers = Some(answers)))
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
@@ -69,11 +69,11 @@ trait ControllerSpec
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
-  protected def theUpdatedUserAnswers: UserAnswers = {
+  protected def theUpdatedCreateAnswers: CreateAnswers = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
     verify(dataRepository).set(captor.capture())
     val cacheData: CacheData = captor.getValue
-    cacheData.answers
+    cacheData.getCreateAnswers
   }
 
   protected def postRequest(data: (String, String)*): Request[AnyContentAsFormUrlEncoded] =

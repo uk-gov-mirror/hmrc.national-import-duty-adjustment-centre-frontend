@@ -46,7 +46,7 @@ class RepayToController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.repayTo.fold(form)(form.fill)
       Ok(representationTypeView(preparedForm, backLink(answers)))
     }
@@ -55,9 +55,9 @@ class RepayToController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(repayTo = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(repayTo = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

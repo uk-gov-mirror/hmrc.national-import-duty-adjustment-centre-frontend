@@ -34,7 +34,7 @@ trait TestData {
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
 
   // UserAnswers
-  val emptyAnswers: UserAnswers = UserAnswers()
+  val emptyAnswers: CreateAnswers = CreateAnswers()
 
   val representationTypeAnswer: RepresentationType = RepresentationType.Representative
 
@@ -86,7 +86,7 @@ trait TestData {
     "01234567890"
   )
 
-  val completeAnswers: UserAnswers = UserAnswers(
+  val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),

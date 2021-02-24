@@ -23,7 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, CreateClaimService}
@@ -46,26 +46,26 @@ class CheckYourAnswersController @Inject() (
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       Ok(checkYourAnswersView(Claim(answers), backLink(answers)))
     } recover {
-      case _: MissingUserAnswersException =>
+      case _: MissingAnswersException =>
         Redirect(controllers.routes.StartController.start())
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       val claim = Claim(answers)
       service.submitClaim(claim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>
-          data.updateResponse(response) map {
+          data.updateCreateResponse(response) map {
             _ => Redirect(nextPage(answers))
           }
       }
     } recover {
-      case _: MissingUserAnswersException =>
+      case _: MissingAnswersException =>
         Redirect(controllers.routes.StartController.start())
     }
 
