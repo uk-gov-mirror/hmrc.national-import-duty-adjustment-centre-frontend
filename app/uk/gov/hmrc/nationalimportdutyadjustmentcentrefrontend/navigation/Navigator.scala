@@ -19,8 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 

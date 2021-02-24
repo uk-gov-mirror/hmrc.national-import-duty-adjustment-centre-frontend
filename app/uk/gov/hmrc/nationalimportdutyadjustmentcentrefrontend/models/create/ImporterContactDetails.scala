@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CreateClaimResult(caseReference: String, fileTransferResults: Seq[FileTransferResult])
+case class ImporterContactDetails(
+  name: String,
+  addressLine1: String,
+  addressLine2: Option[String],
+  city: String,
+  postCode: String,
+  emailAddress: String,
+  telephoneNumber: String
+)
 
-object CreateClaimResult {
-  implicit val format: OFormat[CreateClaimResult] = Json.format[CreateClaimResult]
+object ImporterContactDetails {
+  implicit val format: OFormat[ImporterContactDetails] = Json.format[ImporterContactDetails]
 }

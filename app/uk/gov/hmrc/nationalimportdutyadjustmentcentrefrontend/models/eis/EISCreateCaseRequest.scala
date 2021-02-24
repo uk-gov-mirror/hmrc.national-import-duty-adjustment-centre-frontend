@@ -19,8 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 import java.time.format.DateTimeFormatter
 
 import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
 
 /**
   * Create specified case in the PEGA system.

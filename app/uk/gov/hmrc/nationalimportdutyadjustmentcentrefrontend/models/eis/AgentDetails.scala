@@ -17,8 +17,8 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Representative
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
 
 case class AgentDetails(EORI: Option[String], Name: String, Address: Address)
 

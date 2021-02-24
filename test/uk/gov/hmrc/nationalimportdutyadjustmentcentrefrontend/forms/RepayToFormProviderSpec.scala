@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
 
 class RepayToFormProviderSpec extends OptionFieldBehaviours {
 

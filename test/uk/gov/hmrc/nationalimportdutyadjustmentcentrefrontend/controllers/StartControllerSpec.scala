@@ -20,7 +20,7 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.FirstPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 

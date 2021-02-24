@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateAnswers, ItemNumbers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ItemNumbers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ItemNumbersPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents

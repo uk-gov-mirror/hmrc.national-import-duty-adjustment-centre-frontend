@@ -22,7 +22,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.DutyPaid
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.DutyPaid
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 
 class DutyRepaymentViewSpec extends UnitViewSpec with TestData {

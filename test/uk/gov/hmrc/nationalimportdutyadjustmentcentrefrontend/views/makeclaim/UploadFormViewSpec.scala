@@ -18,11 +18,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import play.api.data.FormError
-import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.{
   Airworthiness,
   AntiDumping,
   Preference,

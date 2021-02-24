@@ -21,8 +21,8 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepresentationTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Importer
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepresentationTypeView
 
 class RepresentationTypeViewSpec extends UnitViewSpec {

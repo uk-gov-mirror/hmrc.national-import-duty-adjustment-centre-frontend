@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import play.api.mvc.Call
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack

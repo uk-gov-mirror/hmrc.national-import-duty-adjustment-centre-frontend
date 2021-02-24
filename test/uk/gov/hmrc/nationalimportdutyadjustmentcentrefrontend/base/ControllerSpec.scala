@@ -24,7 +24,8 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService

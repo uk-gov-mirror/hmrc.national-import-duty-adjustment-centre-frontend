@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimResponse
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.CreateEISClaimRequest
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -21,8 +21,8 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 

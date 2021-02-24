@@ -22,7 +22,7 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EntryDetails
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.EntryDetails
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter._
 
 class EntryDetailsFormProvider @Inject() extends Mappings {

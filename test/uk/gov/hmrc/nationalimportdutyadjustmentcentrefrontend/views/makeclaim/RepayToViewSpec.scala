@@ -18,12 +18,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import play.api.data.Form
-import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepayToFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepayToView
 
 class RepayToViewSpec extends UnitViewSpec {

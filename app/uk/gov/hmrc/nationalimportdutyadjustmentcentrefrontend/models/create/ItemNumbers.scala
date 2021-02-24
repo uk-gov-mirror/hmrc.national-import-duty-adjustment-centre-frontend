@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ClaimReason(reason: String)
+case class ItemNumbers(numbers: String)
 
-object ClaimReason {
-  implicit val format: OFormat[ClaimReason] = Json.format[ClaimReason]
+object ItemNumbers {
+  implicit val format: OFormat[ItemNumbers] = Json.format[ItemNumbers]
 }

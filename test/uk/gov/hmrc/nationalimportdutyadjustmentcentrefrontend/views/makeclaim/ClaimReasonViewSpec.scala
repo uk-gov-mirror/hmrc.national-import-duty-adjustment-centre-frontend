@@ -20,7 +20,7 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimReasonFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimReason
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimReason
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonView
 
 class ClaimReasonViewSpec extends UnitViewSpec with TestData {

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 
 case class CreateClaimResponse(
   correlationId: String,

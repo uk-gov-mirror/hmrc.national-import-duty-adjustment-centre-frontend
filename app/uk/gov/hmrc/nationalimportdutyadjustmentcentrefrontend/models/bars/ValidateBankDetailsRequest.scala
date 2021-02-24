@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.BankDetails
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
 case class ValidateBankDetailsRequest(account: AccountDetails)
 

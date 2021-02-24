@@ -19,10 +19,23 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 import java.time.LocalDate
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Address => UkAddress}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  BankDetails,
+  Claim,
+  ClaimReason,
+  ContactDetails,
+  DutyPaid,
+  EntryDetails,
+  ImporterBeingRepresentedDetails,
+  ImporterContactDetails,
+  ItemNumbers,
+  RepayTo,
+  RepresentationType,
+  Address => UkAddress
+}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 
 class EISCreateCaseRequestSpec extends UnitSpec {
 
@@ -39,7 +52,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     }
   }
 
-  val claimByRepresentative: Claim = Claim(
+  val claimByRepresentative: Claim = create.Claim(
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
     claimantAddress = UkAddress("Representative Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
@@ -107,7 +120,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     SubmissionDate = "20210131"
   )
 
-  val claimByImporter: Claim = Claim(
+  val claimByImporter: Claim = create.Claim(
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
     claimantAddress = UkAddress("Acme Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,

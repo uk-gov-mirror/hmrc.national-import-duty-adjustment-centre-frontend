@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.BankDetails
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
 case class PaymentDetails(AccountName: String, AccountNumber: String, SortCode: String)
 

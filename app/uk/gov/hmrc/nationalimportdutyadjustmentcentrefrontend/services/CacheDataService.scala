@@ -17,8 +17,9 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 
 import scala.concurrent.{ExecutionContext, Future}

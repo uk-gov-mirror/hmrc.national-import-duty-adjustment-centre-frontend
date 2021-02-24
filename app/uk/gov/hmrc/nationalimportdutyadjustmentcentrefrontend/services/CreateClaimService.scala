@@ -22,7 +22,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISCreateCaseRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Claim, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.CreateEISClaimRequest
 
 import scala.concurrent.Future

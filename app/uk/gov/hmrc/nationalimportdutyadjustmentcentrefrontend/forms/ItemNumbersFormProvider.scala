@@ -20,7 +20,7 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ItemNumbers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ItemNumbers
 
 class ItemNumbersFormProvider @Inject() extends Mappings {
 

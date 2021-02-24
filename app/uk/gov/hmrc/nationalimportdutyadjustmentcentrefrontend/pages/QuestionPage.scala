@@ -17,6 +17,20 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  Address,
+  BankDetails,
+  ClaimReason,
+  ClaimType,
+  ContactDetails,
+  DutyPaid,
+  EntryDetails,
+  ImporterContactDetails,
+  ItemNumbers,
+  ReclaimDutyType,
+  RepayTo,
+  RepresentationType
+}
 
 trait QuestionPage[A] extends Page
 

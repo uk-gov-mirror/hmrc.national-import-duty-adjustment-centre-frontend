@@ -20,7 +20,7 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms.set
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
 
 class ReclaimDutyTypeFormProvider @Inject() extends Mappings {
 

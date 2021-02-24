@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import java.time.LocalDate
 
 import play.api.Logger
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 import scala.util.Try
@@ -73,7 +74,7 @@ object Claim {
       case Some(RepresentationType.Importer) => None
       case Some(RepresentationType.Representative) =>
         Some(
-          ImporterBeingRepresentedDetails(
+          create.ImporterBeingRepresentedDetails(
             repayTo = userAnswers.repayTo.getOrElse(missing(RepayToPage)),
             eoriNumber =
               if (userAnswers.importerHasEori.contains(true))

@@ -21,7 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.{
   CheckboxFieldBehaviours,
   OptionFieldBehaviours
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
 
 class ReclaimDutyTypeFormProviderSpec extends CheckboxFieldBehaviours {
 

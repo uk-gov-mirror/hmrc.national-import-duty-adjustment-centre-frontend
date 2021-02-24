@@ -19,13 +19,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateAnswers,
   ReclaimDutyType,
   RepresentationType
 }
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 

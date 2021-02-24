@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ImporterContactDetails(
-  name: String,
-  addressLine1: String,
-  addressLine2: Option[String],
-  city: String,
-  postCode: String,
-  emailAddress: String,
-  telephoneNumber: String
-)
+case class DutyPaid(actuallyPaid: String, shouldHavePaid: String) {
+  val dueAmount: BigDecimal = BigDecimal.apply(actuallyPaid) - BigDecimal.apply(shouldHavePaid)
+}
 
-object ImporterContactDetails {
-  implicit val format: OFormat[ImporterContactDetails] = Json.format[ImporterContactDetails]
+object DutyPaid {
+  implicit val format: OFormat[DutyPaid] = Json.format[DutyPaid]
 }

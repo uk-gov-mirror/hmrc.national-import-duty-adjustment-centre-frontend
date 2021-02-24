@@ -20,12 +20,13 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber, JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -86,7 +87,7 @@ trait TestData {
     "01234567890"
   )
 
-  val completeAnswers: CreateAnswers = CreateAnswers(
+  val completeAnswers: CreateAnswers = create.CreateAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
