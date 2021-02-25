@@ -17,10 +17,9 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
-
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
@@ -122,9 +121,10 @@ trait TestData {
     UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
 
   // BARS
-  val barsSuccessResult          = BARSResult(accountNumberWithSortCodeIsValid = "yes", "no", Some("yes"))
-  val barsInvalidAccountResult   = BARSResult(accountNumberWithSortCodeIsValid = "no", "no", None)
-  val barsRollRequiredResult     = BARSResult(accountNumberWithSortCodeIsValid = "yes", "yes", None)
-  val barsBacsNotSupportedResult = BARSResult(accountNumberWithSortCodeIsValid = "yes", "no", Some("no"))
+  private val validResponse: ValidateBankDetailsResponse = ValidateBankDetailsResponse("yes", "no", Some("yes"))
+  val barsSuccessResult                                  = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("yes")))
+  val barsInvalidAccountResult                           = BARSResult(ValidateBankDetailsResponse("no", "no", None))
+  val barsRollRequiredResult                             = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
+  val barsBacsNotSupportedResult                         = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
 
 }

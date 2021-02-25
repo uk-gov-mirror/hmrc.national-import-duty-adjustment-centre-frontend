@@ -78,25 +78,19 @@ class BankDetailsController @Inject() (
     request: IdentifierRequest[_]
   ) = {
 
-    val formWithErrors = barsResult match {
+    val formWithErrors = form.fill(bankDetails).copy(errors = barsResult match {
 
       case bars if !bars.validAccountAndSortCode =>
-        form.fill(bankDetails).copy(errors =
-          Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
-        )
+        Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
 
-      case bars if !bars.rollNotRequired =>
-        form.fill(bankDetails).copy(errors =
-          Seq(FormError("accountNumber", "bankDetails.bars.validation.rollRequired"))
-        )
+      case bars if !bars.rollNotRequired => Seq(FormError("accountNumber", "bankDetails.bars.validation.rollRequired"))
 
       case bars if !bars.accountSupportsBacs =>
-        form.fill(bankDetails).copy(errors =
-          Seq(FormError("accountNumber", "bankDetails.bars.validation.bacsNotSupported"))
-        )
+        Seq(FormError("accountNumber", "bankDetails.bars.validation.bacsNotSupported"))
 
-      case _ => form.fill(bankDetails).copy(errors = Seq(FormError("", "bankDetails.bars.validation.failed")))
-    }
+      case _ => Seq(FormError("", "bankDetails.bars.validation.failed"))
+    })
+
     data.getCreateAnswers map { answers =>
       BadRequest(bankDetailsView(formWithErrors, importersBankDetails(answers), backLink(answers)))
     }

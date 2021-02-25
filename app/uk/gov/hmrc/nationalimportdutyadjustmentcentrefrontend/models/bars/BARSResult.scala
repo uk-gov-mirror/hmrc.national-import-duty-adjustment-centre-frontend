@@ -16,30 +16,19 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-case class BARSResult(
-  accountNumberWithSortCodeIsValid: String,
-  nonStandardAccountDetailsRequiredForBacs: String,
-  supportsBACS: Option[String]
-) {
+case class BARSResult(validateResponse: ValidateBankDetailsResponse) {
 
-  val validAccountAndSortCode: Boolean = accountNumberWithSortCodeIsValid == "yes"
+  val validAccountAndSortCode: Boolean = validateResponse.accountNumberWithSortCodeIsValid == "yes"
 
-  val rollNotRequired: Boolean = nonStandardAccountDetailsRequiredForBacs == "no"
+  val rollNotRequired: Boolean = validateResponse.nonStandardAccountDetailsRequiredForBacs == "no"
 
-  val accountSupportsBacs: Boolean = supportsBACS match {
-    case Some(answer) => answer == "yes"
-    case None         => false;
-  }
+  val accountSupportsBacs: Boolean = validateResponse.supportsBACS.contains("yes")
 
   val isValid: Boolean = validAccountAndSortCode && rollNotRequired && accountSupportsBacs
 }
 
 object BARSResult {
 
-  def apply(validateResponse: ValidateBankDetailsResponse): BARSResult = new BARSResult(
-    validateResponse.accountNumberWithSortCodeIsValid,
-    validateResponse.nonStandardAccountDetailsRequiredForBacs,
-    validateResponse.supportsBACS
-  )
+  def apply(validateResponse: ValidateBankDetailsResponse): BARSResult = new BARSResult(validateResponse)
 
 }
