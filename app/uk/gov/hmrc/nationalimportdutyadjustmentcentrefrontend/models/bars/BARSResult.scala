@@ -17,15 +17,12 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
 case class BARSResult(accountNumberWithSortCodeIsValid: String,
-                      nonStandardAccountDetailsRequiredForBacs: Option[String],
+                      nonStandardAccountDetailsRequiredForBacs: String,
                       supportsBACS: Option[String]) {
 
   val validAccountAndSortCode: Boolean = accountNumberWithSortCodeIsValid == "yes"
 
-  val rollNotRequired: Boolean = nonStandardAccountDetailsRequiredForBacs match {
-    case Some(answer) => answer == "no"
-    case None => false
-  }
+  val rollNotRequired: Boolean = nonStandardAccountDetailsRequiredForBacs == "no"
 
   val accountSupportsBacs: Boolean = supportsBACS match {
     case Some(answer) => answer == "yes"
