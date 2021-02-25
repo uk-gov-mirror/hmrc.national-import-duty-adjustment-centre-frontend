@@ -29,7 +29,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Crea
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
@@ -46,11 +46,11 @@ class UploadFormController @Inject() (
   upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
   appConfig: AppConfig,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   uploadFormView: UploadFormView,
   uploadProgressView: UploadProgressView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport with Navigation {
+    extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = UploadPage
 

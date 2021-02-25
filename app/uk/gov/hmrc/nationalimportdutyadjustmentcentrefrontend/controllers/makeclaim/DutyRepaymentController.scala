@@ -25,7 +25,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.DutyP
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, DutyPaid, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
@@ -39,7 +39,7 @@ class DutyRepaymentController @Inject() (
   data: CacheDataService,
   formProvider: DutyPaidFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  navigator: Navigator,
+  navigator: CreateNavigator,
   repaymentView: DutyRepaymentView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {

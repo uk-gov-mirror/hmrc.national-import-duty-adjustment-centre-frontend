@@ -21,13 +21,16 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.FirstPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 @Singleton
-class StartController @Inject() (mcc: MessagesControllerComponents, identify: IdentifierAction, navigator: Navigator)
-    extends FrontendController(mcc) with I18nSupport {
+class StartController @Inject() (
+  mcc: MessagesControllerComponents,
+  identify: IdentifierAction,
+  navigator: CreateNavigator
+) extends FrontendController(mcc) with I18nSupport {
 
   private val noAnswers = CreateAnswers()
 

@@ -29,9 +29,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
-class NavigatorSpec extends UnitSpec with Injector with TestData {
+class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
 
-  private val navigator = instanceOf[Navigator]
+  private val navigator = instanceOf[CreateNavigator]
 
   private def answers(reclaim: ReclaimDutyType*): CreateAnswers =
     completeAnswers.copy(reclaimDutyTypes = Set(reclaim: _*))
