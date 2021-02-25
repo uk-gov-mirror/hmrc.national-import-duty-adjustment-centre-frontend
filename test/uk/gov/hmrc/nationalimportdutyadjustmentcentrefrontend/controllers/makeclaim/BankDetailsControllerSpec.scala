@@ -126,7 +126,9 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
 
     "return 400 (BAD REQUEST) when BARS BACS supported check fails" in {
 
-      when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsBacsNotSupportedResult))
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(
+        Future.successful(barsBacsNotSupportedResult)
+      )
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual BAD_REQUEST
 

@@ -87,13 +87,13 @@ class BankDetailsController @Inject() (
 
       case bars if !bars.rollNotRequired =>
         form.fill(bankDetails).copy(errors =
-        Seq(FormError("accountNumber", "bankDetails.bars.validation.rollRequired"))
-    )
+          Seq(FormError("accountNumber", "bankDetails.bars.validation.rollRequired"))
+        )
 
       case bars if !bars.accountSupportsBacs =>
         form.fill(bankDetails).copy(errors =
-        Seq(FormError("accountNumber", "bankDetails.bars.validation.bacsNotSupported"))
-    )
+          Seq(FormError("accountNumber", "bankDetails.bars.validation.bacsNotSupported"))
+        )
 
       case _ => form.fill(bankDetails).copy(errors = Seq(FormError("", "bankDetails.bars.validation.failed")))
     }
