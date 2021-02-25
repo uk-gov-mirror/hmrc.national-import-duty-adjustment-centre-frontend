@@ -80,15 +80,21 @@ class BankDetailsController @Inject() (
 
     val formWithErrors = barsResult match {
 
-      case bars if !bars.rollNotRequired =>
-        form.fill(bankDetails).copy(errors =
-          Seq(FormError("accountNumber", "Enter details of a bank account or building society account that does not require a roll number"))
-        )
-
-      case bars if bars.accountNumberWithSortCodeIsValid != "yes" =>
+      case bars if !bars.validAccountAndSortCode =>
         form.fill(bankDetails).copy(errors =
           Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
         )
+
+      case bars if !bars.rollNotRequired =>
+        form.fill(bankDetails).copy(errors =
+        Seq(FormError("accountNumber", "Enter details of a bank account or building society account that does not require a roll number"))
+    )
+
+      case bars if !bars.accountSupportsBacs =>
+        form.fill(bankDetails).copy(errors =
+        Seq(FormError("accountNumber", "Enter a bank account that supports Bacs payments"))
+    )
+
       case _ => form.fill(bankDetails).copy(errors = Seq(FormError("", "bankDetails.bars.validation.failed")))
     }
     data.getCreateAnswers map { answers =>
