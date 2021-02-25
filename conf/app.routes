@@ -3,6 +3,9 @@
 ->          /govuk-frontend                     govuk.Routes
 ->          /hmrc-frontend                      hmrcfrontend.Routes
 
+->          /amend                              amendClaim.Routes
+->          /create                             createClaim.Routes
+
 GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.start
 GET         /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
 GET         /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
@@ -11,68 +14,5 @@ GET         /keep-alive                         uk.gov.hmrc.nationalimportdutyad
 GET         /language/:lang                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
 GET         /assets/*file                       controllers.Assets.versioned(path = "/public", file: Asset)
 
-# make claim
-GET         /importer-representative            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onPageLoad()
-POST        /importer-representative            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onSubmit()
-
-GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
-POST        /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onSubmit()
-
-GET         /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onPageLoad()
-POST        /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onSubmit()
-
-GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
-POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()
-
-GET         /eori-number                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterHasEoriController.onPageLoad()
-POST        /eori-number                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterHasEoriController.onSubmit()
-
-GET         /upload-supporting-documents        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onPageLoad()
-GET         /upload-supporting-documents/progress uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onProgress(uploadId: UploadId)
-GET         /upload-supporting-documents/error  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onError(errorCode: String)
-
-GET         /uploaded-files                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onPageLoad()
-POST        /uploaded-files                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onSubmit()
-GET         /uploaded-files/remove              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onRemove(documentReference: String)
-
-GET         /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onPageLoad()
-POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onSubmit()
-
-GET         /enter-customs-duty                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onPageLoadCustomsDuty()
-POST        /enter-customs-duty                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onSubmitCustomsDuty()
-
-GET         /enter-import-vat                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onPageLoadImportVat()
-POST        /enter-import-vat                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onSubmitImportVat()
-
-GET         /enter-other-duties                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onPageLoadOtherDuty()
-POST        /enter-other-duties                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onSubmitOtherDuty()
-
-GET         /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onPageLoad()
-POST        /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onSubmit()
-
-GET         /importer-correspondence-address    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onPageLoad()
-POST        /importer-correspondence-address    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onSubmit()
-
-GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
-POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()
-
-GET         /claim-reason                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimReasonController.onPageLoad()
-POST        /claim-reason                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimReasonController.onSubmit()
-
-GET         /entry-details                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.EntryDetailsController.onPageLoad()
-POST        /entry-details                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.EntryDetailsController.onSubmit()
-
-GET         /item-numbers                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ItemNumbersController.onPageLoad()
-POST        /item-numbers                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ItemNumbersController.onSubmit()
-
-GET         /enter-eori-number                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterEoriNumberController.onPageLoad()
-POST        /enter-eori-number                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterEoriNumberController.onSubmit()
-
-GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
-POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
-
-GET         /confirmation                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ConfirmationController.onPageLoad()
-
 # upload file notification callback
-+ nocsrf
-POST        /upscan-callback                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadCallbackController.callback(journeyId: JourneyId)
+POST        /upscan-callback                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UploadCallbackController.callback(journeyId: JourneyId)

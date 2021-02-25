@@ -20,12 +20,13 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, CaseReference}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber, JourneyId, UploadId}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -33,7 +34,7 @@ trait TestData {
   val fixedDate: LocalDate         = LocalDate.now()
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
 
-  // UserAnswers
+  // CreateAnswers
   val emptyAnswers: CreateAnswers = CreateAnswers()
 
   val representationTypeAnswer: RepresentationType = RepresentationType.Representative
@@ -86,7 +87,7 @@ trait TestData {
     "01234567890"
   )
 
-  val completeAnswers: CreateAnswers = create.CreateAnswers(
+  val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
@@ -126,5 +127,12 @@ trait TestData {
   val barsInvalidAccountResult                           = BARSResult(ValidateBankDetailsResponse("no", "no", None))
   val barsRollRequiredResult                             = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
   val barsBacsNotSupportedResult                         = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
+
+  // AmendAnswers
+  val caseReferenceAnswer = CaseReference("NID21134557697RM8WIB13")
+
+  val emptyAmendAnswers: AmendAnswers = AmendAnswers()
+
+  val completeAmendAnswers: AmendAnswers = AmendAnswers(caseReference = Some(caseReferenceAnswer))
 
 }

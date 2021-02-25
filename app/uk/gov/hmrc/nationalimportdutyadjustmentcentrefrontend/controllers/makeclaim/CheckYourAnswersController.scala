@@ -22,9 +22,9 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, CreateClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
@@ -38,10 +38,10 @@ class CheckYourAnswersController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
   service: CreateClaimService,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   checkYourAnswersView: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport with Navigation {
+    extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = CheckYourAnswersPage
 
@@ -60,7 +60,7 @@ class CheckYourAnswersController @Inject() (
       service.submitClaim(claim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>
-          data.updateCreateResponse(response) map {
+          data.storeCreateResponse(response) map {
             _ => Redirect(nextPage(answers))
           }
       }

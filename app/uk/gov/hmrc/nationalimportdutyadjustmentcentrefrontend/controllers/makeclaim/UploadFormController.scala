@@ -29,7 +29,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Crea
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
@@ -46,11 +46,11 @@ class UploadFormController @Inject() (
   upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
   appConfig: AppConfig,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   uploadFormView: UploadFormView,
   uploadProgressView: UploadProgressView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport with Navigation {
+    extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = UploadPage
 
@@ -61,49 +61,50 @@ class UploadFormController @Inject() (
     }
 
   private val errorRedirectUrl =
-    appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/upload-supporting-documents/error"
+    appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/create/upload-supporting-documents/error"
 
   private def successRedirectUrl(uploadId: UploadId) =
     appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswers flatMap { answers =>
-      initiateForm(answers)
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      initiateForm(answersWithJourneyID._1, answersWithJourneyID._2)
     }
   }
 
   def onProgress(uploadId: UploadId): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswers flatMap { answers =>
-      uploadProgressTracker.getUploadResult(uploadId, answers.journeyId) flatMap {
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      uploadProgressTracker.getUploadResult(uploadId, answersWithJourneyID._2) flatMap {
         case Some(successUpload: UploadedFile) =>
           processSuccessfulUpload(successUpload)
         case Some(failed: Failed) =>
           Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
-        case Some(_) => Future(Ok(uploadProgressView(answers.claimType, backLink(answers))))
-        case None    => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
+        case Some(_) =>
+          Future(Ok(uploadProgressView(answersWithJourneyID._1.claimType, backLink(answersWithJourneyID._1))))
+        case None => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
       }
     }
   }
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswers flatMap { answers =>
-      initiateForm(answers, Some(mapError(errorCode)))
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      initiateForm(answersWithJourneyID._1, answersWithJourneyID._2, Some(mapError(errorCode)))
     }
   }
 
-  private def initiateForm(answers: CreateAnswers, maybeError: Option[FormError] = None)(implicit
+  private def initiateForm(answers: CreateAnswers, journeyId: JourneyId, maybeError: Option[FormError] = None)(implicit
     request: IdentifierRequest[_]
   ) = {
     val uploadId = UploadId.generate
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
-        answers.journeyId: JourneyId,
+        journeyId,
         Some(successRedirectUrl(uploadId)),
         Some(errorRedirectUrl)
       )
       _ <- uploadProgressTracker.requestUpload(
         uploadId,
-        answers.journeyId,
+        journeyId,
         Reference(upscanInitiateResponse.fileReference.reference)
       )
     } yield Ok(

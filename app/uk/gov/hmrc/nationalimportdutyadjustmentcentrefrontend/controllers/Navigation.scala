@@ -17,16 +17,16 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import play.api.mvc.Call
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
-trait Navigation {
-  val navigator: Navigator
+trait Navigation[T <: Answers] {
+  val navigator: Navigator[T]
   val page: Page
 
-  def nextPage: CreateAnswers => Call = navigator.nextPage(page, _)
+  def nextPage: T => Call = navigator.nextPage(page, _)
 
-  def backLink: CreateAnswers => NavigatorBack = navigator.previousPage(page, _)
+  def backLink: T => NavigatorBack = navigator.previousPage(page, _)
 }

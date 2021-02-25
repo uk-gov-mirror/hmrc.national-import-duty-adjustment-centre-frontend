@@ -22,7 +22,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 
 final case class CreateAnswers(
-  journeyId: JourneyId = JourneyId.generate,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,
   representationType: Option[RepresentationType] = None,
@@ -39,7 +38,7 @@ final case class CreateAnswers(
   uploadAnotherFile: Option[Boolean] = None,
   importerHasEori: Option[Boolean] = None,
   importerEori: Option[EoriNumber] = None
-) {
+) extends Answers {
 
   val isRepresentative: Boolean     = representationType.contains(Representative)
   val doesImporterHaveEori: Boolean = importerHasEori.contains(true)

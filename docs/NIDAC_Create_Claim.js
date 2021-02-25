@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.8
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
-// @match        http*://*/national-import-duty-adjustment-centre*
+// @match        http*://*/national-import-duty-adjustment-centre/create/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 // ==/UserScript==
@@ -40,15 +40,15 @@ function submit() {
 }
 
 function completePage() {
-    if (currentPageIs("/national-import-duty-adjustment-centre/importer-representative")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/importer-representative")) {
         document.getElementById("representation_type-2").checked = true;
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/claim-type")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/claim-type")) {
         document.getElementById("claim_type").checked = true;
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/entry-details")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/entry-details")) {
         document.getElementById("entryProcessingUnit").value = "123";
         document.getElementById("entryNumber").value = "123456Q";
         document.getElementById("entryDate").value = "12";
@@ -56,51 +56,51 @@ function completePage() {
         document.getElementById("entryDate_year").value = "2020";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/item-numbers")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/item-numbers")) {
         document.getElementById("itemNumbers").value = "1, 2, 7-10";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/reclaiming")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/reclaiming")) {
         document.getElementById("reclaimDutyType").checked = true;
         document.getElementById("reclaimDutyType-2").checked = true;
         document.getElementById("reclaimDutyType-3").checked = true;
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/enter-customs-duty")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/enter-customs-duty")) {
         document.getElementById("actuallyPaid").value = "100.00";
         document.getElementById("shouldPaid").value = "89.99";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/enter-import-vat")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/enter-import-vat")) {
         document.getElementById("actuallyPaid").value = "80.00";
         document.getElementById("shouldPaid").value = "72.50";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/enter-other-duties")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/enter-other-duties")) {
         document.getElementById("actuallyPaid").value = "50.00";
         document.getElementById("shouldPaid").value = "49.99";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/claim-reason")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/claim-reason")) {
         document.getElementById("claimReason").value = "I believe I have been over-charged";
         submit();
     }
 
-    if (currentPageIs("/national-import-duty-adjustment-centre/upload-supporting-documents")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/upload-supporting-documents")) {
     }
 
-    if (currentPageIs("/national-import-duty-adjustment-centre/uploaded-files")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/uploaded-files")) {
         document.getElementById("yesOrNo-2").checked = true;
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/contact-details")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/contact-details")) {
         document.getElementById("firstName").value = "Tim";
         document.getElementById("lastName").value = "Tester";
         document.getElementById("emailAddress").value = "tim@testing.com";
         document.getElementById("telephoneNumber").value = "01234567890";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/your-address")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/your-address")) {
         document.getElementById("name").value = "ACME Importers Ltd";
         document.getElementById("addressLine1").value = "Unit 42";
         document.getElementById("addressLine2").value = "West Industrial Estate";
@@ -108,25 +108,25 @@ function completePage() {
         document.getElementById("postcode").value = "MD123KD";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/eori-number")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/eori-number")) {
         document.getElementById("yesOrNo").checked = true;
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/enter-eori-number")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/enter-eori-number")) {
         document.getElementById("eoriNumber").value = "GB123456789536";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/who-to-repay")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/who-to-repay")) {
         document.getElementById("repay_to-2").checked = true;
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/bank-details")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/bank-details")) {
         document.getElementById("accountName").value = "ACME Importers Ltd";
         document.getElementById("sortCode").value = "400731";
         document.getElementById("accountNumber").value = "52173018";
         submit();
     }
-    if (currentPageIs("/national-import-duty-adjustment-centre/importer-correspondence-address")) {
+    if (currentPageIs("/national-import-duty-adjustment-centre/create/importer-correspondence-address")) {
         document.getElementById("name").value = "Representatives Client Importer";
         document.getElementById("addressLine1").value = "Unit 17";
         document.getElementById("addressLine2").value = "North Industrial Estate";

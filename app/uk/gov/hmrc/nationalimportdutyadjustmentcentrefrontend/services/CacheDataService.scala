@@ -17,9 +17,10 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,8 +35,14 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
         repository.set(data) map { _ => data }
     }
 
+  def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
+    getCacheData map (cache => (cache.getCreateAnswers, cache.journeyId))
+
   def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData map (_.getCreateAnswers)
+
+  def getAmendAnswers(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
+    getCacheData map (_.getAmendAnswers)
 
   def updateCreateAnswers(
     update: CreateAnswers => CreateAnswers
@@ -45,7 +52,15 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       repository.set(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
-  def updateCreateResponse(
+  def updateAmendAnswers(
+    update: AmendAnswers => AmendAnswers
+  )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
+    getCacheData flatMap { data =>
+      val updatedAnswers: AmendAnswers = update(data.getAmendAnswers)
+      repository.set(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+    }
+
+  def storeCreateResponse(
     claimResponse: CreateClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>

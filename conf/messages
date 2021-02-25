@@ -251,3 +251,8 @@ check_answers.payment.bankDetails = Bank details
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>
+
+amend.case.reference.title = What is your claim reference number?
+amend.case.reference.hint = This is the 22-character reference number issued when you submitted your claim.  For example, NID21134557697RM8WIB13.
+amend.case.reference.error.required = Enter a reference number
+amend.case.reference.error.invalid = Enter a reference number in the correct format
