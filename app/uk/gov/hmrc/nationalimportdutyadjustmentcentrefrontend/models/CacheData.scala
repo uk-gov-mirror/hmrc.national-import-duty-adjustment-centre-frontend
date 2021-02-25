@@ -23,6 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Cre
 
 final case class CacheData(
   id: String,
+  journeyId: JourneyId = JourneyId.generate,
   createAnswers: Option[CreateAnswers] = None,
   createClaimResponse: Option[CreateClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now

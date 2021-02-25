@@ -22,7 +22,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 
 final case class CreateAnswers(
-  journeyId: JourneyId = JourneyId.generate,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,
   representationType: Option[RepresentationType] = None,

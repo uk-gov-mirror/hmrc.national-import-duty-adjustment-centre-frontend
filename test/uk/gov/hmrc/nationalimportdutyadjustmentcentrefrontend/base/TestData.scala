@@ -26,7 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Recl
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber, JourneyId, UploadId}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -87,7 +87,7 @@ trait TestData {
     "01234567890"
   )
 
-  val completeAnswers: CreateAnswers = create.CreateAnswers(
+  val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
