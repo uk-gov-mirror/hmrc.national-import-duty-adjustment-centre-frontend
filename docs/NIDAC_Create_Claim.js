@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
-// @match        http*://*/national-import-duty-adjustment-centre*
+// @match        http*://*/national-import-duty-adjustment-centre/create/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 // ==/UserScript==
