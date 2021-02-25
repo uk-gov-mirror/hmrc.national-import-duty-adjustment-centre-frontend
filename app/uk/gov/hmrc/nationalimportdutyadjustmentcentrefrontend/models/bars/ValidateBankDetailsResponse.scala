@@ -18,7 +18,9 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ValidateBankDetailsResponse(accountNumberWithSortCodeIsValid: String, supportsBACS: Option[String])
+case class ValidateBankDetailsResponse(accountNumberWithSortCodeIsValid: String,
+                                       supportsBACS: Option[String],
+                                       nonStandardAccountDetailsRequiredForBacs: Option[String])
 
 object ValidateBankDetailsResponse {
   implicit val format: OFormat[ValidateBankDetailsResponse] = Json.format[ValidateBankDetailsResponse]

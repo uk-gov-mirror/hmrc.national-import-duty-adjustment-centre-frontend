@@ -16,14 +16,20 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-case class BARSResult(accountNumberWithSortCodeIsValid: String) {
-  val isValid: Boolean = accountNumberWithSortCodeIsValid == "yes"
+case class BARSResult(accountNumberWithSortCodeIsValid: String, nonStandardAccountDetailsRequiredForBacs: Option[String]) {
+
+  val rollNotRequired: Boolean = nonStandardAccountDetailsRequiredForBacs match {
+    case Some(answer) => answer == "no"
+    case None => false
+  }
+
+  val isValid: Boolean = rollNotRequired && accountNumberWithSortCodeIsValid == "yes"
 }
 
 object BARSResult {
 
   def apply(validateResponse: ValidateBankDetailsResponse): BARSResult = new BARSResult(
-    validateResponse.accountNumberWithSortCodeIsValid
+    validateResponse.accountNumberWithSortCodeIsValid, validateResponse.nonStandardAccountDetailsRequiredForBacs
   )
 
 }

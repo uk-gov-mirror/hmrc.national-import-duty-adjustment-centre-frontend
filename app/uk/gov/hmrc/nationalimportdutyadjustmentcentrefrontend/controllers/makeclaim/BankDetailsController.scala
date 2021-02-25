@@ -79,6 +79,12 @@ class BankDetailsController @Inject() (
   ) = {
 
     val formWithErrors = barsResult match {
+
+      case bars if !bars.rollNotRequired =>
+        form.fill(bankDetails).copy(errors =
+          Seq(FormError("accountNumber", "Enter details of a bank account or building society account that does not require a roll number"))
+        )
+
       case bars if bars.accountNumberWithSortCodeIsValid != "yes" =>
         form.fill(bankDetails).copy(errors =
           Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
