@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport

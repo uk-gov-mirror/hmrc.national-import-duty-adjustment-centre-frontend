@@ -71,7 +71,7 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: AppC
   ): Future[UpscanInitiateResponse] = {
     val request = UpscanInitiateRequestV2(
       callbackUrl =
-        appConfig.upscan.callbackBase + controllers.makeclaim.routes.UploadCallbackController.callback(journeyId).url,
+        appConfig.upscan.callbackBase + controllers.routes.UploadCallbackController.callback(journeyId).url,
       successRedirect = redirectOnSuccess,
       errorRedirect = redirectOnError,
       maximumFileSize = Some(appConfig.upscan.maxFileSizeMb * 1024 * 1024),
