@@ -20,6 +20,7 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, CaseReference}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
@@ -34,7 +35,7 @@ trait TestData {
   val fixedDate: LocalDate         = LocalDate.now()
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
 
-  // UserAnswers
+  // CreateAnswers
   val emptyAnswers: CreateAnswers = CreateAnswers()
 
   val representationTypeAnswer: RepresentationType = RepresentationType.Representative
@@ -124,5 +125,12 @@ trait TestData {
   // BARS
   val barsSuccessResult        = BARSResult(accountNumberWithSortCodeIsValid = "yes")
   val barsInvalidAccountResult = BARSResult(accountNumberWithSortCodeIsValid = "no")
+
+  // AmendAnswers
+  val caseReferenceAnswer = CaseReference("NID21134557697RM8WIB13")
+
+  val emptyAmendAnswers: AmendAnswers = AmendAnswers()
+
+  val completeAmendAnswers: AmendAnswers = AmendAnswers(caseReference = Some(caseReferenceAnswer))
 
 }

@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.amend
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EoriNumberFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 
-class EoriNumberFormProviderSpec extends StringFieldBehaviours {
+class CaseReferenceFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "importer.eori.error.required"
-  val invalidKey  = "importer.eori.error.invalid"
+  val requiredKey = "amend.case.reference.error.required"
+  val invalidKey  = "amend.case.reference.error.invalid"
 
-  val form = new EoriNumberFormProvider()()
+  val form = new CaseReferenceFormProvider()()
 
-  ".EoriNumber" must {
+  ".CaseReference" must {
 
-    val fieldName = "eoriNumber"
+    val fieldName = "caseReference"
 
-    behave like fieldThatBindsValidData(form, fieldName, eoriNumber)
+    behave like fieldThatBindsValidData(form, fieldName, caseReference)
 
     behave like fieldThatPreventsUnsafeInput(
       form,
       fieldName,
-      unsafeInputsWithMaxLength(17),
-      FormError(fieldName, invalidKey, Seq(Validation.eoriNumber))
+      unsafeInputsWithMaxLength(22),
+      FormError(fieldName, invalidKey, Seq(Validation.caseReference))
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))

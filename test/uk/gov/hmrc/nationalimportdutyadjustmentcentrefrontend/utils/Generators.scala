@@ -154,6 +154,13 @@ trait Generators {
 
     } yield s"GB$digits"
 
+  def caseReference(): Gen[String] =
+    for {
+      length <- Gen.oneOf(Seq(2, 22))
+      chars  <- listOfN(length, arbitrary[Char])
+
+    } yield s"$chars"
+
   def datesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 
     def toMillis(date: LocalDate): Long =

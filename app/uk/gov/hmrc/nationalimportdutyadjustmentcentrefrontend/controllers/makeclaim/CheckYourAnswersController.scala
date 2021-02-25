@@ -60,7 +60,7 @@ class CheckYourAnswersController @Inject() (
       service.submitClaim(claim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>
-          data.updateCreateResponse(response) map {
+          data.storeCreateResponse(response) map {
             _ => Redirect(nextPage(answers))
           }
       }

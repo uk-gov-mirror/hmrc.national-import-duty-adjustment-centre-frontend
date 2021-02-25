@@ -32,4 +32,6 @@ object Validation {
   val postcodePattern    = "^[0-9a-zA-Z]{1,7}$"
 
   val dutyPattern = "^-?[0-9]{1,7}$|^-?[0-9]{1,7}[.][0-9]{1,2}$"
+
+  val caseReference = "^[0-9a-zA-Z]{2,22}$"
 }

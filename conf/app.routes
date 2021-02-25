@@ -3,6 +3,8 @@
 ->          /govuk-frontend                     govuk.Routes
 ->          /hmrc-frontend                      hmrcfrontend.Routes
 
+->          /amend                              amendClaim.Routes
+
 GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.start
 GET         /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
 GET         /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad

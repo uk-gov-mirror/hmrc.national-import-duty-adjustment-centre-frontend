@@ -19,18 +19,21 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 import java.time.LocalDateTime
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
 
 final case class CacheData(
   id: String,
   journeyId: JourneyId = JourneyId.generate,
   createAnswers: Option[CreateAnswers] = None,
+  amendAnswers: Option[AmendAnswers] = None,
   createClaimResponse: Option[CreateClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
   def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
   def getCreateAnswers               = createAnswers.getOrElse(CreateAnswers())
+  def getAmendAnswers                = amendAnswers.getOrElse(AmendAnswers())
 }
 
 object CacheData {
