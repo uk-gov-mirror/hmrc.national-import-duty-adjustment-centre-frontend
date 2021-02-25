@@ -124,5 +124,7 @@ trait TestData {
   // BARS
   val barsSuccessResult        = BARSResult(accountNumberWithSortCodeIsValid = "yes", "no", Some("yes"))
   val barsInvalidAccountResult = BARSResult(accountNumberWithSortCodeIsValid = "no", "no", None)
+  val barsRollRequiredResult = BARSResult(accountNumberWithSortCodeIsValid = "yes", "yes", None)
+  val barsBacsNotSupportedResult = BARSResult(accountNumberWithSortCodeIsValid = "yes", "no", Some("no"))
 
 }
