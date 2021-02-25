@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import java.time.LocalDate
 

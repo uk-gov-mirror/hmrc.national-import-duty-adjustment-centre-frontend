@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
 
-class RepresentationTypeFormProvider @Inject() extends Mappings {
+class RepayToFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[RepresentationType] =
-    Form("representation_type" -> enumerable[RepresentationType]("representation_type.error.required"))
+  def apply(): Form[RepayTo] =
+    Form("repay_to" -> enumerable[RepayTo]("repay_to.error.required"))
 
 }

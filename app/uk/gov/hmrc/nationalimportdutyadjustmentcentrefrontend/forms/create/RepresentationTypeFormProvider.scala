@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType
 
-class ClaimTypeFormProvider @Inject() extends Mappings {
+class RepresentationTypeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ClaimType] =
-    Form("claim_type" -> enumerable[ClaimType]("claim_type.error.required"))
+  def apply(): Form[RepresentationType] =
+    Form("representation_type" -> enumerable[RepresentationType]("representation_type.error.required"))
 
 }

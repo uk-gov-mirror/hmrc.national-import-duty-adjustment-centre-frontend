@@ -21,7 +21,7 @@ import java.time.LocalDate
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EntryDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.EntryDetails
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsView
 

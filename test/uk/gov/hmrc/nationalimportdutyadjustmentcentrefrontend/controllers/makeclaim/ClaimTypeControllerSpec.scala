@@ -24,7 +24,7 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{ClaimType, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage

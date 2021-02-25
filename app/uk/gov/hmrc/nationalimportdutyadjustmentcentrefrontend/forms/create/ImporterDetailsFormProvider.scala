@@ -14,22 +14,35 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ContactDetails
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ImporterContactDetails
 
-class ContactDetailsFormProvider @Inject() extends Mappings {
+class ImporterDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ContactDetails] = Form(
+  def apply(): Form[ImporterContactDetails] = Form(
     mapping(
-      "firstName" -> text("contactDetails.firstName.error.required")
-        .verifying(firstError(maxLength(40, "contactDetails.firstName.error.length"))),
-      "lastName" -> text("contactDetails.lastName.error.required")
-        .verifying(firstError(maxLength(40, "contactDetails.lastName.error.length"))),
+      "name" -> text("address.name.error.required")
+        .verifying(firstError(maxLength(40, "address.name.error.length"))),
+      "addressLine1" -> text("address.line1.error.required")
+        .verifying(firstError(maxLength(100, "address.line1.error.length"))),
+      "addressLine2" -> optional(
+        text()
+          .verifying(firstError(maxLength(50, "address.line2.error.length")))
+      ),
+      "city" -> text("address.city.error.required")
+        .verifying(firstError(maxLength(50, "address.city.error.length"))),
+      "postcode" -> text("address.postcode.error.required")
+        .verifying(
+          firstError(
+            maxLength(7, "address.postcode.error.length"),
+            regexp(Validation.postcodePattern, "address.postcode.error.invalid")
+          )
+        ),
       "emailAddress" -> text("contactDetails.emailAddress.error.required")
         .verifying(
           firstError(
@@ -42,7 +55,7 @@ class ContactDetailsFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(regexp(Validation.phoneNumberPattern.toString, "contactDetails.telephoneNumber.error.invalid"))
           )
-    )(ContactDetails.apply)(ContactDetails.unapply)
+    )(ImporterContactDetails.apply)(ImporterContactDetails.unapply)
   )
 
 }

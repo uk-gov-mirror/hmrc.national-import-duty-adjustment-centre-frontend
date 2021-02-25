@@ -22,7 +22,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BankDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, CreateAnswers, RepayTo}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest

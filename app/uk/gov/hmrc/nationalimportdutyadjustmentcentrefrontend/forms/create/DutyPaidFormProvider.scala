@@ -14,32 +14,35 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.DutyPaid
 
-class BankDetailsFormProvider @Inject() extends Mappings {
+class DutyPaidFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BankDetails] = Form(
+  def apply(): Form[DutyPaid] = Form(
     mapping(
-      "accountName" -> text("bankDetails.name.error.required")
+      "actuallyPaid" -> text("dutyPaid.actual.error.required")
         .verifying(
           firstError(
-            maxLength(40, "bankDetails.name.error.length"),
-            regexp(Validation.safeInputPattern, "bankDetails.name.error.invalid")
+            regexp(Validation.dutyPattern, "dutyPaid.error.invalid"),
+            greaterThanZero("dutyPaid.actual.error.zero")
           )
         ),
-      "sortCode" -> text("bankDetails.sortCode.error.required")
-        .verifying(firstError(regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid"))),
-      "accountNumber" -> text("bankDetails.accountNumber.error.required")
+      "shouldPaid" -> text("dutyPaid.should.error.required")
         .verifying(
-          firstError(regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid"))
+          firstError(
+            regexp(Validation.dutyPattern, "dutyPaid.error.invalid"),
+            greaterThanZero("dutyPaid.should.error.zero")
+          )
         )
-    )(BankDetails.apply)(BankDetails.unapply)
+    )(DutyPaid.apply)(DutyPaid.unapply)
+      .verifying("dutyPaid.amounts.error.same", duty => duty.dueAmount != 0)
+      .verifying("dutyPaid.amounts.error.greater", duty => duty.dueAmount >= 0)
   )
 
 }

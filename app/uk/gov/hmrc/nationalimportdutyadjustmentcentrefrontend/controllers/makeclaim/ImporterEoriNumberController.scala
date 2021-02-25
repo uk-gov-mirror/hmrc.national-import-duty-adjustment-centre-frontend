@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EoriNumberFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EoriNumberFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ImporterEoriNumberPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService

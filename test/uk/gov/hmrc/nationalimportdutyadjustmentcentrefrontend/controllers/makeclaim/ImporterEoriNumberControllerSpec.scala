@@ -24,7 +24,7 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EoriNumberFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EoriNumberFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterEoriNumberPage

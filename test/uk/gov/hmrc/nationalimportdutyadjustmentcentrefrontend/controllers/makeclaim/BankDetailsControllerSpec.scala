@@ -24,7 +24,7 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BankDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage

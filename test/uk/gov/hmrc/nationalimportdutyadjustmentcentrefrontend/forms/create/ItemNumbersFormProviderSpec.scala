@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 
-class RepresentationTypeFormProviderSpec extends OptionFieldBehaviours {
+class ItemNumbersFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new RepresentationTypeFormProvider()()
+  val requiredKey = "itemNumbers.error.required"
+  val lengthKey   = "itemNumbers.error.length"
 
-  "RepresentationTypeFormProvider" must {
+  val form = new ItemNumbersFormProvider()()
 
-    val fieldName   = "representation_type"
-    val requiredKey = "representation_type.error.required"
+  ".ItemNumbers" must {
 
-    behave like optionsField[RepresentationType](
+    val fieldName = "itemNumbers"
+    val maxLength = 500
+
+    behave like fieldThatBindsValidData(form, fieldName, stringsWithMinAndMaxLength(1, maxLength))
+
+    behave like fieldWithMaxLength(
       form,
       fieldName,
-      validValues = RepresentationType.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
   }
+
 }

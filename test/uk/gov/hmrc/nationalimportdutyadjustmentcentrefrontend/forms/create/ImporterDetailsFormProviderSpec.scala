@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 
-class AddressFormProviderSpec extends StringFieldBehaviours {
+class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new AddressFormProvider()()
+  val form = new ImporterDetailsFormProvider()()
 
   ".Name" must {
 
@@ -130,5 +130,64 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
       val expectedError = FormError(fieldName, invalidKey, Seq(Validation.postcodePattern))
       result.errors mustEqual Seq(expectedError)
     }
+  }
+
+  ".EmailAddress" must {
+
+    val fieldName   = "emailAddress"
+    val requiredKey = "contactDetails.emailAddress.error.required"
+    val invalidKey  = "contactDetails.emailAddress.error.invalid"
+    val lengthKey   = "contactDetails.emailAddress.error.length"
+    val maxLength   = 85
+
+    val basicEmail            = Gen.const("foo@example.com")
+    val emailWithSpecialChars = Gen.const("aBcD.!#$%&'*+/=?^_`{|}~-123@foo-bar.example.com")
+    val validData             = Gen.oneOf(basicEmail, emailWithSpecialChars)
+    val invalidEmail          = Gen.const("fooAtexampleDOTcom")
+
+    behave like fieldThatBindsValidData(form, fieldName, validData)
+
+    behave like fieldThatPreventsUnsafeInput(
+      form,
+      fieldName,
+      invalidEmail,
+      invalidError = FormError(fieldName, invalidKey, Seq(Validation.emailAddressPattern))
+    )
+
+    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+  }
+
+  ".TelephoneNumber" must {
+
+    val fieldName   = "telephoneNumber"
+    val requiredKey = "contactDetails.telephoneNumber.error.required"
+    val invalidKey  = "contactDetails.telephoneNumber.error.invalid"
+    val minLength   = 11
+    val maxLength   = 11
+
+    val validTelephoneNumberGen = for {
+      length <- Gen.choose(minLength, maxLength)
+      digits <- Gen.listOfN(length, Gen.numChar)
+    } yield digits.mkString
+
+    behave like fieldThatBindsValidData(form, fieldName, validTelephoneNumberGen)
+
+    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, invalidKey, Seq(Validation.phoneNumberPattern))
+    )
+
   }
 }

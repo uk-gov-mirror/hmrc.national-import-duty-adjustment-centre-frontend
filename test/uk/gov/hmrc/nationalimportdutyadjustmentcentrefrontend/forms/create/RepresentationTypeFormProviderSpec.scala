@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType
 
-class RepayToFormProviderSpec extends OptionFieldBehaviours {
+class RepresentationTypeFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new RepayToFormProvider()()
+  val form = new RepresentationTypeFormProvider()()
 
-  "RepayToFormProvider" must {
+  "RepresentationTypeFormProvider" must {
 
-    val fieldName   = "repay_to"
-    val requiredKey = "repay_to.error.required"
+    val fieldName   = "representation_type"
+    val requiredKey = "representation_type.error.required"
 
-    behave like optionsField[RepayTo](
+    behave like optionsField[RepresentationType](
       form,
       fieldName,
-      validValues = RepayTo.values,
+      validValues = RepresentationType.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

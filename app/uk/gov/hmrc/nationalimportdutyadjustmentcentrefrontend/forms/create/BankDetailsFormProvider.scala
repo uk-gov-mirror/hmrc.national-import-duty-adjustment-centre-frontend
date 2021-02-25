@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.DutyPaid
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
-class DutyPaidFormProvider @Inject() extends Mappings {
+class BankDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[DutyPaid] = Form(
+  def apply(): Form[BankDetails] = Form(
     mapping(
-      "actuallyPaid" -> text("dutyPaid.actual.error.required")
+      "accountName" -> text("bankDetails.name.error.required")
         .verifying(
           firstError(
-            regexp(Validation.dutyPattern, "dutyPaid.error.invalid"),
-            greaterThanZero("dutyPaid.actual.error.zero")
+            maxLength(40, "bankDetails.name.error.length"),
+            regexp(Validation.safeInputPattern, "bankDetails.name.error.invalid")
           )
         ),
-      "shouldPaid" -> text("dutyPaid.should.error.required")
+      "sortCode" -> text("bankDetails.sortCode.error.required")
+        .verifying(firstError(regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid"))),
+      "accountNumber" -> text("bankDetails.accountNumber.error.required")
         .verifying(
-          firstError(
-            regexp(Validation.dutyPattern, "dutyPaid.error.invalid"),
-            greaterThanZero("dutyPaid.should.error.zero")
-          )
+          firstError(regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid"))
         )
-    )(DutyPaid.apply)(DutyPaid.unapply)
-      .verifying("dutyPaid.amounts.error.same", duty => duty.dueAmount != 0)
-      .verifying("dutyPaid.amounts.error.greater", duty => duty.dueAmount >= 0)
+    )(BankDetails.apply)(BankDetails.unapply)
   )
 
 }

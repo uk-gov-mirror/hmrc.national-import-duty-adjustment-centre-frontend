@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
 
-class ClaimReasonFormProviderSpec extends StringFieldBehaviours {
+class RepayToFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ClaimReasonFormProvider()()
+  val form = new RepayToFormProvider()()
 
-  ".ClaimReason" must {
+  "RepayToFormProvider" must {
 
-    val fieldName   = "claimReason"
-    val requiredKey = "claim_reason.error.required"
-    val lengthKey   = "claim_reason.error.length"
-    val maxLength   = 500
+    val fieldName   = "repay_to"
+    val requiredKey = "repay_to.error.required"
 
-    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
-
-    behave like fieldWithMaxLength(
+    behave like optionsField[RepayTo](
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      validValues = RepayTo.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
   }
-
 }

@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 
-class ItemNumbersFormProviderSpec extends StringFieldBehaviours {
+class ClaimReasonFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "itemNumbers.error.required"
-  val lengthKey   = "itemNumbers.error.length"
+  val form = new ClaimReasonFormProvider()()
 
-  val form = new ItemNumbersFormProvider()()
+  ".ClaimReason" must {
 
-  ".ItemNumbers" must {
+    val fieldName   = "claimReason"
+    val requiredKey = "claim_reason.error.required"
+    val lengthKey   = "claim_reason.error.length"
+    val maxLength   = 500
 
-    val fieldName = "itemNumbers"
-    val maxLength = 500
-
-    behave like fieldThatBindsValidData(form, fieldName, stringsWithMinAndMaxLength(1, maxLength))
+    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
     behave like fieldWithMaxLength(
       form,

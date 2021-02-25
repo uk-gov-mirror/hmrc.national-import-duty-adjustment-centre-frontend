@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimReason
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 
-class ClaimReasonFormProvider @Inject() extends Mappings {
+class EoriNumberFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ClaimReason] = Form(
+  def apply(): Form[EoriNumber] = Form(
     mapping(
-      "claimReason" -> text("claim_reason.error.required")
-        .verifying(firstError(maxLength(500, "claim_reason.error.length")))
-    )(ClaimReason.apply)(ClaimReason.unapply)
+      "eoriNumber" -> text("importer.eori.error.required")
+        .verifying(firstError(regexp(Validation.eoriNumber, "importer.eori.error.invalid")))
+    )(EoriNumber.apply)(EoriNumber.unapply)
   )
 
 }

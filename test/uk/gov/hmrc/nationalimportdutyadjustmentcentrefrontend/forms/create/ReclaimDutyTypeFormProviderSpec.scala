@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.{
-  CheckboxFieldBehaviours,
-  OptionFieldBehaviours
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.CheckboxFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
 
 class ReclaimDutyTypeFormProviderSpec extends CheckboxFieldBehaviours {

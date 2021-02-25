@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EoriNumberFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 
 class EoriNumberFormProviderSpec extends StringFieldBehaviours {

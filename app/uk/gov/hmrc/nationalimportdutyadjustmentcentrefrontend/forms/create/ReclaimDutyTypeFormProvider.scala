@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import javax.inject.Inject
 import play.api.data.Form
+import play.api.data.Forms.set
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
 
-class RepayToFormProvider @Inject() extends Mappings {
+class ReclaimDutyTypeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[RepayTo] =
-    Form("repay_to" -> enumerable[RepayTo]("repay_to.error.required"))
+  def apply(): Form[Set[ReclaimDutyType]] =
+    Form(
+      "reclaimDutyType" -> set(enumerable[ReclaimDutyType]("reclaimDutyType.error.required"))
+        .verifying(nonEmptySet("reclaimDutyType.error.required"))
+    )
 
 }
