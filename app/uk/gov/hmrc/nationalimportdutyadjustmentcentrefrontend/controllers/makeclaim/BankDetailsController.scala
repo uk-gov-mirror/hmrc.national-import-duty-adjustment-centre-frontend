@@ -83,10 +83,10 @@ class BankDetailsController @Inject() (
       case bars if !bars.validAccountAndSortCode =>
         Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
 
-      case bars if !bars.rollNotRequired => Seq(FormError("accountNumber", "bankDetails.bars.validation.rollRequired"))
+      case bars if !bars.rollNotRequired => Seq(FormError("sortCode", "bankDetails.bars.validation.rollRequired"))
 
       case bars if !bars.accountSupportsBacs =>
-        Seq(FormError("accountNumber", "bankDetails.bars.validation.bacsNotSupported"))
+        Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
 
       case _ => Seq(FormError("", "bankDetails.bars.validation.failed"))
     })

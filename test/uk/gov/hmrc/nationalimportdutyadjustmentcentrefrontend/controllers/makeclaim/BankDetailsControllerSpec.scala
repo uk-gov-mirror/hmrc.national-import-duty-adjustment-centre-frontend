@@ -121,7 +121,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual BAD_REQUEST
 
-      theResponseForm.errors mustBe Seq(FormError("accountNumber", "bankDetails.bars.validation.rollRequired"))
+      theResponseForm.errors mustBe Seq(FormError("sortCode", "bankDetails.bars.validation.rollRequired"))
     }
 
     "return 400 (BAD REQUEST) when BARS BACS supported check fails" in {
@@ -132,7 +132,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual BAD_REQUEST
 
-      theResponseForm.errors mustBe Seq(FormError("accountNumber", "bankDetails.bars.validation.bacsNotSupported"))
+      theResponseForm.errors mustBe Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {
