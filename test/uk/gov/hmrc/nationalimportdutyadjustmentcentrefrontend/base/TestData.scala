@@ -122,7 +122,6 @@ trait TestData {
     UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
 
   // BARS
-  private val validResponse: ValidateBankDetailsResponse = ValidateBankDetailsResponse("yes", "no", Some("yes"))
   val barsSuccessResult                                  = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("yes")))
   val barsInvalidAccountResult                           = BARSResult(ValidateBankDetailsResponse("no", "no", None))
   val barsRollRequiredResult                             = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
