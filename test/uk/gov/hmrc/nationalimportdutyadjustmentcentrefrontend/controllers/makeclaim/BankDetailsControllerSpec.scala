@@ -106,7 +106,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(navigator.nextPage(BankDetailsPage, emptyAnswers).url)
     }
 
-    "return 400 (BAD REQUEST) when BARS check fails" in {
+    "return 400 (BAD REQUEST) when BARS mod check fails" in {
 
       when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsInvalidAccountResult))
       val result = controller.onSubmit()(validRequest)
@@ -115,11 +115,30 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       theResponseForm.errors mustBe Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
     }
 
+    "return 400 (BAD REQUEST) when BARS roll required check fails" in {
+
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsRollRequiredResult))
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual BAD_REQUEST
+
+      theResponseForm.errors mustBe Seq(FormError("sortCode", "bankDetails.bars.validation.rollRequired"))
+    }
+
+    "return 400 (BAD REQUEST) when BARS BACS supported check fails" in {
+
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(
+        Future.successful(barsBacsNotSupportedResult)
+      )
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual BAD_REQUEST
+
+      theResponseForm.errors mustBe Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
+    }
+
     "return 400 (BAD REQUEST) when invalid data posted" in {
 
       val result = controller.onSubmit()(postRequest())
       status(result) mustEqual BAD_REQUEST
     }
-
   }
 }
