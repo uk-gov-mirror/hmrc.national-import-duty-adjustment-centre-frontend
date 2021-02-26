@@ -122,10 +122,10 @@ trait TestData {
     UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
 
   // BARS
-  val barsSuccessResult                                  = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("yes")))
-  val barsInvalidAccountResult                           = BARSResult(ValidateBankDetailsResponse("no", "no", None))
-  val barsRollRequiredResult                             = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
-  val barsBacsNotSupportedResult                         = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
+  val barsSuccessResult          = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("yes")))
+  val barsInvalidAccountResult   = BARSResult(ValidateBankDetailsResponse("no", "no", None))
+  val barsRollRequiredResult     = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
+  val barsBacsNotSupportedResult = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
 
   // AmendAnswers
   val caseReferenceAnswer = CaseReference("NID21134557697RM8WIB13")

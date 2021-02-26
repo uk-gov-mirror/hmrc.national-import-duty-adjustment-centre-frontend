@@ -140,6 +140,5 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(postRequest())
       status(result) mustEqual BAD_REQUEST
     }
-
   }
 }
