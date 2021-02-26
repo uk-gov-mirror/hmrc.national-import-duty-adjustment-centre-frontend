@@ -1,0 +1,62 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        summaryList: summaryList,
+        continueButton: components.continueButton
+)
+
+@(answers: AmendAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = Title(messages("amend.check_answers.title")), backLink) {
+
+    @components.heading(messages("amend.check_answers.title"))
+
+    @summaryList(
+        id = "amend_section",
+        heading = Some(messages("amend.check_answers.information.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "case_reference_row",
+                key = Key(
+                    content = Text(messages("amend.check_answers.information.caseReference"))
+                ),
+                value = Value(
+                    content = Text(answers.caseReference.map(_.number).getOrElse(throw new MissingAnswersException("Case reference")))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @components.subHeading(messages("amend.check_answers.submit.heading"))
+    @components.paragraph(messages("amend.check_answers.submit.declaration"))
+
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
+        @continueButton("check_answers.submit")
+    }
+
+}

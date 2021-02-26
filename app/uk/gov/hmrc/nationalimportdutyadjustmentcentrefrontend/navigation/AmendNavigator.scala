@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
@@ -26,7 +26,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnswerConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
-    P(CaseReferencePage, amendclaim.routes.CaseReferenceController.onPageLoad, always)
+    P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always),
+    P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always)
   )
 
 }

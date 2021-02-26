@@ -256,3 +256,9 @@ amend.case.reference.title = What is your claim reference number?
 amend.case.reference.hint = This is the 22-character reference number issued when you submitted your claim.  For example, NID21134557697RM8WIB13.
 amend.case.reference.error.required = Enter a reference number
 amend.case.reference.error.invalid = Enter a reference number in the correct format
+
+amend.check_answers.title = Check your answers before sending your application
+amend.check_answers.information.title = Important information
+amend.check_answers.information.caseReference = Claim reference number
+amend.check_answers.submit.heading = Submit your declaration
+amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
