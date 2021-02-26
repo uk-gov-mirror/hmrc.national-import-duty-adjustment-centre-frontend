@@ -18,7 +18,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimReason
 
 final case class AmendAnswers(
                                caseReference: Option[CaseReference] = None,

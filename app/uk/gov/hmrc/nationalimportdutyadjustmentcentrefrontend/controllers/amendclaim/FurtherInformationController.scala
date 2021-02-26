@@ -25,8 +25,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.Amend
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{FurtherInformationPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.FurtherInformationView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.FurtherInformationView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -39,8 +39,8 @@ class FurtherInformationController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
                                               val navigator: AmendNavigator,
                                               furtherInformationView: FurtherInformationView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation[AmendAnswers] {
+                                            )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Navigation[AmendAnswers] {
 
   override val page: Page = FurtherInformationPage
 
@@ -54,11 +54,14 @@ class FurtherInformationController @Inject()(
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
+
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getCreateAnswers map { answers => BadRequest(claimReasonView(formWithErrors, backLink(answers))) },
+        data.getAmendAnswers map { answers =>
+          BadRequest(furtherInformationView(formWithErrors, backLink(answers)))
+        },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(claimReason = Some(value))) map {
+        data.updateAmendAnswers(answers => answers.copy(furtherInformation = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
