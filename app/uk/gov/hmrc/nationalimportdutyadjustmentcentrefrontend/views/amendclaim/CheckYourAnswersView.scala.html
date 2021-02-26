@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
@@ -29,7 +29,7 @@
         continueButton: components.continueButton
 )
 
-@(answers: AmendAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(amendClaim: AmendClaim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = Title(messages("amend.check_answers.title")), backLink) {
 
@@ -45,7 +45,7 @@
                     content = Text(messages("amend.check_answers.information.caseReference"))
                 ),
                 value = Value(
-                    content = Text(answers.caseReference.map(_.number).getOrElse(throw new MissingAnswersException("Case reference")))
+                    content = Text(amendClaim.caseReference.number)
                 ),
                 actions = None
             ))

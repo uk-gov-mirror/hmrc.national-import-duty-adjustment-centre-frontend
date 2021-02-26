@@ -1,5 +1,6 @@
 
 # amend claim
+GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AmendClaimController.start()
 GET         /claim-reference-number            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onPageLoad()
 POST        /claim-reference-number            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onSubmit()
 
