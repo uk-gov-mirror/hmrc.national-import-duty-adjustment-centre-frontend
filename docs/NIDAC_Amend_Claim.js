@@ -46,4 +46,9 @@ function completePage() {
         submit();
     }
 
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/additional-information")) {
+        document.getElementById("furtherInformation").value = "Some new information that has been added";
+        submit();
+    }
+
 }
