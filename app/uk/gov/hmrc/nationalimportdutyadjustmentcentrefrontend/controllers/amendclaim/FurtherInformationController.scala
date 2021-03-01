@@ -32,15 +32,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class FurtherInformationController @Inject()(
-                                              identify: IdentifierAction,
-                                              data: CacheDataService,
-                                              formProvider: FurtherInformationFormProvider,
-                                              val controllerComponents: MessagesControllerComponents,
-                                              val navigator: AmendNavigator,
-                                              furtherInformationView: FurtherInformationView
-                                            )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Navigation[AmendAnswers] {
+class FurtherInformationController @Inject() (
+  identify: IdentifierAction,
+  data: CacheDataService,
+  formProvider: FurtherInformationFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  val navigator: AmendNavigator,
+  furtherInformationView: FurtherInformationView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Navigation[AmendAnswers] {
 
   override val page: Page = FurtherInformationPage
 
@@ -54,7 +54,6 @@ class FurtherInformationController @Inject()(
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-
     form.bindFromRequest().fold(
       formWithErrors =>
         data.getAmendAnswers map { answers =>

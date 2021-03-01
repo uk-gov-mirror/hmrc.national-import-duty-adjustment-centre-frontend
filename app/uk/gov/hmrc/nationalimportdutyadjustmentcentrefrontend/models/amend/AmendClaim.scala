@@ -21,10 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CaseReferencePage, FurtherInformationPage}
 
-final case class AmendClaim(
-                             caseReference: CaseReference,
-                             furtherInformation: FurtherInformation
-                           )
+final case class AmendClaim(caseReference: CaseReference, furtherInformation: FurtherInformation)
 
 object AmendClaim {
   implicit val formats: OFormat[AmendClaim] = Json.format[AmendClaim]

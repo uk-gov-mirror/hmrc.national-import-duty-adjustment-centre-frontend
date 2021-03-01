@@ -20,10 +20,9 @@ import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 
 final case class AmendAnswers(
-                               caseReference: Option[CaseReference] = None,
-                               furtherInformation: Option[FurtherInformation] = None
-
-                             ) extends Answers
+  caseReference: Option[CaseReference] = None,
+  furtherInformation: Option[FurtherInformation] = None
+) extends Answers
 
 object AmendAnswers {
   implicit val formats: OFormat[AmendAnswers] = Json.format[AmendAnswers]
