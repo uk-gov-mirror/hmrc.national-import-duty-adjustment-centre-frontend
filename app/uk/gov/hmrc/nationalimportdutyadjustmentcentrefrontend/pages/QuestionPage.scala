@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.CaseReference
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{CaseReference, FurtherInformation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 
 trait QuestionPage[A] extends Page
@@ -36,6 +36,7 @@ case object RepayToPage                extends QuestionPage[RepayTo]
 case object BankDetailsPage            extends QuestionPage[BankDetails]
 case object ClaimReasonPage            extends QuestionPage[ClaimReason]
 case object UploadSummaryPage          extends QuestionPage[Boolean]
+case object FurtherInformationPage     extends QuestionPage[FurtherInformation]
 case object EntryDetailsPage           extends QuestionPage[EntryDetails]
 case object ItemNumbersPage            extends QuestionPage[ItemNumbers]
 

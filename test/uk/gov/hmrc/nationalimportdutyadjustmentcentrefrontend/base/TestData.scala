@@ -20,7 +20,11 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, CaseReference}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
+  AmendAnswers,
+  CaseReference,
+  FurtherInformation
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
@@ -128,10 +132,12 @@ trait TestData {
   val barsBacsNotSupportedResult = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
 
   // AmendAnswers
-  val caseReferenceAnswer = CaseReference("NID21134557697RM8WIB13")
+  val caseReferenceAnswer      = CaseReference("NID21134557697RM8WIB13")
+  val furtherInformationAnswer = FurtherInformation("I also have this to tell which is additional information")
 
   val emptyAmendAnswers: AmendAnswers = AmendAnswers()
 
-  val completeAmendAnswers: AmendAnswers = AmendAnswers(caseReference = Some(caseReferenceAnswer))
+  val completeAmendAnswers: AmendAnswers =
+    AmendAnswers(caseReference = Some(caseReferenceAnswer), furtherInformation = Some(furtherInformationAnswer))
 
 }

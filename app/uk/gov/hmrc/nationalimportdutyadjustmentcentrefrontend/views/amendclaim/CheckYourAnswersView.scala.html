@@ -48,6 +48,16 @@
                     content = Text(amendClaim.caseReference.number)
                 ),
                 actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "further_information_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.further_information"))
+                ),
+                value = Value(
+                    content = Text(amendClaim.furtherInformation.info)
+                ),
+                actions = None
             ))
         )
     )

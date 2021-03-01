@@ -70,6 +70,11 @@ upload_documents_summary.remove.label.hidden = Remove file {0}
 upload_documents_summary.add.label = Do you need to upload another file?
 upload_documents_summary.add.required = Select yes if you need to upload another file
 
+further_information.title = Enter your additional information
+further_information.error.required = Enter further information
+further_information.hint = Enter any additional information that HMRC has asked for.
+further_information.error.length = Further information cannot be longer than 1500 characters
+
 reclaimDutyType.title = What do you want to reclaim?
 reclaimDutyType.hint = Select all that apply.
 reclaimDutyType.01 = Customs Duty
@@ -230,6 +235,7 @@ check_answers.claim.entryDetails.entryDate = Entry date: {0}
 check_answers.claim.claimType = Claim type
 check_answers.claim.itemNumbers = Item numbers
 check_answers.claim.uploaded = Supporting documents
+check_answers.claim.further_information = Further information
 check_answers.claim.reason = Why are you making this claim?
 check_answers.repayment.title = Repayment request
 check_answers.repayment.reclaimDutyType = What do you want to reclaim?
