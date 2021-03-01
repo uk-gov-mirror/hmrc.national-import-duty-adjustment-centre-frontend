@@ -263,8 +263,16 @@ amend.case.reference.hint = This is the 22-character reference number issued whe
 amend.case.reference.error.required = Enter a reference number
 amend.case.reference.error.invalid = Enter a reference number in the correct format
 
+amend.attach_more_documents.title = Do you need to attach more documents?
+amend.attach_more_documents.required = Select yes if you need to attach more documents
+amend.attach_more_documents.hint = You may have been asked to provide additional documents to help us complete your claim.
+
 amend.check_answers.title = Check your answers before sending your application
 amend.check_answers.information.title = Important information
 amend.check_answers.information.caseReference = Claim reference number
+amend.check_answers.information.attach_more_documents = Do you need to attach more documents?
+amend.check_answers.information.attach_more_documents.false = No
+amend.check_answers.information.attach_more_documents.true = Yes
 amend.check_answers.submit.heading = Submit your declaration
 amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+

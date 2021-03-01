@@ -27,6 +27,7 @@ class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnsw
 
   override protected val pageOrder: Seq[P] = Seq(
     P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always),
+    P(AttachMoreDocumentsPage, routes.AttachMoreDocumentsController.onPageLoad, always),
     P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always),
     P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always)
   )

@@ -40,4 +40,5 @@ case object FurtherInformationPage     extends QuestionPage[FurtherInformation]
 case object EntryDetailsPage           extends QuestionPage[EntryDetails]
 case object ItemNumbersPage            extends QuestionPage[ItemNumbers]
 
-case object CaseReferencePage extends QuestionPage[CaseReference]
+case object CaseReferencePage       extends QuestionPage[CaseReference]
+case object AttachMoreDocumentsPage extends QuestionPage[Boolean]

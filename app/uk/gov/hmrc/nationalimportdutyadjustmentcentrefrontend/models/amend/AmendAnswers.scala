@@ -21,7 +21,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 
 final case class AmendAnswers(
   caseReference: Option[CaseReference] = None,
-  furtherInformation: Option[FurtherInformation] = None
+  furtherInformation: Option[FurtherInformation] = None,
+  hasMoreDocuments: Option[Boolean] = None
 ) extends Answers
 
 object AmendAnswers {

@@ -21,7 +21,8 @@
         label: String,
         legendAsHeading: Boolean = true,
         legendClass: Option[String] = None,
-        inline: Boolean = false
+        inline: Boolean = false,
+        hint: Option[Html] = None,
 )(implicit messages: Messages)
 
 @inputRadio(
@@ -42,5 +43,6 @@
     inline = inline,
     legendAsHeading = legendAsHeading,
     legendClass = legendClass,
-    legend = Some(label)
+    legend = Some(label),
+    hint = hint
 )
