@@ -19,13 +19,13 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyCreate
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyAmend
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadForm
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
-        uploadBody: uploadBodyCreate,
+        uploadBody: uploadBodyAmend,
         uploadForm: uploadForm,
         errorSummary: errorSummary,
         continueButton: components.continueButton,
@@ -34,18 +34,17 @@
 
 @(
         upscanInitiateResponse : UpscanInitiateResponse,
-        claimType: Option[ClaimType],
         isFirstUpload: Boolean,
         error: Option[FormError] = None,
         backLink: NavigatorBack
 )(implicit request: Request[_], messages: Messages)
 
 
-@layout(pageTitle = Title(messages("upload_documents.title")), backLink) {
+@layout(pageTitle = Title(messages("amend.upload_documents.title")), backLink) {
     @errorSummary(error.map(Seq(_)).getOrElse(Seq.empty))
 
-    @components.heading(messages("upload_documents.title"))
+    @components.heading(messages("amend.upload_documents.title"))
 
-    @uploadBody(uploadForm(upscanInitiateResponse, isFirstUpload, error), claimType)
+    @uploadBody(uploadForm(upscanInitiateResponse, isFirstUpload, error))
 
 }

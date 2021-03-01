@@ -17,14 +17,15 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
+
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
   CaseReference,
   FurtherInformation
 }
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
@@ -142,7 +143,8 @@ trait TestData {
     AmendAnswers(
       caseReference = Some(caseReferenceAnswer),
       furtherInformation = Some(furtherInformationAnswer),
-      hasMoreDocuments = Some(hasMoreDocuments)
+      hasMoreDocuments = Some(hasMoreDocuments),
+      uploads = Seq(uploadAnswer, uploadAnswer2)
     )
 
 }

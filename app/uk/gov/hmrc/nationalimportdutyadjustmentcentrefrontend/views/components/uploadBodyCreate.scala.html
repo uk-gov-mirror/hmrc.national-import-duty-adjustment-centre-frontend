@@ -16,32 +16,17 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadFileTypes
 
-@this(govukDetails : GovukDetails)
+@this(govukDetails : GovukDetails, uploadFileTypes: uploadFileTypes)
 
 @(content: Html, claimType: Option[ClaimType])(implicit messages: Messages)
-
-@fileTypes ={
-  <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
-   <li>@messages("upload_documents.body.files.bullet.1")</li>
-   <li>@messages("upload_documents.body.files.bullet.2")</li>
-   <li>@messages("upload_documents.body.files.bullet.3")</li>
-   <li>@messages("upload_documents.body.files.bullet.4")</li>
-  </ul>
-}
 
 <p class="govuk-body">@messages("upload_documents.intro.1")</p>
 <p class="govuk-body">@messages("upload_documents.intro.2")</p>
 
 @components.uploadDocumentTypes(claimType)
 
-<p class="govuk-body">@messages("upload_documents.body.files.size")</p>
-
-@govukDetails(Details(
- summary = Text(messages("upload_documents.body.files.bullet.heading")),
- content = HtmlContent(fileTypes)
-))
+@uploadFileTypes()
 
 @content
-
-</div>

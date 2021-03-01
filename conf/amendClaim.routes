@@ -1,14 +1,20 @@
 
 # amend claim
-GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AmendClaimController.start()
-GET         /claim-reference-number            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onPageLoad()
-POST        /claim-reference-number            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onSubmit()
+GET         /                                            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AmendClaimController.start()
+
+GET         /claim-reference-number                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onPageLoad()
+POST        /claim-reference-number                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onSubmit()
 
 GET         /attach-more-documents              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AttachMoreDocumentsController.onPageLoad()
 POST        /attach-more-documents              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AttachMoreDocumentsController.onSubmit()
 
-GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onPageLoad()
-POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onSubmit()
+GET         /upload-additional-documents                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onPageLoad()
+GET         /upload-additional-documents/progress        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onProgress(uploadId: UploadId)
+GET         /upload-additional-documents/error           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onError(errorCode: String)
 
-GET         /additional-information             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onPageLoad()
-POST        /additional-information             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onSubmit()
+GET         /additional-information                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onPageLoad()
+POST        /additional-information                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onSubmit()
+
+GET         /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onPageLoad()
+POST        /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onSubmit()
+

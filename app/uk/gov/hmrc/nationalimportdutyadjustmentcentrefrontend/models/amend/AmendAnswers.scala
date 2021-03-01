@@ -18,11 +18,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 final case class AmendAnswers(
   caseReference: Option[CaseReference] = None,
-  furtherInformation: Option[FurtherInformation] = None,
-  hasMoreDocuments: Option[Boolean] = None
+  hasMoreDocuments: Option[Boolean] = None,
+  uploads: Seq[UploadedFile] = Seq.empty,
+  furtherInformation: Option[FurtherInformation] = None
 ) extends Answers
 
 object AmendAnswers {

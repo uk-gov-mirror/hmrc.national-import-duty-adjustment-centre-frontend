@@ -25,6 +25,9 @@ https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-fr
 Create Case Journey
 https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 
+Amend Case Journey
+https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Amend_Claim.js
+
 ### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").

@@ -28,6 +28,7 @@ class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnsw
   override protected val pageOrder: Seq[P] = Seq(
     P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always),
     P(AttachMoreDocumentsPage, routes.AttachMoreDocumentsController.onPageLoad, always),
+    P(UploadPage, routes.UploadFormController.onPageLoad, showUploadDocuments),
     P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always),
     P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always)
   )
@@ -37,5 +38,7 @@ class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnsw
 protected trait AmendAnswerConditions {
 
   protected val always: Answers => Boolean = (_: Answers) => true
+
+  protected val showUploadDocuments: AmendAnswers => Boolean = _.hasMoreDocuments.contains(true)
 
 }
