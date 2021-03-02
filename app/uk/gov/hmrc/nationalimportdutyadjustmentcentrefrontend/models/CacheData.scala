@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse, SubmittedClaim}
 
 final case class CacheData(
   id: String,
@@ -28,6 +28,7 @@ final case class CacheData(
   createAnswers: Option[CreateAnswers] = None,
   amendAnswers: Option[AmendAnswers] = None,
   createClaimResponse: Option[CreateClaimResponse] = None,
+  submitedClaim: Option[SubmittedClaim] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 

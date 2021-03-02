@@ -8,6 +8,7 @@ site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
 site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
 site.yes = Yes
 site.no = No
+site.print = Print this page
 
 date.day = Day
 date.month = Month

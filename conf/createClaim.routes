@@ -60,3 +60,4 @@ GET         /check-answers                      uk.gov.hmrc.nationalimportdutyad
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
 
 GET         /confirmation                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ConfirmationController.onPageLoad()
+GET         /review-claim                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReviewClaimController.onPageLoad()

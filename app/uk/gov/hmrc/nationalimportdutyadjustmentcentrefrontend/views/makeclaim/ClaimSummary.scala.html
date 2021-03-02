@@ -1,0 +1,261 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, RepresentationType}
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+
+@this(
+        summaryList: summaryList
+)
+
+@(claim: Claim)(implicit request: Request[_], messages: Messages)
+
+
+    @summaryList(
+        id = "important_information_section",
+        heading = Some(messages("check_answers.information.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "representation_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.information.representation.type"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("check_answers.information.representation", claim.representationType.toString))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @summaryList(
+        id = "your_details_section",
+        heading = Some(messages("check_answers.yourDetails.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "contact_details_row",
+                key = Key(
+                    content = Text(messages("check_answers.yourDetails.contactDetails"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        s"${claim.contactDetails.firstName} ${claim.contactDetails.lastName}",
+                        claim.contactDetails.emailAddress,
+                        claim.contactDetails.telephoneNumber
+                    ).mkString("<br>"))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "your_address_row",
+                key = Key(
+                    content = Text(messages("check_answers.yourDetails.yourAddress"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        Some(claim.claimantAddress.name),
+                        Some(claim.claimantAddress.addressLine1),
+                        claim.claimantAddress.addressLine2,
+                        Some(claim.claimantAddress.city),
+                        Some(claim.claimantAddress.postCode)
+                    ).flatten.mkString("<br>"))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @summaryList(
+        id = "claim_section",
+        heading = Some(messages("check_answers.claim.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "claim_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.claimType"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "entry_details_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.entryDetails"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        messages("check_answers.claim.entryDetails.epu", claim.entryDetails.entryProcessingUnit),
+                        messages("check_answers.claim.entryDetails.entryNumber",claim.entryDetails.entryNumber),
+                        messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(claim.entryDetails.entryDate))
+                    ).mkString("<br>"))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "item_numbers_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.itemNumbers"))
+                ),
+                value = Value(
+                    content = Text(claim.itemNumbers.numbers)
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "claim_reason_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.reason"))
+                ),
+                value = Value(
+                    content = Text(claim.claimReason.reason)
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "upload_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.uploaded"))
+                ),
+                value = Value(
+                    content = HtmlContent(claim.uploads.map(_.fileName).mkString("<br>"))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @summaryList(
+        id = "repayment_section",
+        heading = Some(messages("check_answers.repayment.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "reclaim_duty_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.repayment.reclaimDutyType"))
+                ),
+                value = Value(
+                    content = HtmlContent(claim.reclaimDutyPayments.keys.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType)).mkString(", "))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "reclaim_duty_total_row",
+                key = Key(
+                    content = Text(messages("check_answers.repayment.total"))
+                ),
+                value = Value(
+                    content = Text(s"£${claim.repaymentTotal}")
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @claim.importerBeingRepresentedDetails.map(importer =>
+        summaryList(
+            id = "importer_section",
+            heading = Some(messages("check_answers.importer.title")),
+            summaryListRows = Seq(
+                Some(
+                    SummaryListRow(
+                        classes = "importer_has_eori_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.hasEori"))
+                        ),
+                        value = Value(
+                            content = Text(MessageKey.apply("check_answers.importer.hasEori", importer.eoriNumber.isDefined.toString))
+                        ),
+                        actions = None
+                    )
+                ),
+                importer.eoriNumber.map(eori =>
+                    SummaryListRow(
+                        classes = "importer_eori_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.eori"))
+                        ),
+                        value = Value(
+                            content = Text(eori.number)
+                        ),
+                        actions = None
+                    )
+                ),
+                Some(
+                    SummaryListRow(
+                        classes = "importer_contact_details_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.contactDetails"))
+                        ),
+                        value = Value(
+                            content = HtmlContent(Seq(
+                                Some(importer.contactDetails.name),
+                                Some(importer.contactDetails.addressLine1),
+                                importer.contactDetails.addressLine2,
+                                Some(importer.contactDetails.city),
+                                Some(importer.contactDetails.postCode),
+                                Some(importer.contactDetails.emailAddress),
+                                Some(importer.contactDetails.telephoneNumber)
+                            ).flatten.mkString("<br>"))
+                        ),
+                        actions = None
+                    )
+                )
+            )
+        )
+
+    )
+
+    @summaryList(
+        id = "payment_section",
+        heading = Some(messages("check_answers.payment.title")),
+        summaryListRows = Seq(
+            claim.importerBeingRepresentedDetails.map(_.repayTo).map(payTo =>
+                SummaryListRow(
+                    classes = "pay_to_row",
+                    key = Key(
+                        content = Text(messages("check_answers.payment.payTo"))
+                    ),
+                    value = Value(
+                        content = Text(MessageKey.apply("check_answers.payment.payTo", payTo.toString))
+                    ),
+                    actions = None
+                )
+            ),
+            Some(SummaryListRow(
+                classes = "bank_details_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.payment.bankDetails"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        claim.bankDetails.accountName,
+                        claim.bankDetails.sortCode,
+                        claim.bankDetails.accountNumber
+                    ).mkString("<br>"))
+                ),
+                actions = None
+            ))
+        )
+    )
+

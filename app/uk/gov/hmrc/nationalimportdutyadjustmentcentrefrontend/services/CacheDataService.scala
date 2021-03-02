@@ -18,7 +18,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse, SubmittedClaim}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
@@ -44,6 +45,9 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData map (_.getCreateAnswers)
 
+  def getSubmittedClaim(implicit request: IdentifierRequest[_]): Future[SubmittedClaim] =
+    getCacheData map (_.submitedClaim.getOrElse(throw new MissingAnswersException("No submitted claim")))
+
   def getAmendAnswers(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData map (_.getAmendAnswers)
 
@@ -67,7 +71,14 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
     claimResponse: CreateClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.set(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
+      repository.set(
+        data.copy(
+          createAnswers = None,
+          createClaimResponse = Some(claimResponse),
+          submitedClaim =
+            claimResponse.result.map(result => SubmittedClaim(result.caseReference, data.createAnswers.get))
+        )
+      )
     }
 
 }
