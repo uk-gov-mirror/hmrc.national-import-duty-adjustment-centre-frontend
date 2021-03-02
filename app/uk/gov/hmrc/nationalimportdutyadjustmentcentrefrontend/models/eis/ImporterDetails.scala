@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{
   Importer,
   Representative
@@ -27,9 +28,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   ImporterBeingRepresentedDetails
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
-case class ImporterDetails(EORI: Option[String], Name: String, Address: Address)
+case class ImporterDetails(EORI: Option[String], Name: String, Address: ImporterAddress)
 
 object ImporterDetails {
   implicit val format: OFormat[ImporterDetails] = Json.format[ImporterDetails]
@@ -48,14 +48,14 @@ object ImporterDetails {
     new ImporterDetails(
       EORI = None, // TODO - capture applicant's EORI
       Name = address.name,
-      Address = Address(
+      Address = ImporterAddress(
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,
         City = address.city,
         PostalCode = address.postCode,
         CountryCode = "GB",
-        EmailAddress = contactDetails.emailAddress,
-        TelephoneNumber = contactDetails.telephoneNumber
+        EmailAddress = Some(contactDetails.emailAddress),
+        TelephoneNumber = Some(contactDetails.telephoneNumber)
       )
     )
 
@@ -63,14 +63,14 @@ object ImporterDetails {
     new ImporterDetails(
       EORI = importer.eoriNumber.map(_.number),
       Name = importer.contactDetails.name,
-      Address = Address(
+      Address = ImporterAddress(
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,
         City = importer.contactDetails.city,
         PostalCode = importer.contactDetails.postCode,
         CountryCode = "GB",
-        EmailAddress = importer.contactDetails.emailAddress,
-        TelephoneNumber = importer.contactDetails.telephoneNumber
+        EmailAddress = None,
+        TelephoneNumber = None
       )
     )
 

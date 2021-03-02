@@ -42,19 +42,7 @@ class ImporterDetailsFormProvider @Inject() extends Mappings {
             maxLength(7, "address.postcode.error.length"),
             regexp(Validation.postcodePattern, "address.postcode.error.invalid")
           )
-        ),
-      "emailAddress" -> text("contactDetails.emailAddress.error.required")
-        .verifying(
-          firstError(
-            maxLength(85, "contactDetails.emailAddress.error.length"),
-            regexp(Validation.emailAddressPattern.toString, "contactDetails.emailAddress.error.invalid")
-          )
-        ),
-      "telephoneNumber" ->
-        text("contactDetails.telephoneNumber.error.required")
-          .verifying(
-            firstError(regexp(Validation.phoneNumberPattern.toString, "contactDetails.telephoneNumber.error.invalid"))
-          )
+        )
     )(ImporterContactDetails.apply)(ImporterContactDetails.unapply)
   )
 

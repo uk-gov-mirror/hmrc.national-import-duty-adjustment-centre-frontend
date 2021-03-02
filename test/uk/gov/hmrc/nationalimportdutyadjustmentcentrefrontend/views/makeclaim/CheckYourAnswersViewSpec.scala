@@ -122,9 +122,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
             importerContactDetailsAnswer.addressLine1,
             importerContactDetailsAnswer.addressLine2.getOrElse(""),
             importerContactDetailsAnswer.city,
-            importerContactDetailsAnswer.postCode,
-            importerContactDetailsAnswer.emailAddress,
-            importerContactDetailsAnswer.telephoneNumber
+            importerContactDetailsAnswer.postCode
           ).mkString(" ")
         )
       }

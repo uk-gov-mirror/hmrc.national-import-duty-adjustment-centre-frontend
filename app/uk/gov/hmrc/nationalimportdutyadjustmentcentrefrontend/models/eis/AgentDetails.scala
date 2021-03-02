@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
 
-case class AgentDetails(EORI: Option[String], Name: String, Address: Address)
+case class AgentDetails(EORI: Option[String], Name: String, Address: AgentAddress)
 
 object AgentDetails {
   implicit val format: OFormat[AgentDetails] = Json.format[AgentDetails]
@@ -31,7 +31,7 @@ object AgentDetails {
         AgentDetails(
           EORI = None, // TODO - capture applicant's EORI
           Name = claim.claimantAddress.name,
-          Address = Address(
+          Address = AgentAddress(
             AddressLine1 = claim.claimantAddress.addressLine1,
             AddressLine2 = claim.claimantAddress.addressLine2,
             City = claim.claimantAddress.city,

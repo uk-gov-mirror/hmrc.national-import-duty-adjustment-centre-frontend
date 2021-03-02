@@ -66,18 +66,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       view().getElementsByAttributeValue("for", "postcode") must containMessage("address.postcode.heading")
     }
 
-    "have label for email" in {
-      view().getElementsByAttributeValue("for", "emailAddress") must containMessage(
-        "contactDetails.emailAddress.heading"
-      )
-    }
-
-    "have label for phone number" in {
-      view().getElementsByAttributeValue("for", "telephoneNumber") must containMessage(
-        "contactDetails.telephoneNumber.heading"
-      )
-    }
-
     "have 'Continue' button" in {
       view().getElementById("submit") must includeMessage("site.continue")
     }
@@ -94,8 +82,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       filledView.getElementById("addressLine2") must haveValue(importerContactDetailsAnswer.addressLine2.getOrElse(""))
       filledView.getElementById("city") must haveValue(importerContactDetailsAnswer.city)
       filledView.getElementById("postcode") must haveValue(importerContactDetailsAnswer.postCode)
-      filledView.getElementById("emailAddress") must haveValue(importerContactDetailsAnswer.emailAddress)
-      filledView.getElementById("telephoneNumber") must haveValue(importerContactDetailsAnswer.telephoneNumber)
     }
 
     "display error" when {
@@ -116,14 +102,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
 
       "postcode" in {
         missingView must haveFieldError("postcode", "address.postcode.error.required")
-      }
-
-      "email" in {
-        missingView must haveFieldError("emailAddress", "contactDetails.emailAddress.error.required")
-      }
-
-      "telephone number" in {
-        missingView must haveFieldError("telephoneNumber", "contactDetails.telephoneNumber.error.required")
       }
 
     }

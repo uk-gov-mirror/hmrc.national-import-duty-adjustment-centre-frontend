@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ImporterContactDetails(
-  name: String,
-  addressLine1: String,
-  addressLine2: Option[String],
-  city: String,
-  postCode: String
+case class AgentAddress(
+  AddressLine1: String,
+  AddressLine2: Option[String],
+  City: String,
+  PostalCode: String,
+  CountryCode: String,
+  TelephoneNumber: String,
+  EmailAddress: String
 )
 
-object ImporterContactDetails {
-  implicit val format: OFormat[ImporterContactDetails] = Json.format[ImporterContactDetails]
+object AgentAddress {
+  implicit val format: OFormat[AgentAddress] = Json.format[AgentAddress]
 }

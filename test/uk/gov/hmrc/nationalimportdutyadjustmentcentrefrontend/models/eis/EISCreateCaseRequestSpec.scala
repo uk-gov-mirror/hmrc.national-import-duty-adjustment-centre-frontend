@@ -71,9 +71,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
             "Importer Address Line 1",
             Some("Importer Address Line 2"),
             "Importer City",
-            "IM12CD",
-            "contact@importer.com",
-            "99999999999"
+            "IM12CD"
           )
       )
     ),
@@ -89,21 +87,21 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     ImporterDetails = ImporterDetails(
       Some("GB098765432123"),
       "Import Co Ltd",
-      Address(
+      ImporterAddress(
         "Importer Address Line 1",
         Some("Importer Address Line 2"),
         "Importer City",
         "IM12CD",
         "GB",
-        "99999999999",
-        "contact@importer.com"
+        None,
+        None
       )
     ),
     AgentDetails = Some(
       AgentDetails(
         None,
         "Representative Co Ltd",
-        Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+        AgentAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
       )
     ),
     EntryProcessingUnit = "012",
@@ -142,7 +140,15 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     ImporterDetails = ImporterDetails(
       None,
       "Acme Import Co Ltd",
-      Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+      ImporterAddress(
+        "Address Line 1",
+        Some("Address Line 2"),
+        "City",
+        "PO12CD",
+        "GB",
+        Some("01234567890"),
+        Some("adam@smith.com")
+      )
     ),
     AgentDetails = None,
     EntryProcessingUnit = "012",

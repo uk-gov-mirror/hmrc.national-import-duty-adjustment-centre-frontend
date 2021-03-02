@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      0.10
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -132,8 +132,6 @@ function completePage() {
         document.getElementById("addressLine2").value = "North Industrial Estate";
         document.getElementById("city").value = "Southwich";
         document.getElementById("postcode").value = "SO123KD";
-        document.getElementById("emailAddress").value = "client@importer.com";
-        document.getElementById("telephoneNumber").value = "01234567890";
         submit();
     }
 }

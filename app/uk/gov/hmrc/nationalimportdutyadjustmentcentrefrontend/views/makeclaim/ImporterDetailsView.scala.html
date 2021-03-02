@@ -46,24 +46,6 @@
         ) {
 
             @addressFields(form)
-
-            @inputText(
-                form = form,
-                id = "emailAddress",
-                name = "emailAddress",
-                inputType = "email",
-                label = "contactDetails.emailAddress.heading",
-                autocomplete = Some("email")
-            )
-
-            @inputText(
-                form = form,
-                id = "telephoneNumber",
-                name = "telephoneNumber",
-                label = "contactDetails.telephoneNumber.heading",
-                classes = Some("govuk-input--width-20"),
-                autocomplete = Some("tel")
-            )
         }
 
         @continueButton()

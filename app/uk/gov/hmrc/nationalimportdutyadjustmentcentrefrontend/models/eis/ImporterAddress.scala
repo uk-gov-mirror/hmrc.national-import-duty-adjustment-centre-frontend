@@ -18,16 +18,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Address(
+case class ImporterAddress(
   AddressLine1: String,
   AddressLine2: Option[String],
   City: String,
   PostalCode: String,
   CountryCode: String,
-  TelephoneNumber: String,
-  EmailAddress: String
+  TelephoneNumber: Option[String],
+  EmailAddress: Option[String]
 )
 
-object Address {
-  implicit val format: OFormat[Address] = Json.format[Address]
+object ImporterAddress {
+  implicit val format: OFormat[ImporterAddress] = Json.format[ImporterAddress]
 }
