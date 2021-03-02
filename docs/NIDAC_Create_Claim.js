@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -19,9 +19,9 @@ function createQuickButton() {
     let button = document.createElement('button');
     button.id = "quickSubmit";
     if (!!document.getElementById('global-header')) {
-        button.classList.add('button-start');
+        button.classList.add('button-start', 'govuk-!-display-none-print');
     } else {
-        button.classList.add('govuk-button');
+        button.classList.add('govuk-button', 'govuk-!-display-none-print');
     }
     button.style.position = "absolute"
     button.style.top = "50px"
