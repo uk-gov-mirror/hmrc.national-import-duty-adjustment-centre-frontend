@@ -30,10 +30,10 @@ trait StringFieldBehaviours extends FieldBehaviours {
       }
     }
 
-  def fieldWithMinAndMaxLength(form: Form[_], fieldName: String, minLength: Int, maxLength: Int, lengthError: FormError): Unit =
-    s"not bind strings shorter than $minLength or longer than $maxLength characters" in {
+  def fieldWithMinLength(form: Form[_], fieldName: String, minLength: Int, lengthError: FormError): Unit =
+    s"not bind strings shorter than $minLength characters" in {
 
-      forAll(stringsWithMinAndMaxLength(minLength, maxLength) -> "incorrectLengthString") {
+      forAll(stringsShorterThan(minLength) -> "shortString") {
         string =>
           val result = form.bind(Map(fieldName -> string)).apply(fieldName)
           result.errors mustEqual Seq(lengthError)
