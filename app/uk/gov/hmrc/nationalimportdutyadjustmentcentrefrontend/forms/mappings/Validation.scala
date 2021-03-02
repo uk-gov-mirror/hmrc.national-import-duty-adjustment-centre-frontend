@@ -29,7 +29,7 @@ object Validation {
     """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,85}[a-zA-Z0-9])?)*$"""
 
   val phoneNumberPattern = "^[0-9]{11}$"
-  val postcodePattern    = "^[0-9a-zA-Z]{1,7}$"
+  val postcodePattern    = "^[0-9a-zA-Z]{1}[0-9a-zA-Z ]{4,7}$"
 
   val dutyPattern = "^-?[0-9]{1,7}$|^-?[0-9]{1,7}[.][0-9]{1,2}$"
 
