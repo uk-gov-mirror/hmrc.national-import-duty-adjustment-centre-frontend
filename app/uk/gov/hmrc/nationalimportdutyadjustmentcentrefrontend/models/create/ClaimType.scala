@@ -27,12 +27,13 @@ sealed trait ClaimType
 
 object ClaimType extends Enumerable.Implicits {
 
+  case object AccountSales  extends WithValue("Account Sales") with ClaimType
   case object Airworthiness extends WithValue("Airworthiness") with ClaimType
   case object AntiDumping   extends WithValue("Anti-Dumping") with ClaimType
   case object Preference    extends WithValue("Preference") with ClaimType
   case object Quota         extends WithValue("Quota") with ClaimType
 
-  val values: Seq[ClaimType] = Seq(Airworthiness, AntiDumping, Preference, Quota)
+  val values: Seq[ClaimType] = Seq(AccountSales, Airworthiness, AntiDumping, Preference, Quota)
 
   def options(form: Form[_], name: String)(implicit messages: Messages): Seq[RadioItem] = values.map {
     value =>
