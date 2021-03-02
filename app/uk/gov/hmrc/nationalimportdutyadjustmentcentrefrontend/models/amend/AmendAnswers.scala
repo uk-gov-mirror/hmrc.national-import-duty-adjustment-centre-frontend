@@ -24,6 +24,7 @@ final case class AmendAnswers(
   caseReference: Option[CaseReference] = None,
   hasMoreDocuments: Option[Boolean] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
+  uploadAnotherFile: Option[Boolean] = None,
   furtherInformation: Option[FurtherInformation] = None
 ) extends Answers
 

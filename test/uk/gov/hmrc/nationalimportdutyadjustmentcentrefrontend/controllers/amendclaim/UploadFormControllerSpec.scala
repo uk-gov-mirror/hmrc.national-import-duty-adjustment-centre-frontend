@@ -148,13 +148,14 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       verify(dataRepository, never()).set(any())
     }
 
-    "update UserAnswers and redirect to additional information when upload succeeds" in {
+    "update UserAnswers and redirect to upload summary when upload succeeds" in {
 
+      withCacheAmendAnswers(completeAmendAnswers.copy(hasMoreDocuments = Some(true), uploads = Seq.empty))
       givenUploadStatus(uploadFileSuccess)
       val result = controller.onProgress(uploadId)(fakeGetRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.FurtherInformationController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(routes.UploadFormSummaryController.onPageLoad().url)
 
       theUpdatedAmendAnswers.uploads mustBe Seq(uploadFileSuccess)
     }

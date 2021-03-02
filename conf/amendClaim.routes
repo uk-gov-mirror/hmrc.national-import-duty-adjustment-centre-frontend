@@ -15,6 +15,10 @@ GET         /upload-additional-documents/error           uk.gov.hmrc.nationalimp
 GET         /additional-information                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onPageLoad()
 POST        /additional-information                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onSubmit()
 
+GET         /your-uploads                                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormSummaryController.onPageLoad()
+POST        /your-uploads                                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormSummaryController.onSubmit()
+GET         /your-uploads/remove                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormSummaryController.onRemove(documentReference: String)
+
 GET         /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onSubmit()
 

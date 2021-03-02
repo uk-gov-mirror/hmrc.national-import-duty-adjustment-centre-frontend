@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Amend Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 
 // @description  NIDAC Amend Claim AutoComplete
 // @author       NIDAC Team
@@ -43,6 +43,16 @@ function completePage() {
 
     if (currentPageIs("/national-import-duty-adjustment-centre/amend/claim-reference-number")) {
         document.getElementById("caseReference").value = "NID21134557697RM8WIB13";
+        submit();
+    }
+
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/attach-more-documents")) {
+        document.getElementById("yesOrNo").checked = true;
+        submit();
+    }
+
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/your-uploads")) {
+        document.getElementById("yesOrNo-2").checked = true;
         submit();
     }
 

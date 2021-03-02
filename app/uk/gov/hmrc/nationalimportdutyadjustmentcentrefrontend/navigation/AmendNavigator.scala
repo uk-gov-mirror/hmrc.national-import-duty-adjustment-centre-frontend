@@ -29,6 +29,7 @@ class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnsw
     P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always),
     P(AttachMoreDocumentsPage, routes.AttachMoreDocumentsController.onPageLoad, always),
     P(UploadPage, routes.UploadFormController.onPageLoad, showUploadDocuments),
+    P(UploadSummaryPage, routes.UploadFormSummaryController.onPageLoad, showUploadSummary),
     P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always),
     P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always)
   )
@@ -39,6 +40,10 @@ protected trait AmendAnswerConditions {
 
   protected val always: Answers => Boolean = (_: Answers) => true
 
-  protected val showUploadDocuments: AmendAnswers => Boolean = _.hasMoreDocuments.contains(true)
+  protected val showUploadDocuments: AmendAnswers => Boolean = (answers: AmendAnswers) =>
+    answers.hasMoreDocuments.contains(true) && answers.uploads.isEmpty
+
+  protected val showUploadSummary: AmendAnswers => Boolean = (answers: AmendAnswers) =>
+    answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty
 
 }

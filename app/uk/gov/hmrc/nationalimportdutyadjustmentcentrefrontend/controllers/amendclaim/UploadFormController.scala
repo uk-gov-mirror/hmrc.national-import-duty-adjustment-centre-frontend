@@ -22,7 +22,6 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.{FileUploading, Navigation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UploadId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
@@ -35,6 +34,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.{UploadFormView, UploadProgressView}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -59,6 +59,12 @@ class UploadFormController @Inject() (
   override protected def successRedirectUrl(uploadId: UploadId): Call = routes.UploadFormController.onProgress(uploadId)
 
   override protected def errorRedirectUrl(errorCode: String): Call = routes.UploadFormController.onError(errorCode)
+
+  override def backLink: AmendAnswers => NavigatorBack = (answers: AmendAnswers) =>
+    answers.uploads match {
+      case files if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
+      case _                       => super.backLink(answers)
+    }
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAmendAnswersWithJourneyId flatMap { answersWithJourneyID =>
