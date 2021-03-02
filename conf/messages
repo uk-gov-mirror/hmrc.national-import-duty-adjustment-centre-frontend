@@ -136,7 +136,7 @@ address.city.error.required = Enter a town or city
 address.city.error.length = Town or city must be 50 characters or fewer
 address.postcode.heading = Postcode
 address.postcode.error.required = Enter a postcode
-address.postcode.error.length = Postcode must be 7 characters or fewer
+address.postcode.error.length = Postcode must be between 5 and 8 characters
 address.postcode.error.invalid = Enter a real postcode
 
 importer.has.eori.title = Does the importer have an EORI number?
