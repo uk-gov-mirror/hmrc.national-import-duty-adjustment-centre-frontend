@@ -118,7 +118,7 @@ contactDetails.emailAddress.error.invalid = Enter an email address in the correc
 contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.required = Enter a telephone number
-contactDetails.telephoneNumber.error.invalid = Telephone number must be 11 numbers
+contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
 address.title = What is your UK correspondence address?
 address.hint = We will use this to send letters about this claim.

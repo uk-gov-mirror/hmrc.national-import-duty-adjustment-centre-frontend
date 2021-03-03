@@ -40,7 +40,9 @@ class ContactDetailsFormProvider @Inject() extends Mappings {
       "telephoneNumber" ->
         text("contactDetails.telephoneNumber.error.required")
           .verifying(
-            firstError(regexp(Validation.phoneNumberPattern.toString, "contactDetails.telephoneNumber.error.invalid"))
+            firstError(
+              minLength(9, "contactDetails.telephoneNumber.error.length"),
+              maxLength(32, "contactDetails.telephoneNumber.error.length"))
           )
     )(ContactDetails.apply)(ContactDetails.unapply)
   )
