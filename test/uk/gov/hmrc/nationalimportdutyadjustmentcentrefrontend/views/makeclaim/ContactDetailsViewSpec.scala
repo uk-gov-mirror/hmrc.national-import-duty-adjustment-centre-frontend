@@ -23,8 +23,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.Conta
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ContactDetails
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ContactDetailsView
 
-import scala.util.Random
-
 class ContactDetailsViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[ContactDetailsView]
