@@ -61,6 +61,17 @@ class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidat
         )
       ) mustBe None
     }
+
+    "validate contact details without telephone number" in {
+      validationErrors(
+        eisRequest(
+          completeAnswers.copy(contactDetails =
+            Some(contactDetailsAnswer.copy(telephoneNumber = None))
+          )
+        )
+      ) mustBe None
+    }
+
   }
 
   private def eisRequest(answers: CreateAnswers) =
