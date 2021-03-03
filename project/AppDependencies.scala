@@ -17,6 +17,7 @@ object AppDependencies {
     "org.scalatestplus"      %% "mockito-3-4"            % "3.2.3.0" % Test,
     "org.jsoup"               % "jsoup"                  % "1.13.1"  % Test,
     "com.typesafe.play"      %% "play-test"              % current   % Test,
+    "com.eclipsesource"      %% "play-json-schema-validator" % "0.9.4" % Test,
     "com.vladsch.flexmark"    % "flexmark-all"           % "0.36.8"  % "test, it",
     "org.scalatestplus.play" %% "scalatestplus-play"     % "4.0.3"   % "test, it",
     "org.scalatestplus"      %% "scalacheck-1-15"        % "3.2.3.0" % "test"

@@ -37,7 +37,11 @@ lazy val microservice = Project(appName, file("."))
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
+  .settings(resolvers += "emueller-bintray" at "https://dl.bintray.com/emueller/maven")
   .settings(scoverageSettings)
+  .settings(
+    resourceDirectory in Test := baseDirectory.value / "test" / "resources",
+  )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
