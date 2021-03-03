@@ -70,7 +70,7 @@ trait TestData {
 
   val claimReasonAnswer: ClaimReason = ClaimReason("some valid reason")
 
-  val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
+  val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", Some("01234567890"))
 
   val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "PCode")
 

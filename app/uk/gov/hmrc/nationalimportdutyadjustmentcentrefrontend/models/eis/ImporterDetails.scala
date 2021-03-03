@@ -55,7 +55,7 @@ object ImporterDetails {
         PostalCode = address.postCode,
         CountryCode = "GB",
         EmailAddress = Some(contactDetails.emailAddress),
-        TelephoneNumber = Some(contactDetails.telephoneNumber)
+        TelephoneNumber = contactDetails.telephoneNumber
       )
     )
 

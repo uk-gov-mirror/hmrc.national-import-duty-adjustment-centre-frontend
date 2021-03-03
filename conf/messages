@@ -117,7 +117,6 @@ contactDetails.emailAddress.error.required = Enter an email address
 contactDetails.emailAddress.error.invalid = Enter an email address in the correct format, like name@example.com
 contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
-contactDetails.telephoneNumber.error.required = Enter a telephone number
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
 address.title = What is your UK correspondence address?
