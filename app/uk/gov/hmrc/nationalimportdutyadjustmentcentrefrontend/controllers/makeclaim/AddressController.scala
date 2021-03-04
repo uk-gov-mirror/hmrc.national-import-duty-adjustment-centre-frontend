@@ -54,7 +54,12 @@ class AddressController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    form.bindFromRequest().fold(
+
+
+
+    val cleanedInput = cleanPostCode(request.body.asFormUrlEncoded.get)
+
+    form.bindFromRequest(cleanedInput).fold(
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
       value =>
@@ -62,6 +67,14 @@ class AddressController @Inject() (
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
+  }
+
+  def cleanPostCode(data: Map[String, Seq[String]]): Map[String, Seq[String]] = {
+    data.map{
+      case (key, values) => 
+        if (key == "postcode") (key, values.map(_.trim()))
+        else (key, values)
+    }
   }
 
 }
