@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ContactDetails(firstName: String, lastName: String, emailAddress: String, telephoneNumber: String)
+case class ContactDetails(firstName: String, lastName: String, emailAddress: String, telephoneNumber: Option[String])
 
 object ContactDetails {
   implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]

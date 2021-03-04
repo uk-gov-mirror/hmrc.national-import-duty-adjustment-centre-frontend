@@ -86,7 +86,7 @@ class ContactDetailsControllerSpec extends ControllerSpec with TestData {
       "firstName"       -> contactDetailsAnswer.firstName,
       "lastName"        -> contactDetailsAnswer.lastName,
       "emailAddress"    -> contactDetailsAnswer.emailAddress,
-      "telephoneNumber" -> contactDetailsAnswer.telephoneNumber
+      "telephoneNumber" -> contactDetailsAnswer.telephoneNumber.getOrElse("")
     )
 
     "update cache and redirect when valid answer is submitted" in {

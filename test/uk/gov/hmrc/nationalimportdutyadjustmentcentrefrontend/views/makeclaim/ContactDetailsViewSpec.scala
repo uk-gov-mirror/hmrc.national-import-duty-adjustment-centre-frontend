@@ -66,7 +66,7 @@ class ContactDetailsViewSpec extends UnitViewSpec with TestData {
       filledView.getElementById("firstName") must haveValue(contactDetailsAnswer.firstName)
       filledView.getElementById("lastName") must haveValue(contactDetailsAnswer.lastName)
       filledView.getElementById("emailAddress") must haveValue(contactDetailsAnswer.emailAddress)
-      filledView.getElementById("telephoneNumber") must haveValue(contactDetailsAnswer.telephoneNumber)
+      filledView.getElementById("telephoneNumber") must haveValue(contactDetailsAnswer.telephoneNumber.getOrElse(""))
     }
 
     "display error when " when {
@@ -96,14 +96,20 @@ class ContactDetailsViewSpec extends UnitViewSpec with TestData {
         )
       }
 
-      "telephone number missing" in {
-        view(form.bind(answers - "telephoneNumber")) must haveFieldError(
+      "phone number too short" in {
+        view(form.bind(answers + ("telephoneNumber" -> "123"))) must haveFieldError(
           "telephoneNumber",
-          "contactDetails.telephoneNumber.error.required"
+          "contactDetails.telephoneNumber.error.length"
         )
       }
 
+      "phone number too long" in {
+        view(form.bind(answers + ("telephoneNumber" -> "123456789012345678901234567890123"))) must haveFieldError(
+          "telephoneNumber",
+          "contactDetails.telephoneNumber.error.length"
+        )
+      }
     }
-
   }
+
 }

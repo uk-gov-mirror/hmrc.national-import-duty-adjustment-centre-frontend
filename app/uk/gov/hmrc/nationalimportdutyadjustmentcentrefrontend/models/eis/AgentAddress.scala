@@ -24,7 +24,7 @@ case class AgentAddress(
   City: String,
   PostalCode: String,
   CountryCode: String,
-  TelephoneNumber: String,
+  TelephoneNumber: Option[String],
   EmailAddress: String
 )
 

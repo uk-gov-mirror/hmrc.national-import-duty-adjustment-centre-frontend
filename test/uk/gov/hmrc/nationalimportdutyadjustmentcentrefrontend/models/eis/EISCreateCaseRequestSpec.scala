@@ -53,7 +53,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   }
 
   val claimByRepresentative: Claim = create.Claim(
-    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
+    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     claimantAddress = UkAddress("Representative Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
@@ -101,7 +101,15 @@ class EISCreateCaseRequestSpec extends UnitSpec {
       AgentDetails(
         None,
         "Representative Co Ltd",
-        AgentAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+        AgentAddress(
+          "Address Line 1",
+          Some("Address Line 2"),
+          "City",
+          "PO12CD",
+          "GB",
+          Some("01234567890"),
+          "adam@smith.com"
+        )
       )
     ),
     EntryProcessingUnit = "012",
@@ -119,7 +127,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   )
 
   val claimByImporter: Claim = create.Claim(
-    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
+    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     claimantAddress = UkAddress("Acme Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,
     claimType = AntiDumping,
