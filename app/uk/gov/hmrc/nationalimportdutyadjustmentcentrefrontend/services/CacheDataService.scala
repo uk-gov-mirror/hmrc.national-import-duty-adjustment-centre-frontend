@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import javax.inject.Inject
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: ExecutionContext) {
@@ -68,6 +68,13 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
       repository.set(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
+    }
+
+  def storeAmendResponse(
+    amendClaimResponse: AmendClaimResponse
+  )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
+    getCacheData flatMap { data =>
+      repository.set(data.copy(amendAnswers = None, amendClaimResponse = Some(amendClaimResponse)))
     }
 
 }

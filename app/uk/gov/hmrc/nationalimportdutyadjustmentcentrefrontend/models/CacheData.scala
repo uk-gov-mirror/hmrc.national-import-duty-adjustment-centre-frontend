@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import java.time.LocalDateTime
-
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+
+import java.time.LocalDateTime
 
 final case class CacheData(
   id: String,
@@ -28,10 +28,12 @@ final case class CacheData(
   createAnswers: Option[CreateAnswers] = None,
   amendAnswers: Option[AmendAnswers] = None,
   createClaimResponse: Option[CreateClaimResponse] = None,
+  amendClaimResponse: Option[AmendClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
   def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
+  def amendReference: Option[String] = amendClaimResponse.flatMap(_.result).map(_.caseReference)
   def getCreateAnswers               = createAnswers.getOrElse(CreateAnswers())
   def getAmendAnswers                = amendAnswers.getOrElse(AmendAnswers())
 }

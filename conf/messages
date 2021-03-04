@@ -277,3 +277,6 @@ amend.check_answers.information.attach_more_documents.true = Yes
 amend.check_answers.information.uploadedDocuments = Additional documents
 amend.check_answers.submit.heading = Submit your declaration
 amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+
+amend.confirmation.title = Information sent
+amend.confirmation.reference = Your reference number<br><strong>{0}</strong>

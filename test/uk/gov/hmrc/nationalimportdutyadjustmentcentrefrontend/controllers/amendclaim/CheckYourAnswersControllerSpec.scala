@@ -22,8 +22,8 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateClaimResponse, CreateClaimResult}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CreateClaimService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaimResponse, AmendClaimResult}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -32,15 +32,15 @@ import scala.util.Random
 
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
-  val page: CheckYourAnswersView  = mock[CheckYourAnswersView]
-  val service: CreateClaimService = mock[CreateClaimService]
-  val claimRef                    = Random.nextString(12)
+  val page: CheckYourAnswersView = mock[CheckYourAnswersView]
+  val service: ClaimService      = mock[ClaimService]
+  val claimRef                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(service.submitClaim(any())(any())).thenReturn(
-      Future.successful(CreateClaimResponse("id", None, Some(CreateClaimResult(claimRef, Seq.empty))))
+    when(service.amendClaim(any())(any())).thenReturn(
+      Future.successful(AmendClaimResponse("id", None, Some(AmendClaimResult(claimRef, Seq.empty))))
     )
   }
 
@@ -54,6 +54,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       stubMessagesControllerComponents(),
       fakeAuthorisedIdentifierAction,
       cacheDataService,
+      service,
       amendNavigator,
       page
     )
@@ -87,12 +88,20 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   "POST" should {
 
-    "submit and redirect to self" in {
-      withCacheCreateAnswers(completeAnswers)
+    "submit and redirect to confirmation page" in {
+      withCacheAmendAnswers(completeAmendAnswers)
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(routes.ConfirmationController.onPageLoad().url)
+    }
+
+    "redirect to start when cache empty" in {
+      withEmptyCache
+      val result = controller.onSubmit()(postRequest())
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.AmendClaimController.start().url)
     }
   }
 }

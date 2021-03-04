@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnswerConditions {
@@ -31,7 +32,8 @@ class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnsw
     P(UploadPage, routes.UploadFormController.onPageLoad, showUploadDocuments),
     P(UploadSummaryPage, routes.UploadFormSummaryController.onPageLoad, showUploadSummary),
     P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always),
-    P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always)
+    P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always),
+    P(ConfirmationPage, routes.ConfirmationController.onPageLoad, always)
   )
 
 }

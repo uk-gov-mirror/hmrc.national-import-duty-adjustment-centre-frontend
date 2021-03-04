@@ -16,12 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
-import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.CreateEISClaimRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
+  AmendEISClaimRequest,
+  CreateEISClaimRequest
+}
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
@@ -33,6 +37,15 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
   ): Future[CreateClaimResponse] =
     httpClient.POST[CreateEISClaimRequest, CreateClaimResponse](
       s"$baseUrl/create-claim",
+      request,
+      Seq("X-Correlation-Id" -> correlationId)
+    )
+
+  def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit
+    hc: HeaderCarrier
+  ): Future[AmendClaimResponse] =
+    httpClient.POST[AmendEISClaimRequest, AmendClaimResponse](
+      s"$baseUrl/update-claim",
       request,
       Seq("X-Correlation-Id" -> correlationId)
     )

@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
@@ -26,10 +25,11 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Cla
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, CreateClaimService}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -37,7 +37,7 @@ class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   data: CacheDataService,
-  service: CreateClaimService,
+  service: ClaimService,
   val navigator: CreateNavigator,
   checkYourAnswersView: CheckYourAnswersView
 )(implicit ec: ExecutionContext)

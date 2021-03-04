@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
@@ -25,10 +24,11 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{Amen
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -36,6 +36,7 @@ class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   data: CacheDataService,
+  service: ClaimService,
   val navigator: AmendNavigator,
   checkYourAnswersView: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
@@ -52,9 +53,20 @@ class CheckYourAnswersController @Inject() (
     }
   }
 
-  def onSubmit(): Action[AnyContent] = identify { implicit request =>
-    // TODO submit amend claim request and display confirmation
-    Redirect(routes.CheckYourAnswersController.onPageLoad())
+  def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
+    data.getAmendAnswers flatMap { answers =>
+      val amendClaim = AmendClaim(answers)
+      service.amendClaim(amendClaim) flatMap {
+        case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
+        case response =>
+          data.storeAmendResponse(response) map {
+            _ => Redirect(nextPage(answers))
+          }
+      }
+    } recover {
+      case _: MissingAnswersException =>
+        Redirect(routes.AmendClaimController.start())
+    }
 
   }
 
