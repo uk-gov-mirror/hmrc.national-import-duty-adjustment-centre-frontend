@@ -64,10 +64,10 @@
                 ),
                 value = Value(
                     content = HtmlContent(Seq(
-                        s"${claim.contactDetails.firstName} ${claim.contactDetails.lastName}",
-                        claim.contactDetails.emailAddress,
+                        Some(s"${claim.contactDetails.firstName} ${claim.contactDetails.lastName}"),
+                        Some(claim.contactDetails.emailAddress),
                         claim.contactDetails.telephoneNumber
-                    ).mkString("<br>"))
+                    ).flatten.mkString("<br>"))
                 ),
                 actions = None
             )),
