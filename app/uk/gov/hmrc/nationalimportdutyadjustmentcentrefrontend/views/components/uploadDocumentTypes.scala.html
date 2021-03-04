@@ -28,6 +28,7 @@
   case Some(AntiDumping)   => List(E2, C88, Invoice)
   case Some(Preference)    => List(E2, C88, Invoice, PreferenceCertificate)
   case Some(Quota)         => List(E2, C88, Invoice, PreferenceCertificate)
+  case Some(AccountSales)  => List(E2, C88, Invoice, CertificateOfOrigin)
   case _                   => DocumentTypes.values.toList
  }
 }
