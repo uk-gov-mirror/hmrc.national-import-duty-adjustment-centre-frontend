@@ -25,7 +25,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   CaseReference,
   FurtherInformation
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
@@ -118,12 +117,6 @@ trait TestData {
 
   val uploadFileSuccess: UploadStatus =
     UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
-
-  // BARS
-  val barsSuccessResult          = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("yes")))
-  val barsInvalidAccountResult   = BARSResult(ValidateBankDetailsResponse("no", "no", None))
-  val barsRollRequiredResult     = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
-  val barsBacsNotSupportedResult = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
 
   // AmendAnswers
   val caseReferenceAnswer      = CaseReference("NID21134557697RM8WIB13")

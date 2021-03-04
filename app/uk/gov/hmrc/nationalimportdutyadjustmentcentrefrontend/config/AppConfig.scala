@@ -63,8 +63,11 @@ class AppConfig @Inject() (
 
   private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
 
-  val barsValidateBankDetailsUrl: String =
-    s"$barsBaseUrl${servicesConfig("bank-account-reputation.validateBankDetails")}"
+  val barsSortcodeMetadataUrl: String =
+    s"$barsBaseUrl${servicesConfig("bank-account-reputation.sortcodeMetadata")}"
+
+  val barsBusinessAssessUrl: String =
+    s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),

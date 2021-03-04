@@ -16,55 +16,52 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{BarsTestData, UnitSpec}
 
-class BARSResultSpec extends UnitSpec with TestData {
-
-  val validResponse: ValidateBankDetailsResponse =
-    ValidateBankDetailsResponse(
-      accountNumberWithSortCodeIsValid = "yes",
-      nonStandardAccountDetailsRequiredForBacs = "no",
-      supportsBACS = Some("yes")
-    )
+class BARSResultSpec extends UnitSpec with BarsTestData {
 
   "BARSResult" should {
 
-    "be valid if sort code matches account and roll is not required and bacs is supported" in {
+    "be valid if metadata and assess calls are valid" in {
 
-      BARSResult(validResponse).isValid mustBe true
+      BARSResult(validMetaDataResponse, validAssessResponse).isValid mustBe true
     }
 
     "be invalid if sort code does not match account" in {
 
-      val accountOrSortCodeInvalid = validResponse.copy(accountNumberWithSortCodeIsValid = "no")
-
-      BARSResult(accountOrSortCodeInvalid).isValid mustBe false
+      BARSResult(
+        validMetaDataResponse,
+        validAssessResponse.copy(accountNumberWithSortCodeIsValid = "no")
+      ).isValid mustBe false
     }
 
     "be invalid if it is indeterminate if sort code and account match" in {
 
-      val indeterminateResponse: ValidateBankDetailsResponse =
-        ValidateBankDetailsResponse(
-          accountNumberWithSortCodeIsValid = "indeterminate",
-          nonStandardAccountDetailsRequiredForBacs = "inapplicable",
-          supportsBACS = None
-        )
-
-      BARSResult(indeterminateResponse).isValid mustBe false
+      BARSResult(
+        validMetaDataResponse,
+        validAssessResponse.copy(accountNumberWithSortCodeIsValid = "indeterminate")
+      ).isValid mustBe false
     }
 
     "be invalid if roll IS required" in {
 
-      val rollRequiredResponse = validResponse.copy(nonStandardAccountDetailsRequiredForBacs = "yes")
-
-      BARSResult(rollRequiredResponse).isValid mustBe false
+      BARSResult(
+        validMetaDataResponse,
+        validAssessResponse.copy(nonStandardAccountDetailsRequiredForBacs = "yes")
+      ).isValid mustBe false
     }
 
     "be invalid if bacs is not supported" in {
 
-      val bacsNotSupportedResponse = validResponse.copy(supportsBACS = Some("no"))
+      BARSResult(validMetaDataResponse.copy(bacsOfficeStatus = "N"), validAssessResponse).isValid mustBe false
+    }
 
-      BARSResult(bacsNotSupportedResponse).isValid mustBe false
+    "be invalid if bacs credits is not supported" in {
+
+      BARSResult(
+        validMetaDataResponse.copy(disallowedTransactions = Seq("CR")),
+        validAssessResponse
+      ).isValid mustBe false
     }
   }
 

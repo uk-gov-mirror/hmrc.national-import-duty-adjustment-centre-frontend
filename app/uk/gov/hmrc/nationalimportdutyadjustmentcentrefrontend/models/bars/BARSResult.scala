@@ -16,19 +16,29 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-case class BARSResult(validateResponse: ValidateBankDetailsResponse) {
+case class BARSResult(
+  metadataResponse: MetadataResponse,
+  assessBusinessBankDetailsResponse: AssessBusinessBankDetailsResponse
+) {
 
-  val validAccountAndSortCode: Boolean = validateResponse.accountNumberWithSortCodeIsValid == "yes"
+  val sortcodeExists: Boolean        = metadataResponse != MetadataResponse.notFound
+  val validSortcodeMetadata: Boolean = metadataResponse.acceptsBacsPayments
 
-  val rollNotRequired: Boolean = validateResponse.nonStandardAccountDetailsRequiredForBacs == "no"
+  val validAccountAndSortCode: Boolean = assessBusinessBankDetailsResponse.validAccountAndSortCode
+  val rollNotRequired: Boolean         = assessBusinessBankDetailsResponse.rollNotRequired
+  val accountValid: Boolean            = assessBusinessBankDetailsResponse.accountValid
+  val companyNameValid: Boolean        = assessBusinessBankDetailsResponse.companyNameValid
 
-  val accountSupportsBacs: Boolean = validateResponse.supportsBACS.contains("yes")
+  val isValid: Boolean =
+    sortcodeExists && validSortcodeMetadata && validAccountAndSortCode && rollNotRequired && accountValid && companyNameValid
 
-  val isValid: Boolean = validAccountAndSortCode && rollNotRequired && accountSupportsBacs
 }
 
 object BARSResult {
 
-  def apply(validateResponse: ValidateBankDetailsResponse): BARSResult = new BARSResult(validateResponse)
+  def apply(metadataResponse: MetadataResponse): BARSResult =
+    new BARSResult(metadataResponse, AssessBusinessBankDetailsResponse.notApplicable)
+
+  val notFound: BARSResult = new BARSResult(MetadataResponse.notFound, AssessBusinessBankDetailsResponse.notApplicable)
 
 }

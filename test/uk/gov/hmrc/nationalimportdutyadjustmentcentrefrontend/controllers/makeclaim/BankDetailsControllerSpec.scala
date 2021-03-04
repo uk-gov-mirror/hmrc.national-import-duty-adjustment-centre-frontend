@@ -23,9 +23,8 @@ import play.api.data.{Form, FormError}
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{BarsTestData, ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.BankAccountReputationService
@@ -34,7 +33,7 @@ import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
 
-class BankDetailsControllerSpec extends ControllerSpec with TestData {
+class BankDetailsControllerSpec extends ControllerSpec with TestData with BarsTestData {
 
   private val page         = mock[BankDetailsView]
   private val formProvider = new BankDetailsFormProvider

@@ -19,20 +19,21 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{
-  ValidateBankDetailsRequest,
-  ValidateBankDetailsResponse
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class BARSConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
-  private val validateUrl = appConfig.barsValidateBankDetailsUrl
+  def assessBusinessBankDetails(
+    request: AssessBusinessBankDetailsRequest
+  )(implicit hc: HeaderCarrier): Future[AssessBusinessBankDetailsResponse] =
+    httpClient.POST[AssessBusinessBankDetailsRequest, AssessBusinessBankDetailsResponse](
+      appConfig.barsBusinessAssessUrl,
+      request
+    )
 
-  def validateBankDetails(
-    request: ValidateBankDetailsRequest
-  )(implicit hc: HeaderCarrier): Future[ValidateBankDetailsResponse] =
-    httpClient.POST[ValidateBankDetailsRequest, ValidateBankDetailsResponse](validateUrl, request)
+  def sortcodeMetadata(sortcode: String)(implicit hc: HeaderCarrier): Future[MetadataResponse] =
+    httpClient.GET[MetadataResponse](s"${appConfig.barsSortcodeMetadataUrl}/$sortcode")
 
 }
