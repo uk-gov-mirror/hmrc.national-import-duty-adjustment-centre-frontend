@@ -121,7 +121,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
     "not bind strings with invalid characters" in {
       val result        = form.bind(Map(fieldName -> "P!24KF")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey)
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.postcodePattern))
       result.errors mustEqual Seq(expectedError)
     }
 

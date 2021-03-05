@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
-import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Address
+
+import javax.inject.Inject
 
 class AddressFormProvider @Inject() extends Mappings {
 
@@ -38,7 +40,14 @@ class AddressFormProvider @Inject() extends Mappings {
         .verifying(firstError(maxLength(50, "address.city.error.length"))),
       "postcode" -> text("address.postcode.error.required")
         .verifying(
-          firstError(postcodeLength("address.postcode.error.length"), postcodeFormat("address.postcode.error.invalid"))
+          firstError(
+            postcodeLength("address.postcode.error.length"),
+            regexp(
+              Validation.postcodePattern,
+              "address.postcode.error.invalid",
+              _.stripExternalAndReduceInternalSpaces()
+            )
+          )
         )
     )(Address.apply)(Address.unapply)
   )
