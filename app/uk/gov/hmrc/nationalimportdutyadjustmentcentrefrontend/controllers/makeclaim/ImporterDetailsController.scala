@@ -54,7 +54,6 @@ class ImporterDetailsController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-
     form.bindFromRequest().fold(
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(detailsView(formWithErrors, backLink(answers))) },

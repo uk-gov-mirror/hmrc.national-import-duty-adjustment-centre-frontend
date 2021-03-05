@@ -38,10 +38,7 @@ class ImporterDetailsFormProvider @Inject() extends Mappings {
         .verifying(firstError(maxLength(50, "address.city.error.length"))),
       "postcode" -> text("address.postcode.error.required")
         .verifying(
-          firstError(
-            postcodeLength("address.postcode.error.length"),
-            postcodeFormat("address.postcode.error.invalid")
-          )
+          firstError(postcodeLength("address.postcode.error.length"), postcodeFormat("address.postcode.error.invalid"))
         )
     )(ImporterContactDetails.apply)(ImporterContactDetails.unapply)
   )

@@ -106,35 +106,40 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     val requiredKey = "address.postcode.error.required"
     val lengthKey   = "address.postcode.error.length"
     val invalidKey  = "address.postcode.error.invalid"
-    val minLength   = 5
-    val maxLength   = 8
 
     val validPostCodeGen = for {
-      length <- Gen.choose(minLength, maxLength)
-      digits <- Gen.listOfN(length, Gen.numChar)
-    } yield digits.mkString
+      leading       <- Gen.listOfN(10, " ").map(_.mkString)
+      firstGroup    <- Gen.listOfN(3, Gen.numChar).map(_.toString)
+      internalSpace <- Gen.listOfN(10, " ").map(_.mkString)
+      secondGroup   <- Gen.listOfN(4, Gen.numChar).map(_.toString)
+      trailing      <- Gen.listOfN(15, " ").map(_.mkString)
+    } yield s"$leading$firstGroup$internalSpace$secondGroup$trailing"
 
     behave like fieldThatBindsValidData(form, fieldName, validPostCodeGen)
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    behave like fieldWithMinLength(
-      form,
-      fieldName,
-      minLength = minLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(minLength))
-    )
-
     "not bind strings with invalid characters" in {
       val result        = form.bind(Map(fieldName -> "P!24KF")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.postcodePattern))
+      val expectedError = FormError(fieldName, invalidKey)
+      result.errors mustEqual Seq(expectedError)
+    }
+
+    "not bind empty string" in {
+      val result        = form.bind(Map(fieldName -> "       ")).apply(fieldName)
+      val expectedError = FormError(fieldName, lengthKey)
+      result.errors mustEqual Seq(expectedError)
+    }
+
+    "not bind postcode with too many characters postcleansing" in {
+      val result        = form.bind(Map(fieldName -> "PLACE42 23REGION")).apply(fieldName)
+      val expectedError = FormError(fieldName, lengthKey)
+      result.errors mustEqual Seq(expectedError)
+    }
+
+    "not bind postcode with too few characters postcleansing" in {
+      val result        = form.bind(Map(fieldName -> "     A5      X      ")).apply(fieldName)
+      val expectedError = FormError(fieldName, lengthKey)
       result.errors mustEqual Seq(expectedError)
     }
   }

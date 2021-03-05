@@ -100,25 +100,6 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
     }
 
-    "update cache with cleaned postcode" in {
-
-      val spaciousPostcodeRequest = postRequest(
-        "name"         -> importerContactDetailsAnswer.name,
-        "addressLine1" -> importerContactDetailsAnswer.addressLine1,
-        "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
-        "city"         -> importerContactDetailsAnswer.city,
-        "postcode"     -> "     BR0    0KL    "
-      )
-
-      withCacheCreateAnswers(emptyAnswers)
-
-      val result = controller.onSubmit()(spaciousPostcodeRequest)
-      status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
-
-    }
-
     "return 400 (BAD REQUEST) when invalid data posted" in {
 
       val result = controller.onSubmit()(postRequest())

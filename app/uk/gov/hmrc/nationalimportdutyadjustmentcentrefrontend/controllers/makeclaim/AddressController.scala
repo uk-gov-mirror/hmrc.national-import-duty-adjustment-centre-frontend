@@ -54,7 +54,6 @@ class AddressController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-
     form.bindFromRequest().fold(
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
@@ -64,4 +63,5 @@ class AddressController @Inject() (
         }
     )
   }
+
 }

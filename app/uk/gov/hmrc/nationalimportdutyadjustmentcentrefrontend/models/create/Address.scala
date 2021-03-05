@@ -26,4 +26,5 @@ object Address {
 
   def apply(name: String, addressLine1: String, addressLine2: Option[String], city: String, postCode: String): Address =
     new Address(name, addressLine1, addressLine2, city, postCode.stripExternalAndReduceInternalSpaces())
+
 }
