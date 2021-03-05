@@ -39,9 +39,8 @@ class AddressFormProvider @Inject() extends Mappings {
       "postcode" -> text("address.postcode.error.required")
         .verifying(
           firstError(
-            maxLength(8, "address.postcode.error.length"),
-            minLength(5, "address.postcode.error.length"),
-            regexp(Validation.postcodePattern, "address.postcode.error.invalid")
+            postcodeLength("address.postcode.error.length"),
+            postcodeFormat("address.postcode.error.invalid")
           )
         )
     )(Address.apply)(Address.unapply)

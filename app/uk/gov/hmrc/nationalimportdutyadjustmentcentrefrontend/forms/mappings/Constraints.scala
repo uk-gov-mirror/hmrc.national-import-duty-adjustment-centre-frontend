@@ -17,10 +17,11 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
 import java.time.LocalDate
-
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation.postcodePattern
 
 import scala.util.{Success, Try}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 trait Constraints {
 
@@ -31,6 +32,24 @@ trait Constraints {
           .map(_.apply(input))
           .find(_ != Valid)
           .getOrElse(Valid)
+    }
+
+  protected def postcodeLength(errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.stripExternalAndReduceInternalSpaces().length > 8 =>
+        Invalid(errorKey)
+      case str if str.stripExternalAndReduceInternalSpaces().length < 5 =>
+        Invalid(errorKey)
+      case _ =>
+        Valid
+    }
+
+  protected def postcodeFormat(errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.stripExternalAndReduceInternalSpaces().matches(postcodePattern) =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
     }
 
   protected def regexp(regex: String, errorKey: String, transform: String => String = x => x): Constraint[String] =

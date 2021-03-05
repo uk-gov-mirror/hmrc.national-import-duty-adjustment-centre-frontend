@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
@@ -28,8 +27,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ImporterCon
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -55,9 +54,8 @@ class ImporterDetailsController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    val cleanedInput = cleanPostCode(request.body.asFormUrlEncoded.get)
 
-    form.bindFromRequest(cleanedInput).fold(
+    form.bindFromRequest().fold(
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(detailsView(formWithErrors, backLink(answers))) },
       value =>
@@ -66,12 +64,5 @@ class ImporterDetailsController @Inject() (
         }
     )
   }
-
-  def cleanPostCode(data: Map[String, Seq[String]]): Map[String, Seq[String]] =
-    data.map {
-      case (key, values) =>
-        if (key == "postcode") (key, values.map(_.stripExternalAndReduceInternalSpaces()))
-        else (key, values)
-    }
 
 }
