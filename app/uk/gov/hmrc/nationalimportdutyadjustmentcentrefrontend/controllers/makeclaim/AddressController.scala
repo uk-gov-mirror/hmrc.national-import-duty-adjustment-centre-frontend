@@ -28,6 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 import scala.concurrent.ExecutionContext
 
@@ -71,8 +72,8 @@ class AddressController @Inject() (
 
   def cleanPostCode(data: Map[String, Seq[String]]): Map[String, Seq[String]] = {
     data.map{
-      case (key, values) => 
-        if (key == "postcode") (key, values.map(_.trim()))
+      case (key, values) =>
+        if (key == "postcode") (key, values.map(_.stripExternalAndReduceInternalSpaces()))
         else (key, values)
     }
   }

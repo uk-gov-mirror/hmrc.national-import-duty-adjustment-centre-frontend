@@ -22,6 +22,9 @@ object Implicits {
     def stripSpacesAndDashes() = unwrap.replaceAll("""[ \-]""", "")
 
     def leftPadAccountNumber() = f"${unwrap.toInt}%08d"
+
+    def stripExternalAndReduceInternalSpaces(): String = {unwrap.trim.replaceAll("[ ]+", " ")}
+
   }
 
 }
