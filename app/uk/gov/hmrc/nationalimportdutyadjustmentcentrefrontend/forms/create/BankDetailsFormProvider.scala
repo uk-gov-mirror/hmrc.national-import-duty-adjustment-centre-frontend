@@ -21,6 +21,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 class BankDetailsFormProvider @Inject() extends Mappings {
 
@@ -34,7 +35,11 @@ class BankDetailsFormProvider @Inject() extends Mappings {
           )
         ),
       "sortCode" -> text("bankDetails.sortCode.error.required")
-        .verifying(firstError(regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid"))),
+        .verifying(
+          firstError(
+            regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid", _.stripSpacesAndDashes())
+          )
+        ),
       "accountNumber" -> text("bankDetails.accountNumber.error.required")
         .verifying(
           firstError(regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid"))

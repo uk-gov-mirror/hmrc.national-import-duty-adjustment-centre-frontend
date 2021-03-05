@@ -33,9 +33,9 @@ trait Constraints {
           .getOrElse(Valid)
     }
 
-  protected def regexp(regex: String, errorKey: String): Constraint[String] =
+  protected def regexp(regex: String, errorKey: String, transform: String => String = x => x): Constraint[String] =
     Constraint {
-      case str if str.matches(regex) =>
+      case str if transform(str).matches(regex) =>
         Valid
       case _ =>
         Invalid(errorKey, regex)

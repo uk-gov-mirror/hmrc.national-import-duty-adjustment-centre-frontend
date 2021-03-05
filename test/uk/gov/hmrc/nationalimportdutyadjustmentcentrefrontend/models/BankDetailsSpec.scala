@@ -28,6 +28,12 @@ class BankDetailsSpec extends UnitSpec with TestData {
       BankDetails("Account", "001122", "123456").accountNumber mustBe "00123456"
     }
 
+    "strip spaces and dashes from sort code" in {
+
+      BankDetails("Account", "12 34 56", "12345678").sortCode mustBe "123456"
+      BankDetails("Account", "12-34-56", "12345678").sortCode mustBe "123456"
+    }
+
   }
 
 }

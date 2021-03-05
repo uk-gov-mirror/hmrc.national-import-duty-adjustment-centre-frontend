@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
 object Validation {
-
   val accountNumberPattern = "^[0-9]{6,8}$"
   val sortCodePattern      = "^[0-9]{6}$"
   val safeInputPattern     = """^[A-Za-z0-9À-ÿ \!\)\(.,_/’'"&-]+$"""
