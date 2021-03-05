@@ -129,7 +129,7 @@ object UpscanNotification {
     )
 
     def decodeMimeEncodedWord(word: String): String =
-      Try(MimeUtility.decodeWord(word)).getOrElse(word)
+      Try(MimeUtility.decodeText(word)).getOrElse(word)
 
   }
 
@@ -168,13 +168,11 @@ object UpscanNotification {
     case o => o
   }
 
-  implicit def writes: Writes[UpscanNotification] =
-    (o: UpscanNotification) =>
-      o match {
-        case i: UpscanFileReady =>
-          upscanFileReadyFormat.transform(addFileStatus(READY)).writes(i)
-        case i: UpscanFileFailed =>
-          upscanFileFailedFormat.transform(addFileStatus(FAILED)).writes(i)
-      }
+  implicit def writes: Writes[UpscanNotification] = {
+    case i: UpscanFileReady =>
+      upscanFileReadyFormat.transform(addFileStatus(READY)).writes(i)
+    case i: UpscanFileFailed =>
+      upscanFileFailedFormat.transform(addFileStatus(FAILED)).writes(i)
+  }
 
 }

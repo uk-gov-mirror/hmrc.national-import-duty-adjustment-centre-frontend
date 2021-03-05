@@ -22,7 +22,8 @@ import play.api.libs.json.{JsSuccess, Json}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UpscanNotificationSpec.{
   failedNotificationBody,
-  successNotificationBody
+  successNotificationBody,
+  successNotificationWithMimeEncodedFilenameBody
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.{
   FailureDetails,
@@ -55,6 +56,23 @@ class UpscanNotificationSpec extends UnitSpec {
         )
     }
 
+    "deserialize successful body with MIME encoded filenames" in {
+
+      UpscanNotification.reads.reads(Json.parse(successNotificationWithMimeEncodedFilenameBody)) mustBe
+        JsSuccess(
+          UpscanFileReady(
+            reference = "11370e18-6e24-453e-b45a-76d3e32ea33d",
+            downloadUrl = "https://bucketName.s3.eu-west-2.amazonaws.com?1235676",
+            uploadDetails = UploadDetails(
+              uploadTimestamp = ZonedDateTime.parse("2018-04-24T09:30:00Z"),
+              checksum = "396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100",
+              fileMimeType = "application/pdf",
+              fileName = "You’ve submitted your documents - Send documents for a customs check - GOV.UK.pdf"
+            )
+          )
+        )
+    }
+
     "deserialize failed body" in {
 
       UpscanNotification.reads.reads(Json.parse(failedNotificationBody)) mustBe
@@ -71,7 +89,7 @@ class UpscanNotificationSpec extends UnitSpec {
 
 object UpscanNotificationSpec {
 
-  val successNotificationBody =
+  val successNotificationBody: String =
     """
       |{
       |    "reference" : "11370e18-6e24-453e-b45a-76d3e32ea33d",
@@ -87,7 +105,23 @@ object UpscanNotificationSpec {
       |
         """.stripMargin
 
-  val failedNotificationBody =
+  val successNotificationWithMimeEncodedFilenameBody: String =
+    """
+      |{
+      |     "reference":"11370e18-6e24-453e-b45a-76d3e32ea33d",
+      |     "fileStatus":"READY",
+      |     "downloadUrl":"https://bucketName.s3.eu-west-2.amazonaws.com?1235676",
+      |     "uploadDetails":{
+      |         "uploadTimestamp":"2018-04-24T09:30:00Z",
+      |         "checksum":"396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100",
+      |         "fileName":"=?UTF-8?Q?You=E2=80=99ve_submitted_your_documents_-_Send_d?= =?UTF-8?Q?ocuments_for_a_customs_check_-_GOV.UK.pdf?=",
+      |         "fileMimeType":"application/pdf",
+      |         "size":5432190
+      |     }
+      |}
+      |""".stripMargin
+
+  val failedNotificationBody: String =
     """
       |{
       |    "reference" : "11370e18-6e24-453e-b45a-76d3e32ea33d",
