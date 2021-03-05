@@ -233,7 +233,7 @@ check_answers.claim.entryDetails = Entry details
 check_answers.claim.entryDetails.epu = EPU: {0}
 check_answers.claim.entryDetails.entryNumber = Entry number: {0}
 check_answers.claim.entryDetails.entryDate = Entry date: {0}
-check_answers.claim.claimType = Claim type
+check_answers.claim.claimType = What is the type of claim you are making?
 check_answers.claim.itemNumbers = Item numbers
 check_answers.claim.uploaded = Supporting documents
 check_answers.claim.further_information = Further information
@@ -255,6 +255,9 @@ check_answers.payment.payTo = Who is to be repaid?
 check_answers.payment.payTo.Importer = Importer
 check_answers.payment.payTo.Representative_of_importer = Representative
 check_answers.payment.bankDetails = Bank details
+check_answers.submit.heading = Submit your declaration
+check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>

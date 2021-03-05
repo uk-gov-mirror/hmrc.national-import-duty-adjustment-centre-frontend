@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, RepresentationType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 
@@ -63,15 +63,9 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         uploadRow must haveSummaryValue(uploadAnswer.fileName)
       }
 
-    }
-
-    "have repayment section" which {
-
-      val repaymentSection = view().getElementById("repayment_section")
-
       "contains valid reclaim duty type" in {
 
-        val reclaimDutyTypeRow = repaymentSection.getElementsByClass("reclaim_duty_type_row")
+        val reclaimDutyTypeRow = claimSection.getElementsByClass("reclaim_duty_type_row")
 
         reclaimDutyTypeRow must haveSummaryKey(messages("check_answers.repayment.reclaimDutyType"))
         reclaimDutyTypeRow must haveSummaryValue(
@@ -79,6 +73,14 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
             value => MessageKey.apply("check_answers.repayment.reclaimDutyType", value.toString)
           ).mkString(", ")
         )
+      }
+
+      "contains valid reclaim duty total" in {
+
+        val reclaimDutyTypeRow = claimSection.getElementsByClass("reclaim_duty_total_row")
+
+        reclaimDutyTypeRow must haveSummaryKey(messages("check_answers.repayment.total"))
+        reclaimDutyTypeRow must haveSummaryValue(s"£${completeClaim.repaymentTotal}")
       }
     }
 

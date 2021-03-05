@@ -54,43 +54,6 @@
     )
 
     @summaryList(
-        id = "your_details_section",
-        heading = Some(messages("check_answers.yourDetails.title")),
-        summaryListRows = Seq(
-            Some(SummaryListRow(
-                classes = "contact_details_row",
-                key = Key(
-                    content = Text(messages("check_answers.yourDetails.contactDetails"))
-                ),
-                value = Value(
-                    content = HtmlContent(Seq(
-                        Some(s"${claim.contactDetails.firstName} ${claim.contactDetails.lastName}"),
-                        Some(claim.contactDetails.emailAddress),
-                        claim.contactDetails.telephoneNumber
-                    ).flatten.mkString("<br>"))
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "your_address_row",
-                key = Key(
-                    content = Text(messages("check_answers.yourDetails.yourAddress"))
-                ),
-                value = Value(
-                    content = HtmlContent(Seq(
-                        Some(claim.claimantAddress.name),
-                        Some(claim.claimantAddress.addressLine1),
-                        claim.claimantAddress.addressLine2,
-                        Some(claim.claimantAddress.city),
-                        Some(claim.claimantAddress.postCode)
-                    ).flatten.mkString("<br>"))
-                ),
-                actions = None
-            ))
-        )
-    )
-
-    @summaryList(
         id = "claim_section",
         heading = Some(messages("check_answers.claim.title")),
         summaryListRows = Seq(
@@ -139,23 +102,6 @@
                 actions = None
             )),
             Some(SummaryListRow(
-                classes = "upload_row",
-                key = Key(
-                    content = Text(messages("check_answers.claim.uploaded"))
-                ),
-                value = Value(
-                    content = HtmlContent(claim.uploads.map(_.fileName).mkString("<br>"))
-                ),
-                actions = None
-            ))
-        )
-    )
-
-    @summaryList(
-        id = "repayment_section",
-        heading = Some(messages("check_answers.repayment.title")),
-        summaryListRows = Seq(
-            Some(SummaryListRow(
                 classes = "reclaim_duty_type_row",
                 key = Key(
                     content = Text(messages("check_answers.repayment.reclaimDutyType"))
@@ -172,6 +118,53 @@
                 ),
                 value = Value(
                     content = Text(s"£${claim.repaymentTotal}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "upload_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.uploaded"))
+                ),
+                value = Value(
+                    content = HtmlContent(claim.uploads.map(_.fileName).mkString("<br>"))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @summaryList(
+        id = "your_details_section",
+        heading = Some(messages("check_answers.yourDetails.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "contact_details_row",
+                key = Key(
+                    content = Text(messages("check_answers.yourDetails.contactDetails"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        Some(s"${claim.contactDetails.firstName} ${claim.contactDetails.lastName}"),
+                        Some(claim.contactDetails.emailAddress),
+                        claim.contactDetails.telephoneNumber
+                    ).flatten.mkString("<br>"))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "your_address_row",
+                key = Key(
+                    content = Text(messages("check_answers.yourDetails.yourAddress"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        Some(claim.claimantAddress.name),
+                        Some(claim.claimantAddress.addressLine1),
+                        claim.claimantAddress.addressLine2,
+                        Some(claim.claimantAddress.city),
+                        Some(claim.claimantAddress.postCode)
+                    ).flatten.mkString("<br>"))
                 ),
                 actions = None
             ))
@@ -262,6 +255,9 @@
             ))
         )
     )
+
+    @components.subHeading(messages("check_answers.submit.heading"))
+    @components.paragraph(messages("check_answers.submit.declaration"))
 
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
         @continueButton("check_answers.submit")
