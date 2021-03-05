@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.10
+// @version      0.11
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -122,8 +122,8 @@ function completePage() {
     }
     if (currentPageIs("/national-import-duty-adjustment-centre/create/bank-details")) {
         document.getElementById("accountName").value = "ACME Importers Ltd";
-        document.getElementById("sortCode").value = "400731";
-        document.getElementById("accountNumber").value = "52173018";
+        document.getElementById("sortCode").value = "400530";
+        document.getElementById("accountNumber").value = "71584685";
         submit();
     }
     if (currentPageIs("/national-import-duty-adjustment-centre/create/importer-correspondence-address")) {
