@@ -111,7 +111,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
-        theFormViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.DutyRepaymentController.onPageLoadOtherDuty()))
       }
 
       "user has uploaded some files" in {
@@ -177,7 +177,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK
 
-        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.DutyRepaymentController.onPageLoadOtherDuty()))
       }
 
       "user has uploaded some files" in {
