@@ -26,7 +26,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, ImporterContactDetailsPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 

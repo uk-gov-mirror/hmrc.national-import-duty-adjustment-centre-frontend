@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
@@ -28,7 +29,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheData
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
