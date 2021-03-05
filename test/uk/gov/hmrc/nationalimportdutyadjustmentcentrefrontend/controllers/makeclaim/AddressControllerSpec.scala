@@ -98,6 +98,26 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       status(result) mustEqual SEE_OTHER
       theUpdatedCreateAnswers.claimantAddress mustBe Some(addressAnswer)
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
+
+    }
+
+    "update cache with cleaned postcode" in {
+
+      val spaciousPostcodeRequest = postRequest(
+        "name"         -> addressAnswer.name,
+        "addressLine1" -> addressAnswer.addressLine1,
+        "addressLine2" -> addressAnswer.addressLine2.getOrElse(""),
+        "city"         -> addressAnswer.city,
+        "postcode"     -> "     WO0    1KE    "
+      )
+
+      withCacheCreateAnswers(emptyAnswers)
+
+      val result = controller.onSubmit()(spaciousPostcodeRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(addressAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
+
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {
