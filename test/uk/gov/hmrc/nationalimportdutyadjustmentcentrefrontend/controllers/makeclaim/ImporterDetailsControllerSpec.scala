@@ -26,7 +26,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, ImporterContactDetailsPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -98,6 +98,25 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
       status(result) mustEqual SEE_OTHER
       theUpdatedCreateAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
       redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
+    }
+
+    "update cache with cleaned postcode" in {
+
+      val spaciousPostcodeRequest = postRequest(
+        "name"         -> importerContactDetailsAnswer.name,
+        "addressLine1" -> importerContactDetailsAnswer.addressLine1,
+        "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
+        "city"         -> importerContactDetailsAnswer.city,
+        "postcode"     -> "     BR0    0KL    "
+      )
+
+      withCacheCreateAnswers(emptyAnswers)
+
+      val result = controller.onSubmit()(spaciousPostcodeRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
+
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

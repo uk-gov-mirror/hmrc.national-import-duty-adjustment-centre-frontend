@@ -82,7 +82,7 @@ trait TestData {
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
   val importerContactDetailsAnswer =
-    ImporterContactDetails("Importer Name", "Importer Line 1", Some("Importer Line 2"), "Importer City", "PCode")
+    ImporterContactDetails("Importer Name", "Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
 
   val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),

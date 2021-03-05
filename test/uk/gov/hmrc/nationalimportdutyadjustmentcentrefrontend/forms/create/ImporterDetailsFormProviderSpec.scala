@@ -106,8 +106,8 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     val requiredKey = "address.postcode.error.required"
     val lengthKey   = "address.postcode.error.length"
     val invalidKey  = "address.postcode.error.invalid"
-    val minLength   = 1
-    val maxLength   = 7
+    val minLength   = 5
+    val maxLength   = 8
 
     val validPostCodeGen = for {
       length <- Gen.choose(minLength, maxLength)
@@ -123,6 +123,13 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like fieldWithMinLength(
+      form,
+      fieldName,
+      minLength = minLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(minLength))
     )
 
     "not bind strings with invalid characters" in {

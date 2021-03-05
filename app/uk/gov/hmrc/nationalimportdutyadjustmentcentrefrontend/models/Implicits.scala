@@ -23,7 +23,7 @@ object Implicits {
 
     def leftPadAccountNumber() = f"${unwrap.toInt}%08d"
 
-    def stripExternalAndReduceInternalSpaces(): String = {unwrap.trim.replaceAll("[ ]+", " ")}
+    def stripExternalAndReduceInternalSpaces(): String = unwrap.trim.replaceAll("[ ]+", " ")
 
   }
 
