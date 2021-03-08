@@ -17,54 +17,47 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
+import com.mongodb.client.model.Indexes.ascending
 import javax.inject.Inject
-import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import uk.gov.hmrc.mongo.ReactiveRepository
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import org.mongodb.scala.model.Filters.equal
+import org.mongodb.scala.model.Updates.set
+import org.mongodb.scala.model.{IndexModel, IndexOptions}
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JsonFormats.formatLocalDateTime
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CacheDataRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: AppConfig)(implicit
-  ec: ExecutionContext
-) extends ReactiveRepository[CacheData, BSONObjectID](
+class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: AppConfig)(implicit ec: ExecutionContext)
+    extends PlayMongoRepository[CacheData](
       collectionName = "cache-data",
-      mongo = mongoComponent.mongoConnector.db,
+      mongoComponent = mongoComponent,
       domainFormat = CacheData.formats,
-      idFormat = ReactiveMongoFormats.objectIdFormats
+      indexes = Seq(
+        IndexModel(ascending("id"), IndexOptions().name("idIdx").unique(true)),
+        IndexModel(
+          ascending("lastUpdated"),
+          IndexOptions().name("userAnswersExpiry").expireAfter(config.mongoTimeToLiveInSeconds, TimeUnit.SECONDS)
+        )
+      ),
+      replaceIndexes = config.mongoReplaceIndexes
     ) {
 
-  override def indexes: Seq[Index] = super.indexes ++ Seq(
-    Index(
-      key = Seq("lastUpdated" -> IndexType.Ascending),
-      name = Some("userAnswersExpiry"),
-      options = BSONDocument("expireAfterSeconds" -> config.mongoTimeToLiveInSeconds)
-    )
-  )
-
   def get(id: String): Future[Option[CacheData]] =
-    super.findAndUpdate(
-      query = Json.obj("id" -> id),
-      update = Json.obj("$set" -> Json.obj("lastUpdated" -> formatLocalDateTime.writes(LocalDateTime.now()))),
-      upsert = false
-    ).map(_.value.map(_.as[CacheData]))
+    collection.findOneAndUpdate(filter(id), set("lastUpdated", LocalDateTime.now())).toFutureOption()
 
-  def set(data: CacheData): Future[Option[CacheData]] =
-    super.findAndUpdate(
-      Json.obj("id" -> data.id),
-      Json.toJson(data copy (lastUpdated = LocalDateTime.now)).as[JsObject],
-      upsert = true
-    ).map(_.value.map(_.as[CacheData]))
+  def insert(data: CacheData): Future[Unit] =
+    collection.insertOne(data).toFuture().map(_ => Unit)
 
-  def delete(id: String): Future[Unit] =
-    super
-      .remove("id" -> id)
-      .map(_ => Unit)
+  def update(data: CacheData): Future[Option[CacheData]] =
+    collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = LocalDateTime.now)).toFutureOption()
+
+  def delete(id: String): Future[Unit] = collection.deleteOne(filter(id)).toFuture().map(_ => Unit)
+
+  private def filter(id: String) =
+    equal("id", Codecs.toBson(id))
 
 }

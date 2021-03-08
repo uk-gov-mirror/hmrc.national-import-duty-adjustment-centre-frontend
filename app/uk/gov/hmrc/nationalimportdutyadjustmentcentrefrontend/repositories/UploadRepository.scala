@@ -17,25 +17,26 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
+import com.mongodb.client.model.Indexes.ascending
 import javax.inject.Inject
+import org.mongodb.scala.model.Filters.{and, equal}
+import org.mongodb.scala.model.Updates.set
+import org.mongodb.scala.model.{IndexModel, IndexOptions}
 import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import reactivemongo.play.json.ImplicitBSONHandlers._
-import uk.gov.hmrc.mongo.ReactiveRepository
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, JsonFormats, UploadId}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class UploadDetails(
-  id: BSONObjectID,
   uploadId: UploadId,
   journeyId: JourneyId,
   reference: Reference,
@@ -45,12 +46,10 @@ case class UploadDetails(
 
 object UploadDetails {
 
-  import ReactiveMongoFormats.mongoEntity
-
   val uploadedSuccessfullyFormat: OFormat[UploadedFile] = Json.format[UploadedFile]
   val uploadedFailedFormat: OFormat[Failed]             = Json.format[Failed]
 
-  implicit private val formatCreated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
+  implicit private val formatCreated = MongoJavatimeFormats.localDateTimeFormat
 
   val read: Reads[UploadStatus] = (json: JsValue) => {
     val jsObject = json.asInstanceOf[JsObject]
@@ -79,42 +78,37 @@ object UploadDetails {
 
   implicit val referenceFormat: OFormat[Reference] = Json.format[Reference]
 
-  val format: Format[UploadDetails] = mongoEntity(Json.format[UploadDetails])
+  val format: Format[UploadDetails] = Json.format[UploadDetails]
 }
 
-class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config: AppConfig)(implicit
-  ec: ExecutionContext
-) extends ReactiveRepository[UploadDetails, BSONObjectID](
+class UploadRepository @Inject() (mongoComponent: MongoComponent, config: AppConfig)(implicit ec: ExecutionContext)
+    extends PlayMongoRepository[UploadDetails](
       collectionName = "upload-data",
-      mongo = mongoComponent.mongoConnector.db,
+      mongoComponent = mongoComponent,
       domainFormat = UploadDetails.format,
-      idFormat = ReactiveMongoFormats.objectIdFormats
+      indexes = Seq(
+        IndexModel(ascending("uploadId", "journeyId"), IndexOptions().name("uploadJourneyIdx").unique(true)),
+        IndexModel(ascending("reference", "journeyId"), IndexOptions().name("referenceJourneyIdx").unique(true)),
+        IndexModel(
+          ascending("created"),
+          IndexOptions().name("uploadExpiry").expireAfter(config.mongoTimeToLiveInSeconds, TimeUnit.SECONDS)
+        )
+      ),
+      replaceIndexes = config.mongoReplaceIndexes
     ) {
 
-  override def indexes: Seq[Index] = super.indexes ++ Seq(
-    Index(
-      key = Seq("created" -> IndexType.Ascending),
-      name = Some("uploadExpiry"),
-      options = BSONDocument("expireAfterSeconds" -> config.mongoTimeToLiveInSeconds)
-    )
-  )
-
-  def add(uploadDetails: UploadDetails): Future[Boolean] = insert(uploadDetails).map(_ => true)
+  def add(uploadDetails: UploadDetails): Future[Boolean] =
+    collection.insertOne(uploadDetails).toFutureOption().map(_ => true)
 
   def findUploadDetails(uploadId: UploadId, journeyId: JourneyId): Future[Option[UploadDetails]] =
-    find("uploadId" -> Json.toJson(uploadId), "journeyId" -> Json.toJson(journeyId)).map(_.headOption)
+    collection.find(
+      and(equal("uploadId", Codecs.toBson(uploadId)), equal("journeyId", Codecs.toBson(journeyId)))
+    ).toFuture().map(_.headOption)
 
   def updateStatus(reference: Reference, journeyId: JourneyId, newStatus: UploadStatus): Future[UploadStatus] =
-    for (
-      result <- findAndUpdate(
-        query = JsObject(Seq("reference" -> Json.toJson(reference), "journeyId" -> Json.toJson(journeyId))),
-        update = Json.obj("$set" -> Json.obj("status" -> Json.toJson(newStatus))),
-        upsert = true // TODO - do we want to upsert?  Should fail if not found
-      )
-    )
-      yield result.result[UploadDetails].map(_.status).getOrElse(
-        // TODO - change return type to Option and return None if not found
-        throw new Exception("Update failed, no document modified")
-      )
+    collection.findOneAndUpdate(
+      and(equal("reference", Codecs.toBson(reference)), equal("journeyId", Codecs.toBson(journeyId))),
+      set("status", Codecs.toBson(newStatus))
+    ).toFuture() map (details => details.status)
 
 }

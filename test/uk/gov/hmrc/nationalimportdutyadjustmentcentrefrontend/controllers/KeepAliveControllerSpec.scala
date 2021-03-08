@@ -41,7 +41,7 @@ class KeepAliveControllerSpec extends ControllerSpec {
       val result = controller(fakeAuthorisedIdentifierAction).keepAlive(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      verify(dataRepository).set(any[CacheData])
+      verify(dataRepository).update(any[CacheData])
 
     }
 

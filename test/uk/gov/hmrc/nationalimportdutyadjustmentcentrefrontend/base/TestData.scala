@@ -18,7 +18,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 
-import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
@@ -110,7 +109,7 @@ trait TestData {
     UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
 
   def uploadResult(status: UploadStatus): UploadDetails =
-    UploadDetails(BSONObjectID.generate(), uploadId, journeyId, Reference("reference"), status, fixedDateTime)
+    UploadDetails(uploadId, journeyId, Reference("reference"), status, fixedDateTime)
 
   val uploadInProgress: UploadStatus = InProgress
   val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")

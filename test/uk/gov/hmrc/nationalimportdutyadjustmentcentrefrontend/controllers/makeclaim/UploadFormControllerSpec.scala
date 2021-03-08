@@ -155,7 +155,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE").url)
 
-      verify(dataRepository, never()).set(any())
+      verify(dataRepository, never()).update(any())
     }
 
     "update UserAnswers and redirect to summary when upload succeeds" in {

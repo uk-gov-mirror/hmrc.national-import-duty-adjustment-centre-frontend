@@ -57,6 +57,7 @@ class AppConfig @Inject() (
   val timeoutDialogCountdown: Int = servicesConfig.getInt("timeoutDialog.countdownSeconds")
 
   val mongoTimeToLiveInSeconds: Int = sessionTimeoutSeconds + 60
+  val mongoReplaceIndexes: Boolean  = config.getOptional[Boolean]("mongodb.replaceIndexes").getOrElse(false)
 
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"

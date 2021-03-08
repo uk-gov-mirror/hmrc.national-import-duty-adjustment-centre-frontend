@@ -47,12 +47,13 @@ trait ControllerSpec
 
   val cacheDataService: CacheDataService = new CacheDataService(dataRepository)
 
-  val navigator      = instanceOf[CreateNavigator]
-  val amendNavigator = instanceOf[AmendNavigator]
+  val navigator: CreateNavigator     = instanceOf[CreateNavigator]
+  val amendNavigator: AmendNavigator = instanceOf[AmendNavigator]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(dataRepository.set(any[CacheData])).thenReturn(Future.successful(None))
+    when(dataRepository.insert(any[CacheData])).thenReturn(Future.successful(()))
+    when(dataRepository.update(any[CacheData])).thenReturn(Future.successful(None))
   }
 
   override protected def afterEach(): Unit = {
@@ -90,7 +91,7 @@ trait ControllerSpec
 
   private def theUpdatedCacheDate: CacheData = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
-    verify(dataRepository).set(captor.capture())
+    verify(dataRepository).update(captor.capture())
     captor.getValue
   }
 

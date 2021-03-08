@@ -32,7 +32,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       case Some(data) => Future(data)
       case None =>
         val data = CacheData(request.identifier)
-        repository.set(data) map { _ => data }
+        repository.insert(data) map { _ => data }
     }
 
   def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
@@ -52,7 +52,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   )(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData flatMap { data =>
       val updatedAnswers: CreateAnswers = update(data.getCreateAnswers)
-      repository.set(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+      repository.update(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
   def updateAmendAnswers(
@@ -60,21 +60,21 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData flatMap { data =>
       val updatedAnswers: AmendAnswers = update(data.getAmendAnswers)
-      repository.set(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+      repository.update(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
   def storeCreateResponse(
     claimResponse: CreateClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.set(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
+      repository.update(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
     }
 
   def storeAmendResponse(
     amendClaimResponse: AmendClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.set(data.copy(amendAnswers = None, amendClaimResponse = Some(amendClaimResponse)))
+      repository.update(data.copy(amendAnswers = None, amendClaimResponse = Some(amendClaimResponse)))
     }
 
 }

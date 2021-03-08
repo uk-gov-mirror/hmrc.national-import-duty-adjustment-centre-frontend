@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
+import java.time.LocalDateTime
+
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
-
-import java.time.LocalDateTime
 
 final case class CacheData(
   id: String,
@@ -32,15 +33,15 @@ final case class CacheData(
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
-  def amendReference: Option[String] = amendClaimResponse.flatMap(_.result).map(_.caseReference)
-  def getCreateAnswers               = createAnswers.getOrElse(CreateAnswers())
-  def getAmendAnswers                = amendAnswers.getOrElse(AmendAnswers())
+  def claimReference: Option[String]  = createClaimResponse.flatMap(_.result).map(_.caseReference)
+  def amendReference: Option[String]  = amendClaimResponse.flatMap(_.result).map(_.caseReference)
+  def getCreateAnswers: CreateAnswers = createAnswers.getOrElse(CreateAnswers())
+  def getAmendAnswers: AmendAnswers   = amendAnswers.getOrElse(AmendAnswers())
 }
 
 object CacheData {
 
-  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
-
+  implicit val formatInstant               = MongoJavatimeFormats.localDateTimeFormat
   implicit val formats: OFormat[CacheData] = Json.format[CacheData]
+
 }
