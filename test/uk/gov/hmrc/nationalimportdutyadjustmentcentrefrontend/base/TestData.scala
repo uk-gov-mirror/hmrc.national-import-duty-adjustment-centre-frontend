@@ -71,7 +71,7 @@ trait TestData {
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", Some("01234567890"))
 
-  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "PCode")
+  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "WO0 1KE")
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
@@ -82,7 +82,7 @@ trait TestData {
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
   val importerContactDetailsAnswer =
-    ImporterContactDetails("Importer Name", "Importer Line 1", Some("Importer Line 2"), "Importer City", "PCode")
+    ImporterContactDetails("Importer Name", "Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
 
   val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),

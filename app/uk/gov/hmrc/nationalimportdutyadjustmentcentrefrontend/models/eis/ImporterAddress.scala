@@ -30,4 +30,5 @@ case class ImporterAddress(
 
 object ImporterAddress {
   implicit val format: OFormat[ImporterAddress] = Json.format[ImporterAddress]
+
 }
