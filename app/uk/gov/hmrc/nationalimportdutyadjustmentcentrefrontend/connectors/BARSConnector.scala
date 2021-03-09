@@ -33,7 +33,7 @@ class BARSConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(imp
       request
     )
 
-  def sortcodeMetadata(sortcode: String)(implicit hc: HeaderCarrier): Future[MetadataResponse] =
-    httpClient.GET[MetadataResponse](s"${appConfig.barsSortcodeMetadataUrl}/$sortcode")
+  def sortcodeMetadata(sortcode: String)(implicit hc: HeaderCarrier): Future[Option[MetadataResponse]] =
+    httpClient.GET[Option[MetadataResponse]](s"${appConfig.barsSortcodeMetadataUrl}/$sortcode")
 
 }

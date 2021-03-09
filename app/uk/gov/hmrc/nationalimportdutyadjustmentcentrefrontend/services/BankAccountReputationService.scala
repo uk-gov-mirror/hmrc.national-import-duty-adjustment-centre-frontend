@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.BARSConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{AssessBusinessBankDetailsRequest, BARSResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
@@ -27,15 +27,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class BankAccountReputationService @Inject() (connector: BARSConnector)(implicit ec: ExecutionContext) {
 
   def validate(bankDetails: BankDetails)(implicit hc: HeaderCarrier): Future[BARSResult] =
-    connector.sortcodeMetadata(bankDetails.sortCode) flatMap { meta =>
-      if (meta.acceptsBacsPayments)
+    connector.sortcodeMetadata(bankDetails.sortCode) flatMap {
+      case Some(metadata) if metadata.acceptsBacsPayments =>
         connector.assessBusinessBankDetails(AssessBusinessBankDetailsRequest(bankDetails)) map { assessment =>
-          BARSResult(meta, assessment)
+          BARSResult(metadata, assessment)
         }
-      else
-        Future(BARSResult.apply(meta))
-    } recover {
-      case _: NotFoundException => BARSResult.notFound
+      case Some(metadata) => Future(BARSResult.apply(metadata))
+      case None           => Future(BARSResult.notFound)
     }
 
 }

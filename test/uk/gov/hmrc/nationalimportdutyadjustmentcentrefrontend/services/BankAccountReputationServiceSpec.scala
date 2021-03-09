@@ -40,7 +40,7 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(validMetaDataResponse))
+    when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(Some(validMetaDataResponse)))
     when(connector.assessBusinessBankDetails(any())(any())).thenReturn(Future.successful(validAssessResponse))
   }
 
@@ -70,7 +70,7 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
     }
 
     "not call 'assess' if metadata invalid" in {
-      when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(noBacsMetaDataResponse))
+      when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(Some(noBacsMetaDataResponse)))
 
       service.validate(bankDetailsAnswer).futureValue.isValid mustBe false
 
@@ -79,9 +79,7 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
     }
 
     "return 'Bars Not Found' result when BARS response with 404" in {
-      when(connector.sortcodeMetadata(any())(any())).thenAnswer { _ =>
-        Future(throw new NotFoundException("Not found"))
-      }
+      when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(None))
 
       val result = service.validate(bankDetailsAnswer).futureValue
 
