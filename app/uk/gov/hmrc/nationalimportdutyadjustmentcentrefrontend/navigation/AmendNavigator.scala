@@ -16,31 +16,43 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
+import javax.inject.{Inject, Singleton}
+import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
-import javax.inject.{Inject, Singleton}
-
 @Singleton
 class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnswerConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
-    P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always),
-    P(AttachMoreDocumentsPage, routes.AttachMoreDocumentsController.onPageLoad, always),
-    P(UploadPage, routes.UploadFormController.onPageLoad, showUploadDocuments),
-    P(UploadSummaryPage, routes.UploadFormSummaryController.onPageLoad, showUploadSummary),
-    P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always),
-    P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always),
-    P(ConfirmationPage, routes.ConfirmationController.onPageLoad, always)
+    P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always, caseReferenceAnswered),
+    P(AttachMoreDocumentsPage, routes.AttachMoreDocumentsController.onPageLoad, always, attachMoreDocumentsAnswered),
+    P(UploadPage, routes.UploadFormController.onPageLoad, showUploadDocuments, uploadPageAnswered),
+    P(UploadSummaryPage, routes.UploadFormSummaryController.onPageLoad, showUploadSummary, uploadSummaryPageAnswered),
+    P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always, furtherInformationAnswered),
+    P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always, never),
+    P(ConfirmationPage, routes.ConfirmationController.onPageLoad, always, never)
   )
+
+  override protected def checkYourAnswersPage: Call = routes.CheckYourAnswersController.onPageLoad
+
+  override protected def pageFor: String => Option[Page] = (pageName: String) =>
+    pageName match {
+      case AmendPageNames.claimReference      => Some(CaseReferencePage)
+      case AmendPageNames.attachMoreDocuments => Some(AttachMoreDocumentsPage)
+      case AmendPageNames.uploadSummary       => Some(UploadSummaryPage)
+      case AmendPageNames.furtherInformation  => Some(FurtherInformationPage)
+      case _                                  => None
+    }
 
 }
 
 protected trait AmendAnswerConditions {
 
   protected val always: Answers => Boolean = (_: Answers) => true
+  protected val never: Answers => Boolean  = (_: Answers) => false
 
   protected val showUploadDocuments: AmendAnswers => Boolean = (answers: AmendAnswers) =>
     answers.hasMoreDocuments.contains(true) && answers.uploads.isEmpty
@@ -48,4 +60,21 @@ protected trait AmendAnswerConditions {
   protected val showUploadSummary: AmendAnswers => Boolean = (answers: AmendAnswers) =>
     answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty
 
+  protected val caseReferenceAnswered: AmendAnswers => Boolean       = _.caseReference.nonEmpty
+  protected val attachMoreDocumentsAnswered: AmendAnswers => Boolean = _.hasMoreDocuments.nonEmpty
+  protected val furtherInformationAnswered: AmendAnswers => Boolean  = _.furtherInformation.nonEmpty
+
+  protected val uploadPageAnswered: AmendAnswers => Boolean = (answers: AmendAnswers) =>
+    answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty
+
+  protected val uploadSummaryPageAnswered: AmendAnswers => Boolean = (answers: AmendAnswers) =>
+    answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty && answers.uploadAnotherFile.contains(false)
+
+}
+
+object AmendPageNames {
+  val claimReference      = "claim-reference"
+  val attachMoreDocuments = "attach-more-documents"
+  val uploadSummary       = "your-uploads"
+  val furtherInformation  = "additional-information"
 }

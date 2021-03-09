@@ -45,6 +45,9 @@ trait ViewMatchers extends Matchers {
   def haveSummaryKey(value: String)   = new ElementsHasElementsContainingTextMatcher("govuk-summary-list__key", value)
   def haveSummaryValue(value: String) = new ElementsHasElementsContainingTextMatcher("govuk-summary-list__value", value)
 
+  def haveSummaryChangeLinkText(value: String) =
+    new ElementsHasElementsContainingTextMatcher("govuk-summary-list__actions", value)
+
   def haveAttribute(key: String, value: String): Matcher[Element] = new ElementHasAttributeValueMatcher(key, value)
   def haveValue(value: String): Matcher[Element]                  = new ElementHasAttributeValueMatcher("value", value)
 

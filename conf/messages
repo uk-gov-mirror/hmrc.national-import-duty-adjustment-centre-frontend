@@ -8,6 +8,7 @@ site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
 site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
 site.yes = Yes
 site.no = No
+site.change = Change
 
 date.day = Day
 date.month = Month
@@ -276,10 +277,15 @@ amend.upload_documents.title = Upload your additional documents
 amend.check_answers.title = Check your answers before sending your application
 amend.check_answers.information.title = Important information
 amend.check_answers.information.caseReference = Claim reference number
+amend.check_answers.information.caseReference.accessible = Change your claim reference number
 amend.check_answers.information.attach_more_documents = Do you need to attach more documents?
+amend.check_answers.information.attach_more_documents.accessible = Change whether you need to attach more documents
 amend.check_answers.information.attach_more_documents.false = No
 amend.check_answers.information.attach_more_documents.true = Yes
 amend.check_answers.information.uploadedDocuments = Additional documents
+amend.check_answers.information.uploadedDocuments.accessible = Change or remove an uploaded document
+amend.check_answers.information.further_information = Further information
+amend.check_answers.information.further_information.accessible = Change your further information
 amend.check_answers.submit.heading = Submit your declaration
 amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
 

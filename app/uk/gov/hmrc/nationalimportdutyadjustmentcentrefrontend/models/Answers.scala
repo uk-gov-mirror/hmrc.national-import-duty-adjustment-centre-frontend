@@ -16,4 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-trait Answers
+trait Answers {
+  val changePage: Option[String]
+}

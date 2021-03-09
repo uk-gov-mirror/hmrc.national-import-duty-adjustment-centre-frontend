@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
 import javax.inject.{Inject, Singleton}
+import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
@@ -27,31 +28,70 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 class CreateNavigator @Inject() () extends Navigator[CreateAnswers] with CreateAnswerConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
-    P(RepresentationTypePage, makeclaim.routes.RepresentationTypeController.onPageLoad, always),
-    P(ClaimTypePage, makeclaim.routes.ClaimTypeController.onPageLoad, always),
-    P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always),
-    P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always),
-    P(ClaimReasonPage, makeclaim.routes.ClaimReasonController.onPageLoad, always),
-    P(ReclaimDutyTypePage, makeclaim.routes.ReclaimDutyTypeController.onPageLoad, always),
-    P(CustomsDutyRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty, hasDutyType(Customs)),
-    P(ImportVatRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadImportVat, hasDutyType(Vat)),
-    P(OtherDutyRepaymentPage, makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty, hasDutyType(Other)),
-    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads),
-    P(UploadSummaryPage, makeclaim.routes.UploadFormSummaryController.onPageLoad, hasUploads),
-    P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always),
-    P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always),
-    P(ImporterHasEoriNumberPage, makeclaim.routes.ImporterHasEoriController.onPageLoad, isRepresentative),
-    P(ImporterEoriNumberPage, makeclaim.routes.ImporterEoriNumberController.onPageLoad, enterImporterEori),
-    P(ImporterContactDetailsPage, makeclaim.routes.ImporterDetailsController.onPageLoad, isRepresentative),
-    P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative),
-    P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always),
-    P(CheckYourAnswersPage, makeclaim.routes.CheckYourAnswersController.onPageLoad, always),
-    P(ConfirmationPage, makeclaim.routes.ConfirmationController.onPageLoad, always)
+    P(RepresentationTypePage, makeclaim.routes.RepresentationTypeController.onPageLoad, always, defaultHasAnswer),
+    P(ClaimTypePage, makeclaim.routes.ClaimTypeController.onPageLoad, always, defaultHasAnswer),
+    P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always, defaultHasAnswer),
+    P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always, defaultHasAnswer),
+    P(ClaimReasonPage, makeclaim.routes.ClaimReasonController.onPageLoad, always, defaultHasAnswer),
+    P(ReclaimDutyTypePage, makeclaim.routes.ReclaimDutyTypeController.onPageLoad, always, defaultHasAnswer),
+    P(
+      CustomsDutyRepaymentPage,
+      makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty,
+      hasDutyType(Customs),
+      defaultHasAnswer
+    ),
+    P(
+      ImportVatRepaymentPage,
+      makeclaim.routes.DutyRepaymentController.onPageLoadImportVat,
+      hasDutyType(Vat),
+      defaultHasAnswer
+    ),
+    P(
+      OtherDutyRepaymentPage,
+      makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty,
+      hasDutyType(Other),
+      defaultHasAnswer
+    ),
+    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads, defaultHasAnswer),
+    P(UploadSummaryPage, makeclaim.routes.UploadFormSummaryController.onPageLoad, hasUploads, defaultHasAnswer),
+    P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, defaultHasAnswer),
+    P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, defaultHasAnswer),
+    P(
+      ImporterHasEoriNumberPage,
+      makeclaim.routes.ImporterHasEoriController.onPageLoad,
+      isRepresentative,
+      defaultHasAnswer
+    ),
+    P(
+      ImporterEoriNumberPage,
+      makeclaim.routes.ImporterEoriNumberController.onPageLoad,
+      enterImporterEori,
+      defaultHasAnswer
+    ),
+    P(
+      ImporterContactDetailsPage,
+      makeclaim.routes.ImporterDetailsController.onPageLoad,
+      isRepresentative,
+      defaultHasAnswer
+    ),
+    P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative, defaultHasAnswer),
+    P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always, defaultHasAnswer),
+    P(CheckYourAnswersPage, makeclaim.routes.CheckYourAnswersController.onPageLoad, always, defaultHasAnswer),
+    P(ConfirmationPage, makeclaim.routes.ConfirmationController.onPageLoad, always, defaultHasAnswer)
   )
+
+  override protected def checkYourAnswersPage: Call = makeclaim.routes.CheckYourAnswersController.onPageLoad
+
+  override protected def pageFor: String => Option[Page] = (pageName: String) =>
+    pageName match {
+      case _ => None
+    }
 
 }
 
 protected trait CreateAnswerConditions {
+
+  protected val defaultHasAnswer: Answers => Boolean = (_: Answers) => false
 
   protected val always: Answers => Boolean = (_: Answers) => true
 

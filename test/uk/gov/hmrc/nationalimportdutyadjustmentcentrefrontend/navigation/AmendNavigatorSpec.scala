@@ -119,4 +119,31 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
       }
     }
   }
+
+  "Goto Page" should {
+    "go directly to named page" in {
+
+      amendNavigator.gotoPage(AmendPageNames.claimReference) mustBe routes.CaseReferenceController.onPageLoad
+      amendNavigator.gotoPage(AmendPageNames.attachMoreDocuments) mustBe routes.AttachMoreDocumentsController.onPageLoad
+      amendNavigator.gotoPage(AmendPageNames.uploadSummary) mustBe routes.UploadFormSummaryController.onPageLoad
+      amendNavigator.gotoPage(AmendPageNames.furtherInformation) mustBe routes.FurtherInformationController.onPageLoad
+    }
+  }
+
+  "Next page when changing answers" should {
+    "goto change your answers when no further answers required" in {
+      val answers = completeAmendAnswers.copy(changePage = Some(AmendPageNames.claimReference))
+      amendNavigator.nextPage(CaseReferencePage, answers) mustBe routes.CheckYourAnswersController.onPageLoad()
+    }
+
+    "goto next question with missing answer" in {
+      val answers = completeAmendAnswers.copy(
+        changePage = Some(AmendPageNames.claimReference),
+        uploads = Seq.empty,
+        uploadAnotherFile = None
+      )
+      amendNavigator.nextPage(AttachMoreDocumentsPage, answers) mustBe routes.UploadFormController.onPageLoad()
+    }
+  }
+
 }

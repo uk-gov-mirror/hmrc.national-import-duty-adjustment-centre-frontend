@@ -21,5 +21,6 @@ GET         /your-uploads/remove                         uk.gov.hmrc.nationalimp
 
 GET         /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onSubmit()
+GET         /check-answers/change/:page                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onChange(page)
 
 GET         /confirmation                                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.ConfirmationController.onPageLoad()

@@ -17,11 +17,12 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 
 final case class CreateAnswers(
+  changePage: Option[String] = None,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,
   representationType: Option[RepresentationType] = None,

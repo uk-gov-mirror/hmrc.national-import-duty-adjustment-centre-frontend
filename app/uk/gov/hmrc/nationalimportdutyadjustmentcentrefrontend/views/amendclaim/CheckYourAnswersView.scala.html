@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
@@ -23,10 +24,10 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 
 @this(
-        layout: Layout,
-        formHelper: FormWithCSRF,
-        summaryList: summaryList,
-        continueButton: components.continueButton
+layout: Layout,
+formHelper: FormWithCSRF,
+summaryList: summaryList,
+continueButton: components.continueButton
 )
 
 @(amendClaim: AmendClaim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
@@ -47,7 +48,15 @@
                 value = Value(
                     content = Text(amendClaim.caseReference.number)
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "has_supporting_documents_row",
@@ -57,7 +66,15 @@
                 value = Value(
                     content = Text(MessageKey.apply("amend.check_answers.information.attach_more_documents", amendClaim.hasMoreDocuments.toString ))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
+                        )
+                    )
+                ))
             )
             ),
             if(amendClaim.hasMoreDocuments){
@@ -69,17 +86,33 @@
                 value = Value(
                     content = HtmlContent(amendClaim.uploads.map(_.fileName).mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
+                        )
+                    )
+                ))
             ))} else None,
             Some(SummaryListRow(
                 classes = "further_information_row",
                 key = Key(
-                    content = Text(messages("check_answers.claim.further_information"))
+                    content = Text(messages("amend.check_answers.information.further_information"))
                 ),
                 value = Value(
                     content = Text(amendClaim.furtherInformation.info)
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
+                        )
+                    )
+                ))
             ))
         )
     )
