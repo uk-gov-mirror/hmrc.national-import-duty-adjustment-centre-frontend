@@ -29,6 +29,8 @@
         govukLayout: GovukLayout,
         hmrcHeader: HmrcHeader,
         head: Head,
+        gtmHeadSnippet: GtmHeadSnippet,
+        gtmBodySnippet: GtmBodySnippet,
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
         govukBackLink: GovukBackLink,
@@ -58,7 +60,9 @@
     else
         None
 }
+@gtmHeadSnippet()
 @headerBlock = {
+    @gtmBodySnippet()
     @hmrcHeader(
         Header(
             homepageUrl = "https://www.gov.uk",
