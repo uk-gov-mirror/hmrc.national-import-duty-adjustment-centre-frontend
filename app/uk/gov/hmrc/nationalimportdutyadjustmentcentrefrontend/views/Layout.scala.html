@@ -32,6 +32,7 @@
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
         govukBackLink: GovukBackLink,
+        hmrcScripts: HmrcScripts,
         appConfig: AppConfig
 )
 @(      pageTitle: Title,
@@ -72,8 +73,7 @@
 }
 
 @scriptsBlock = {
-    <script src='@routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
-    <script src='@routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
+    hmrcScripts()
     <script src='@controllers.routes.Assets.versioned("javascripts/nidacfrontend.js")'></script>
 }
 
