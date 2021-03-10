@@ -291,3 +291,10 @@ amend.check_answers.submit.declaration = Before you proceed, ensure that you hav
 
 amend.confirmation.title = Information sent
 amend.confirmation.reference = Your reference number<br><strong>{0}</strong>
+
+what_do_you_want_to_do.title = What do you want to do?
+what_do_you_want_to_do.error.required = Select whether you want to start a new claim or amend an existing claim
+what_do_you_want_to_do.New_Claim = Start a new claim
+what_do_you_want_to_do.hint.New_Claim = If you want to claim for a return of overpaid clearance duty charges, such as import duty or import VAT.
+what_do_you_want_to_do.Amend_Claim = Amend an existing claim
+what_do_you_want_to_do.hint.Amend_Claim = If you have already submitted a claim and have a reference number. You can add more information to your claim or upload additional documents.
