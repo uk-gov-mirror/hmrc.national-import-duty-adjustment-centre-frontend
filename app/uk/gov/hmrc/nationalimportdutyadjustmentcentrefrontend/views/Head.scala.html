@@ -17,15 +17,19 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.KeepAliveController
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.SignOutController
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 
-@this(hmrcTimeoutDialog: HmrcTimeoutDialog, appConfig: AppConfig)
+@this(hmrcTimeoutDialog: HmrcTimeoutDialog, appConfig: AppConfig, hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet)
 
 @(headBlock: Option[Html] = None)(implicit request: Request[_], messages: Messages)
+
 @headBlock
 
 <!--[if lte IE 8]><script src='@controllers.routes.Assets.versioned("javascripts/html5shiv.min.js")'></script><![endif]-->
 <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
 <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
+
+@hmrcTrackingConsentSnippet()
 
 @if(request.isInstanceOf[IdentifierRequest[_]]) {
     @hmrcTimeoutDialog(
