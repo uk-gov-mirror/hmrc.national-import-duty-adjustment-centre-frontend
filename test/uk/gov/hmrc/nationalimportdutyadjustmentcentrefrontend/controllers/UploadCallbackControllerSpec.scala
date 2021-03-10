@@ -30,11 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UpscanNotificationSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{
-  MongoBackedUploadProgressTracker,
-  UploadProgressTracker
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.{CacheDataRepository, UploadRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,11 +40,11 @@ class UploadCallbackControllerSpec
   implicit val ec: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 
-  private val mockUploadRepository = mock[UploadRepository]
-  private val progressTracker      = new MongoBackedUploadProgressTracker(mockUploadRepository)
+  private val mockUploadRepository    = mock[UploadRepository]
+  private val mockCacheDataRepository = mock[CacheDataRepository]
 
   override lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(bind[UploadProgressTracker].to(progressTracker))
+    .overrides(bind[UploadRepository].to(mockUploadRepository), bind[CacheDataRepository].to(mockCacheDataRepository))
     .build()
 
   override protected def beforeEach(): Unit = {
