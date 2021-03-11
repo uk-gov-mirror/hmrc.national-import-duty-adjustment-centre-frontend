@@ -268,8 +268,10 @@ check_answers.payment.payTo = Who is to be repaid?
 check_answers.payment.payTo.accessible = Change who is to be repaid
 check_answers.payment.payTo.Importer = Importer
 check_answers.payment.payTo.Representative_of_importer = Representative
-check_answers.payment.bankDetails = Bank details
-check_answers.payment.bankDetails.accessible = Change bank details
+check_answers.payment.accountName = Name on the account
+check_answers.payment.sortCode = Sort code
+check_answers.payment.accountNumber = Account number
+check_answers.payment.bankDetails.accessible = Change the bank account details
 check_answers.submit.heading = Submit your declaration
 check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
 

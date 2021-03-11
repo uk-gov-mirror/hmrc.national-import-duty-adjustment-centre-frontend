@@ -300,22 +300,31 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         payToRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo))
       }
 
-      "contains bank details" in {
+      "contains account name" in {
+        val accountNameRow = paymentSection.getElementsByClass("bank_details_account_name_row")
+        accountNameRow must haveSummaryKey(messages("check_answers.payment.accountName"))
+        accountNameRow must haveSummaryValue(bankDetailsAnswer.accountName)
 
-        val bankDetailsRow = paymentSection.getElementsByClass("bank_details_type_row")
-
-        bankDetailsRow must haveSummaryKey(messages("check_answers.payment.bankDetails"))
-        bankDetailsRow must haveSummaryValue(
-          s"${bankDetailsAnswer.accountName} ${bankDetailsAnswer.sortCode} ${bankDetailsAnswer.accountNumber}"
-        )
-
-        bankDetailsRow must haveSummaryChangeLinkText(
+        accountNameRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("check_answers.payment.bankDetails.accessible")}"
         )
 
-        bankDetailsRow must haveSummaryActionsHref(
+        accountNameRow must haveSummaryActionsHref(
           routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails)
         )
+
+      }
+
+      "does account sort code" in {
+        val accountSortCodeRow = paymentSection.getElementsByClass("bank_details_sortCode_row")
+        accountSortCodeRow must haveSummaryKey(messages("check_answers.payment.sortCode"))
+        accountSortCodeRow must haveSummaryValue(bankDetailsAnswer.sortCode)
+      }
+
+      "contains account number" in {
+        val accountNumberRow = paymentSection.getElementsByClass("bank_details_accountNumber_row")
+        accountNumberRow must haveSummaryKey(messages("check_answers.payment.accountNumber"))
+        accountNumberRow must haveSummaryValue(bankDetailsAnswer.accountNumber)
       }
     }
 

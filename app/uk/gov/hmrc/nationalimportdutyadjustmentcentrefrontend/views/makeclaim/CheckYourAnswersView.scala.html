@@ -346,16 +346,12 @@
                 )
             ),
             Some(SummaryListRow(
-                classes = "bank_details_type_row",
+                classes = "bank_details_account_name_row govuk-summary-list__row--no-border",
                 key = Key(
-                    content = Text(messages("check_answers.payment.bankDetails"))
+                    content = Text(messages("check_answers.payment.accountName"))
                 ),
                 value = Value(
-                    content = HtmlContent(Seq(
-                        claim.bankDetails.accountName,
-                        claim.bankDetails.sortCode,
-                        claim.bankDetails.accountNumber
-                    ).mkString("<br>"))
+                    content = Text(claim.bankDetails.accountName)
                 ),
                 actions = Some(Actions(
                     items = Seq(
@@ -363,10 +359,30 @@
                             href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
                             content = HtmlContent(linkContent(messages("site.change"))),
                             visuallyHiddenText = Some(messages("check_answers.payment.bankDetails.accessible"))
+                            )
                         )
-                    )
-                ))
-            ))
+                    ))
+            )),
+            Some(SummaryListRow(
+                classes = "bank_details_sortCode_row govuk-summary-list__row--no-border",
+                key = Key(
+                content = Text(messages("check_answers.payment.sortCode"))
+                ),
+                value = Value(
+                content = Text(claim.bankDetails.sortCode)
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "bank_details_accountNumber_row",
+                key = Key(
+                content = Text(messages("check_answers.payment.accountNumber"))
+                ),
+                value = Value(
+                content = Text(claim.bankDetails.accountNumber)
+                ),
+                actions = None
+            )),
         )
     )
 
