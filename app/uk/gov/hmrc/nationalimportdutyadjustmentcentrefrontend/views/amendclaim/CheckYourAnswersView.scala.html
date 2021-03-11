@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
@@ -50,7 +51,7 @@ continueButton: components.continueButton
                 ),
                 actions = Some(Actions(
                     items = Seq(
-                        ActionItem(
+                        actionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference).url,
                             content = HtmlContent(linkContent(messages("site.change"))),
                             visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference.accessible"))
@@ -68,7 +69,7 @@ continueButton: components.continueButton
                 ),
                 actions = Some(Actions(
                     items = Seq(
-                        ActionItem(
+                        actionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments).url,
                             content = HtmlContent(linkContent(messages("site.change"))),
                             visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
@@ -88,7 +89,7 @@ continueButton: components.continueButton
                 ),
                 actions = Some(Actions(
                     items = Seq(
-                        ActionItem(
+                        actionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary).url,
                             content = HtmlContent(linkContent(messages("site.change"))),
                             visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
@@ -106,7 +107,7 @@ continueButton: components.continueButton
                 ),
                 actions = Some(Actions(
                     items = Seq(
-                        ActionItem(
+                        actionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
                             content = HtmlContent(linkContent(messages("site.change"))),
                             visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
