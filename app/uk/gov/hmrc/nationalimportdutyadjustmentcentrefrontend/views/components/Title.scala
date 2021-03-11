@@ -20,7 +20,7 @@ import play.api.data.Form
 import play.api.i18n.Messages
 
 case class Title(pageHeader: String, messageKey: String) {
-  def create(implicit messages: Messages): String = messages(messageKey, pageHeader)
+  def create(implicit messages: Messages): String = messages(messageKey, pageHeader, messages("service.name"))
 }
 
 object Title {

@@ -1,11 +1,10 @@
-service.name = National Import Duty Adjustment Centre
-service.homePageUrl = /national-import-duty-adjustment-centre
+service.name = Apply for return of import duty secured by deposit or guarantee
 
 site.continue = Continue
 site.back = Back
 site.error.summary = There is a problem.
-site.title = {0} - National Import Duty Adjustment Centre - GOV.UK
-site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
+site.title = {0} - {1} - GOV.UK
+site.title.error = Error: {0} - {1} - GOV.UK
 site.yes = Yes
 site.no = No
 site.change = Change
@@ -175,7 +174,7 @@ bankDetails.bars.validation.accountInvalid = Enter a real bank account
 bankDetails.bars.validation.companyNameInvalid = Enter the name as it appears on the bank account
 
 itemNumbers.title = Which item numbers are you claiming for?
-itemNumbers.hint = Tell us the item numbers as they appear on your declaration. You can enter an individual item number, multiple items or a range. For example, 1, 10, 11-20.
+itemNumbers.hint = Enter the item numbers as they appear on your import declaration. You can enter an individual item number, multiple items or a range. For example, 1, 10, 11-20.
 itemNumbers.error.required = Enter an item number
 itemNumbers.error.length = Item numbers must be 500 characters or fewer
 
@@ -190,11 +189,11 @@ importer.eori.error.invalid = Enter an EORI number in the correct format
 entryDetails.title = Entry details
 entryDetails.hint = These can be found on Single Administrative Document (C88) or Import Entry Acceptance Advice (E2) documents.
 entryDetails.claimEpu.heading = Entry processing unit (EPU)
-entryDetails.claimEpu.hint = This is 3 numbers, for example ‘131’.
+entryDetails.claimEpu.hint = This is 3 numbers, for example 131.
 entryDetails.claimEpu.error.required = Enter the entry processing unit (EPU) number
 entryDetails.claimEpu.error.invalid = Enter the entry processing unit (EPU) number in the correct format
 entryDetails.entryNumber.heading = Entry number
-entryDetails.entryNumber.hint = This is 6 numbers and a letter, for example ‘123456Q’.
+entryDetails.entryNumber.hint = This is 6 numbers and a letter, for example 123456Q.
 entryDetails.entryNumber.error.required = Enter the entry number
 entryDetails.entryNumber.error.invalid = Enter the entry number in the correct format
 entryDetails.entryDate.heading = Entry date
@@ -253,7 +252,7 @@ check_answers.repayment.reclaimDutyType.accessible = Change what you want to rec
 check_answers.repayment.reclaimDutyType.01 = Customs duty
 check_answers.repayment.reclaimDutyType.02 = VAT
 check_answers.repayment.reclaimDutyType.03 = Other
-check_answers.repayment.total = Repayment request total
+check_answers.repayment.total = Return request total
 check_answers.importer.title = Importer’s details
 check_answers.importer.hasEori = Does the importer have an EORI number?
 check_answers.importer.hasEori.accessible = Change whether the importer has an Economic Operators Registration and Identification number

@@ -58,7 +58,10 @@ class UploadCallbackControllerSpec
     super.afterEach()
   }
 
-  val post = FakeRequest("POST", s"/national-import-duty-adjustment-centre/upscan-callback?journeyId=$journeyId")
+  val post = FakeRequest(
+    "POST",
+    s"/apply-for-refund-import-duty-paid-on-deposit-or-guarantee/upscan-callback?journeyId=$journeyId"
+  )
 
   "UploadCallbackController" should {
 
