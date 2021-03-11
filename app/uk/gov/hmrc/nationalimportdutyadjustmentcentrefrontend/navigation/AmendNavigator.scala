@@ -24,7 +24,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.Amend
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 @Singleton
-class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnswerConditions {
+class AmendNavigator @Inject() ()
+    extends Navigator[AmendAnswers] with AmendAnswerConditions with AmendHasAnsweredConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
     P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always, caseReferenceAnswered),
@@ -52,13 +53,18 @@ class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnsw
 protected trait AmendAnswerConditions {
 
   protected val always: Answers => Boolean = (_: Answers) => true
-  protected val never: Answers => Boolean  = (_: Answers) => false
 
   protected val showUploadDocuments: AmendAnswers => Boolean = (answers: AmendAnswers) =>
     answers.hasMoreDocuments.contains(true) && answers.uploads.isEmpty
 
   protected val showUploadSummary: AmendAnswers => Boolean = (answers: AmendAnswers) =>
     answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty
+
+}
+
+protected trait AmendHasAnsweredConditions {
+
+  protected val never: Answers => Boolean = (_: Answers) => false
 
   protected val caseReferenceAnswered: AmendAnswers => Boolean       = _.caseReference.nonEmpty
   protected val attachMoreDocumentsAnswered: AmendAnswers => Boolean = _.hasMoreDocuments.nonEmpty

@@ -18,8 +18,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.{DateFormatter, MessageKey}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 
 class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
@@ -43,6 +45,30 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
+    "have important information section" which {
+
+      val informationSection = view().getElementById("important_information_section")
+
+      "contains representative type" in {
+
+        val representativeTypeRow = informationSection.getElementsByClass("representation_type_row")
+
+        representativeTypeRow must haveSummaryKey(messages("check_answers.information.representation.type"))
+        representativeTypeRow must haveSummaryValue(
+          MessageKey.apply("check_answers.information.representation", representationTypeAnswer.toString)
+        )
+
+        representativeTypeRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.information.representation.type.accessible")}"
+        )
+
+        representativeTypeRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.representationType)
+        )
+      }
+
+    }
+
     "have claim section" which {
 
       val claimSection = view().getElementById("claim_section")
@@ -53,14 +79,62 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
         claimTypeRow must haveSummaryKey(messages("check_answers.claim.claimType"))
         claimTypeRow must haveSummaryValue(MessageKey.apply("claim_type", claimTypeAnswer.toString))
+
+        claimTypeRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.claim.claimType.accessible")}"
+        )
+
+        claimTypeRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.claimType))
       }
 
-      "contains valid upload" in {
+      "contains valid entry details" in {
 
-        val uploadRow = claimSection.getElementsByClass("upload_row")
+        val entryDetailsRow = claimSection.getElementsByClass("entry_details_row")
 
-        uploadRow must haveSummaryKey(messages("check_answers.claim.uploaded"))
-        uploadRow must haveSummaryValue(uploadAnswer.fileName)
+        entryDetailsRow must haveSummaryKey(messages("check_answers.claim.entryDetails"))
+        entryDetailsRow must haveSummaryValue(
+          s"${messages("check_answers.claim.entryDetails.epu", entryDetailsAnswer.entryProcessingUnit)} ${messages("check_answers.claim.entryDetails.entryNumber", entryDetailsAnswer.entryNumber)} ${messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(entryDetailsAnswer.entryDate))}"
+        )
+
+        entryDetailsRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.claim.entryDetails.accessible")}"
+        )
+
+        entryDetailsRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.entryDetails)
+        )
+      }
+
+      "contains valid item number" in {
+
+        val itemNumberRow = claimSection.getElementsByClass("item_numbers_row")
+
+        itemNumberRow must haveSummaryKey(messages("check_answers.claim.itemNumbers"))
+        itemNumberRow must haveSummaryValue(itemNumbersAnswer.numbers)
+
+        itemNumberRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.claim.itemNumbers.accessible")}"
+        )
+
+        itemNumberRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.itemNumbers)
+        )
+      }
+
+      "contains valid claim reason" in {
+
+        val claimReasonRow = claimSection.getElementsByClass("claim_reason_row")
+
+        claimReasonRow must haveSummaryKey(messages("check_answers.claim.reason"))
+        claimReasonRow must haveSummaryValue(claimReasonAnswer.reason)
+
+        claimReasonRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.claim.reason.accessible")}"
+        )
+
+        claimReasonRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.claimReason)
+        )
       }
 
       "contains valid reclaim duty type" in {
@@ -73,6 +147,14 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
             value => MessageKey.apply("check_answers.repayment.reclaimDutyType", value.toString)
           ).mkString(", ")
         )
+
+        reclaimDutyTypeRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.repayment.reclaimDutyType.accessible")}"
+        )
+
+        reclaimDutyTypeRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyTypes)
+        )
       }
 
       "contains valid reclaim duty total" in {
@@ -82,6 +164,62 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         reclaimDutyTypeRow must haveSummaryKey(messages("check_answers.repayment.total"))
         reclaimDutyTypeRow must haveSummaryValue(s"£${completeClaim.repaymentTotal}")
       }
+
+      "contains valid upload" in {
+
+        val uploadRow = claimSection.getElementsByClass("upload_row")
+
+        uploadRow must haveSummaryKey(messages("check_answers.claim.uploaded"))
+        uploadRow must haveSummaryValue(uploadAnswer.fileName)
+
+        uploadRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.claim.uploaded.accessible")}"
+        )
+
+        uploadRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.uploadSummary))
+      }
+    }
+
+    "have your details section" which {
+
+      val yourDetailsSection = view().getElementById("your_details_section")
+
+      "contains valid contact details" in {
+
+        val contactDetailsRow = yourDetailsSection.getElementsByClass("contact_details_row")
+
+        contactDetailsRow must haveSummaryKey(messages("check_answers.yourDetails.contactDetails"))
+        contactDetailsRow must haveSummaryValue(
+          s"${contactDetailsAnswer.firstName} ${contactDetailsAnswer.lastName} ${contactDetailsAnswer.emailAddress} ${contactDetailsAnswer.telephoneNumber.get}"
+        )
+
+        contactDetailsRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.yourDetails.contactDetails.accessible")}"
+        )
+
+        contactDetailsRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.contactDetails)
+        )
+      }
+
+      "contains valid address details" in {
+
+        val addressDetailsRow = yourDetailsSection.getElementsByClass("your_address_row")
+
+        addressDetailsRow must haveSummaryKey(messages("check_answers.yourDetails.yourAddress"))
+        addressDetailsRow must haveSummaryValue(
+          s"${addressAnswer.name} ${addressAnswer.addressLine1} ${addressAnswer.addressLine2.get} ${addressAnswer.city} ${addressAnswer.postCode}"
+        )
+
+        addressDetailsRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.yourDetails.yourAddress.accessible")}"
+        )
+
+        addressDetailsRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.contactAddress)
+        )
+      }
+
     }
 
     "not have importer details when claimant is importer" in {
@@ -90,13 +228,17 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       ) must notBePresent
     }
 
-    "have import details section" which {
+    "have importer details section" which {
       val importerSection = view().getElementById("importer_section")
 
       "contains does import have Eori" in {
         val eoriRow = importerSection.getElementsByClass("importer_has_eori_row")
         eoriRow must haveSummaryKey(messages("check_answers.importer.hasEori"))
         eoriRow must haveSummaryValue(MessageKey.apply("check_answers.importer.hasEori", true.toString))
+        eoriRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.importer.hasEori.accessible")}"
+        )
+        eoriRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.importerHasEori))
       }
 
       "contains Eori number when importer has EORI" in {
@@ -104,6 +246,10 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
         eoriRow must haveSummaryKey(messages("check_answers.importer.eori"))
         eoriRow must haveSummaryValue(importerEoriNumberAnswer.number)
+        eoriRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.importer.eori.accessible")}"
+        )
+        eoriRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.importerEori))
       }
 
       "does not contains Eori number when importer does not have EORI" in {
@@ -115,10 +261,10 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       }
 
       "contains importer contact details" in {
-        val eoriRow = importerSection.getElementsByClass("importer_contact_details_row")
+        val importerDetailsRow = importerSection.getElementsByClass("importer_contact_details_row")
 
-        eoriRow must haveSummaryKey(messages("check_answers.importer.contactDetails"))
-        eoriRow must haveSummaryValue(
+        importerDetailsRow must haveSummaryKey(messages("check_answers.importer.contactDetails"))
+        importerDetailsRow must haveSummaryValue(
           Seq(
             importerContactDetailsAnswer.name,
             importerContactDetailsAnswer.addressLine1,
@@ -126,6 +272,49 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
             importerContactDetailsAnswer.city,
             importerContactDetailsAnswer.postCode
           ).mkString(" ")
+        )
+        importerDetailsRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.importer.contactDetails.accessible")}"
+        )
+        importerDetailsRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.importerDetails)
+        )
+      }
+    }
+
+    "have payment section" which {
+
+      val paymentSection = view().getElementById("payment_section")
+
+      "contains who to pay" in {
+
+        val payToRow = paymentSection.getElementsByClass("pay_to_row")
+
+        payToRow must haveSummaryKey(messages("check_answers.payment.payTo"))
+        payToRow must haveSummaryValue(MessageKey.apply("check_answers.payment.payTo", repayToAnswer.toString))
+
+        payToRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.payment.payTo.accessible")}"
+        )
+
+        payToRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo))
+      }
+
+      "contains bank details" in {
+
+        val bankDetailsRow = paymentSection.getElementsByClass("bank_details_type_row")
+
+        bankDetailsRow must haveSummaryKey(messages("check_answers.payment.bankDetails"))
+        bankDetailsRow must haveSummaryValue(
+          s"${bankDetailsAnswer.accountName} ${bankDetailsAnswer.sortCode} ${bankDetailsAnswer.accountNumber}"
+        )
+
+        bankDetailsRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.payment.bankDetails.accessible")}"
+        )
+
+        bankDetailsRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails)
         )
       }
     }

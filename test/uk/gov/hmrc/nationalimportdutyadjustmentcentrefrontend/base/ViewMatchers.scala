@@ -22,12 +22,13 @@ import org.jsoup.select.Elements
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 import play.api.i18n.Messages
-import play.api.mvc.Result
+import play.api.mvc.{Call, Result}
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
+import scala.util.Try
 
 trait ViewMatchers extends Matchers {
 
@@ -47,6 +48,8 @@ trait ViewMatchers extends Matchers {
 
   def haveSummaryChangeLinkText(value: String) =
     new ElementsHasElementsContainingTextMatcher("govuk-summary-list__actions", value)
+
+  def haveSummaryActionsHref(value: Call) = new ElementsHasSummaryActionMatcher(value)
 
   def haveAttribute(key: String, value: String): Matcher[Element] = new ElementHasAttributeValueMatcher(key, value)
   def haveValue(value: String): Matcher[Element]                  = new ElementHasAttributeValueMatcher("value", value)
@@ -107,6 +110,20 @@ trait ViewMatchers extends Matchers {
         s"Elements with class {$elementsClass} had text {${left.first().getElementsByClass(elementsClass).text()}}, expected {$value}",
         s"Element with class {$elementsClass} had text {${left.first().getElementsByClass(elementsClass).text()}}"
       )
+
+  }
+
+  class ElementsHasSummaryActionMatcher(value: Call) extends Matcher[Elements] {
+
+    override def apply(left: Elements): MatchResult = {
+      val actionElement = Try(left.first().getElementsByClass("govuk-link").first()).toOption.orNull
+
+      MatchResult(
+        left != null && actionElement != null && actionElement.attr("href") == value.url,
+        s"Elements had no summary action {$value}\n${actualContentWas(actionElement)}",
+        s"Element had summary action {$value}"
+      )
+    }
 
   }
 

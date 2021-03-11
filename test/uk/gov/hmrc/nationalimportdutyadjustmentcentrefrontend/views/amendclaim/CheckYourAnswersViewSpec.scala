@@ -19,6 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.amendclaim
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.CheckYourAnswersView
 
@@ -55,6 +57,8 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         caseRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("amend.check_answers.information.caseReference.accessible")}"
         )
+
+        caseRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference))
       }
 
       "contains do you want to attach docs?" in {
@@ -69,6 +73,10 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         attachDocsRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("amend.check_answers.information.attach_more_documents.accessible")}"
         )
+
+        attachDocsRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments)
+        )
       }
 
       "contains uploaded documents" in {
@@ -81,6 +89,8 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         uploadRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("amend.check_answers.information.uploadedDocuments.accessible")}"
         )
+
+        uploadRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary))
       }
 
       "contains further information" in {
@@ -92,6 +102,10 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
         furtherInfoRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("amend.check_answers.information.further_information.accessible")}"
+        )
+
+        furtherInfoRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation)
         )
       }
     }

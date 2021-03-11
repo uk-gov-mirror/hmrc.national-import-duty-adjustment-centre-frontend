@@ -223,4 +223,49 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       }
     }
   }
+
+  "Navigating to page" should {
+    "go directly to named page" in {
+
+      navigator.gotoPage(CreatePageNames.representationType) mustBe routes.RepresentationTypeController.onPageLoad
+      navigator.gotoPage(CreatePageNames.claimType) mustBe routes.ClaimTypeController.onPageLoad
+      navigator.gotoPage(CreatePageNames.entryDetails) mustBe routes.EntryDetailsController.onPageLoad
+      navigator.gotoPage(CreatePageNames.itemNumbers) mustBe routes.ItemNumbersController.onPageLoad
+      navigator.gotoPage(CreatePageNames.claimReason) mustBe routes.ClaimReasonController.onPageLoad
+      navigator.gotoPage(CreatePageNames.dutyTypes) mustBe routes.ReclaimDutyTypeController.onPageLoad
+      navigator.gotoPage(CreatePageNames.uploadSummary) mustBe routes.UploadFormSummaryController.onPageLoad
+      navigator.gotoPage(CreatePageNames.contactDetails) mustBe routes.ContactDetailsController.onPageLoad
+      navigator.gotoPage(CreatePageNames.contactAddress) mustBe routes.AddressController.onPageLoad
+      navigator.gotoPage(CreatePageNames.importerHasEori) mustBe routes.ImporterHasEoriController.onPageLoad
+      navigator.gotoPage(CreatePageNames.importerEori) mustBe routes.ImporterEoriNumberController.onPageLoad
+      navigator.gotoPage(CreatePageNames.importerDetails) mustBe routes.ImporterDetailsController.onPageLoad
+      navigator.gotoPage(CreatePageNames.repayTo) mustBe routes.RepayToController.onPageLoad
+      navigator.gotoPage(CreatePageNames.bankDetails) mustBe routes.BankDetailsController.onPageLoad
+    }
+  }
+
+  "Navigating to next page when changing answers" should {
+
+    "goto change your answers when no further answers required" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+
+    "goto importer EORI page when changing from no to yes" in {
+      val answers = completeAnswers.copy(
+        importerEori = None,
+        changePage = Some(CreatePageNames.importerHasEori),
+        importerHasEori = Some(true)
+      )
+      navigator.nextPage(ImporterHasEoriNumberPage, answers) mustBe routes.ImporterEoriNumberController.onPageLoad
+    }
+
+    "goto does importer have EORI when changing from Importer to Representative" in {
+      val answers = importerAnswers.copy(
+        changePage = Some(CreatePageNames.representationType),
+        representationType = Some(RepresentationType.Representative)
+      )
+      navigator.nextPage(RepresentationTypePage, answers) mustBe routes.ImporterHasEoriController.onPageLoad
+    }
+  }
 }

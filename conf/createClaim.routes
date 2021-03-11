@@ -58,5 +58,6 @@ POST        /enter-eori-number                  uk.gov.hmrc.nationalimportdutyad
 
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onSubmit()
+GET         /check-answers/change/:page         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onChange(page)
 
 GET         /confirmation                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ConfirmationController.onPageLoad()

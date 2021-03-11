@@ -90,6 +90,7 @@ trait TestData {
     contactDetails = Some(contactDetailsAnswer),
     claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
+    uploadAnotherFile = Some(uploadAnotherFileAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
     repayTo = Some(repayToAnswer),
@@ -99,6 +100,21 @@ trait TestData {
     importerHasEori = Some(importerHasEoriAnswer),
     importerEori = Some(importerEoriNumberAnswer),
     importerContactDetails = Some(importerContactDetailsAnswer)
+  )
+
+  val importerAnswers: CreateAnswers = CreateAnswers(
+    representationType = Some(RepresentationType.Importer),
+    claimType = Some(claimTypeAnswer),
+    claimReason = Some(claimReasonAnswer),
+    contactDetails = Some(contactDetailsAnswer),
+    claimantAddress = Some(addressAnswer),
+    uploads = Seq(uploadAnswer),
+    uploadAnotherFile = Some(uploadAnotherFileAnswer),
+    reclaimDutyTypes = reclaimDutyTypesAnswer,
+    reclaimDutyPayments = reclaimDutyPayments,
+    bankDetails = Some(bankDetailsAnswer),
+    entryDetails = Some(entryDetailsAnswer),
+    itemNumbers = Some(itemNumbersAnswer)
   )
 
   // Upscan

@@ -46,11 +46,17 @@ class CheckYourAnswersController @Inject() (
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswers map { answers =>
+    data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { answers =>
       Ok(checkYourAnswersView(Claim(answers), backLink(answers)))
     } recover {
       case _: MissingAnswersException =>
         Redirect(controllers.routes.StartController.start())
+    }
+  }
+
+  def onChange(page: String): Action[AnyContent] = identify.async { implicit request =>
+    data.updateCreateAnswers(answers => answers.copy(changePage = Some(page))) map { _ =>
+      Redirect(navigator.gotoPage(page))
     }
   }
 

@@ -15,8 +15,10 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, RepresentationType}
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
@@ -48,7 +50,15 @@
                 value = Value(
                     content = Text(MessageKey.apply("check_answers.information.representation", claim.representationType.toString))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.representationType).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.information.representation.type.accessible"))
+                        )
+                    )
+                ))
             ))
         )
     )
@@ -65,7 +75,15 @@
                 value = Value(
                     content = Text(MessageKey.apply("claim_type", claim.claimType.toString))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimType).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.claim.claimType.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "entry_details_row",
@@ -79,7 +97,15 @@
                         messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(claim.entryDetails.entryDate))
                     ).mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.entryDetails).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.claim.entryDetails.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "item_numbers_row",
@@ -89,7 +115,15 @@
                 value = Value(
                     content = Text(claim.itemNumbers.numbers)
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.itemNumbers).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.claim.itemNumbers.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "claim_reason_row",
@@ -99,7 +133,15 @@
                 value = Value(
                     content = Text(claim.claimReason.reason)
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimReason).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.claim.reason.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "reclaim_duty_type_row",
@@ -109,7 +151,15 @@
                 value = Value(
                     content = HtmlContent(claim.reclaimDutyPayments.keys.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType)).mkString(", "))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyTypes).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.repayment.reclaimDutyType.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "reclaim_duty_total_row",
@@ -119,7 +169,7 @@
                 value = Value(
                     content = Text(s"£${claim.repaymentTotal}")
                 ),
-                actions = None
+                actions = None // TODO
             )),
             Some(SummaryListRow(
                 classes = "upload_row",
@@ -129,7 +179,15 @@
                 value = Value(
                     content = HtmlContent(claim.uploads.map(_.fileName).mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.uploadSummary).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.claim.uploaded.accessible"))
+                        )
+                    )
+                ))
             ))
         )
     )
@@ -150,7 +208,15 @@
                         claim.contactDetails.telephoneNumber
                     ).flatten.mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactDetails).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.yourDetails.contactDetails.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "your_address_row",
@@ -166,7 +232,15 @@
                         Some(claim.claimantAddress.postCode)
                     ).flatten.mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactAddress).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.yourDetails.yourAddress.accessible"))
+                        )
+                    )
+                ))
             ))
         )
     )
@@ -185,7 +259,15 @@
                         value = Value(
                             content = Text(MessageKey.apply("check_answers.importer.hasEori", importer.eoriNumber.isDefined.toString))
                         ),
-                        actions = None
+                        actions = Some(Actions(
+                            items = Seq(
+                                actionItem(
+                                    href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerHasEori).url,
+                                    content = HtmlContent(linkContent(messages("site.change"))),
+                                    visuallyHiddenText = Some(messages("check_answers.importer.hasEori.accessible"))
+                                )
+                            )
+                        ))
                     )
                 ),
                 importer.eoriNumber.map(eori =>
@@ -197,7 +279,15 @@
                         value = Value(
                             content = Text(eori.number)
                         ),
-                        actions = None
+                        actions = Some(Actions(
+                            items = Seq(
+                                actionItem(
+                                    href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerEori).url,
+                                    content = HtmlContent(linkContent(messages("site.change"))),
+                                    visuallyHiddenText = Some(messages("check_answers.importer.eori.accessible"))
+                                )
+                            )
+                        ))
                     )
                 ),
                 Some(
@@ -215,7 +305,15 @@
                                 Some(importer.contactDetails.postCode)
                             ).flatten.mkString("<br>"))
                         ),
-                        actions = None
+                        actions = Some(Actions(
+                            items = Seq(
+                                actionItem(
+                                    href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerDetails).url,
+                                    content = HtmlContent(linkContent(messages("site.change"))),
+                                    visuallyHiddenText = Some(messages("check_answers.importer.contactDetails.accessible"))
+                                )
+                            )
+                        ))
                     )
                 )
             )
@@ -236,7 +334,15 @@
                     value = Value(
                         content = Text(MessageKey.apply("check_answers.payment.payTo", payTo.toString))
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("check_answers.payment.payTo.accessible"))
+                            )
+                        )
+                    ))
                 )
             ),
             Some(SummaryListRow(
@@ -251,7 +357,15 @@
                         claim.bankDetails.accountNumber
                     ).mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.payment.bankDetails.accessible"))
+                        )
+                    )
+                ))
             ))
         )
     )
