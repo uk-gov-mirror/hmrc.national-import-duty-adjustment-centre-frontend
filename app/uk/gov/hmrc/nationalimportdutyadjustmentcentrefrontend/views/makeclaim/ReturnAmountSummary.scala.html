@@ -1,0 +1,63 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        summaryList: summaryList,
+        continueButton: components.continueButton
+)
+
+@(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = Title(messages("check_answers.title")), backLink) {
+
+    @components.heading(messages("check_answers.title"))
+
+    @summaryList(
+        id = "important_information_section",
+        heading = Some(messages("check_answers.information.title")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "representation_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.information.representation.type"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("check_answers.information.representation", Some(createAnswers.representationType).toString))
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @components.subHeading(messages("check_answers.submit.heading"))
+    @components.paragraph(messages("check_answers.submit.declaration"))
+
+    @formHelper(action = makeclaim.routes.ReturnAmountSummaryController.onSubmit(), 'autoComplete -> "off") {
+        @continueButton("check_answers.submit")
+    }
+
+}

@@ -58,6 +58,7 @@ class CreateNavigator @Inject() ()
       hasDutyType(Other),
       dutyPaymentAnswered(Other)
     ),
+    P(ReturnAmountSummaryPage, makeclaim.routes.ReturnAmountSummaryController.onPageLoad, always, defaultHasAnswer),
     P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads, uploadPageAnswered),
     P(
       UploadSummaryPage,
