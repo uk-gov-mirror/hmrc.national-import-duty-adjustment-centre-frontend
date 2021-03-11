@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language
+@import views.html.helper.CSPNonce
 
 @this(
         govukLayout: GovukLayout,
@@ -73,7 +74,7 @@
 }
 
 @scriptsBlock = {
-    @hmrcScripts()
+    @hmrcScripts(nonce = CSPNonce.get)
     <script src='@controllers.routes.Assets.versioned("javascripts/nidacfrontend.js")'></script>
 }
 
