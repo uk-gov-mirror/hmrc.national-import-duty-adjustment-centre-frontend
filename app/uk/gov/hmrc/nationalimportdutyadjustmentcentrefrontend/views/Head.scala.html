@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.SignOutController
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
+@import views.html.helper.CSPNonce
 
 @this(hmrcTimeoutDialog: HmrcTimeoutDialog, appConfig: AppConfig, hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet)
 
@@ -29,7 +30,7 @@
 <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
 <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
 
-@hmrcTrackingConsentSnippet()
+@hmrcTrackingConsentSnippet(nonce = CSPNonce.get)
 
 @if(request.isInstanceOf[IdentifierRequest[_]]) {
     @hmrcTimeoutDialog(
