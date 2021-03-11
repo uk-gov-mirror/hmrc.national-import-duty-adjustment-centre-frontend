@@ -32,26 +32,42 @@
 
 @(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("check_answers.title")), backLink) {
+@layout(pageTitle = Title(messages("returnAmoutSummary.tile")), backLink) {
 
-    @components.heading(messages("check_answers.title"))
+    @components.heading(messages("returnAmountSummary.tile"))
+    @components.paragraph(messages("returnAmountSummary.subtitle"))
+
+
+@for((dutyType, dutyPaid) <- createAnswers.reclaimDutyPayments) {
+
 
     @summaryList(
-        id = "important_information_section",
-        heading = Some(messages("check_answers.information.title")),
+        id = "customs_duty_summary_section",
+        heading = Some(messages("returnAmountSummary.customsDuty.title")),
         summaryListRows = Seq(
             Some(SummaryListRow(
-                classes = "representation_type_row",
+                classes = "customs_duty_summary_row",
                 key = Key(
-                    content = Text(messages("check_answers.information.representation.type"))
+                    content = Text(messages("returnAmountSummary.customsDuty.was.paid"))
                 ),
                 value = Value(
-                    content = Text(MessageKey.apply("check_answers.information.representation", Some(createAnswers.representationType).toString))
+                    content = Text(s"£${dutyPaid.actuallyPaid}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "customs_duty_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.customsDuty.should.have.paid"))
+                ),
+                value = Value(
+                    content = Text(s"£${dutyPaid.shouldHavePaid}")
                 ),
                 actions = None
             ))
         )
     )
+}
 
     @components.subHeading(messages("check_answers.submit.heading"))
     @components.paragraph(messages("check_answers.submit.declaration"))

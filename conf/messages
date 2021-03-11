@@ -104,6 +104,12 @@ otherDutyPaid.actual.label = How much of other duties was paid to HMRC?
 otherDutyPaid.actual.hint = Do not include any agent fees.
 otherDutyPaid.should.label = How much of other duties do you think should have been paid?
 
+returnAmountSummary.tile = Return amount summary
+returnAmountSummary.subtitle = Check your amounts are correct before you continue
+returnAmountSummary.customsDuty.title = Customs Duty
+returnAmountSummary.customsDuty.was.paid = Customs Duty that was paid
+returnAmountSummary.customsDuty.should.have.paid = Customs Duty that should have been paid
+
 contactDetails.title = What are your contact details?
 contactDetails.hint = We may need to contact you to discuss this claim.
 contactDetails.firstName.heading = First name
