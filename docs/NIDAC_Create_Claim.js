@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.11
+// @version      0.12
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
-// @match        http*://*/national-import-duty-adjustment-centre/create/*
+// @match        http*://*/national-import-duty-adjustment-centre/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 // ==/UserScript==
@@ -40,6 +40,10 @@ function submit() {
 }
 
 function completePage() {
+    if (currentPageIs("/national-import-duty-adjustment-centre/what-do-you-want-to-do")) {
+        document.getElementById("what_do_you_want_to_do").checked = true;
+        submit();
+    }
     if (currentPageIs("/national-import-duty-adjustment-centre/create/importer-representative")) {
         document.getElementById("representation_type-2").checked = true;
         submit();
