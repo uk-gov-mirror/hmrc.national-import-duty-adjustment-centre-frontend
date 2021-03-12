@@ -68,7 +68,7 @@
                     content = Text(messages("returnAmountSummary.duty.total.01"))
                 ),
                 value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("01").dueAmount}")
+                    content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("01").dueAmount}</span>")
                 ),
                 actions = None
             ))
@@ -105,7 +105,7 @@
                     content = Text(messages("returnAmountSummary.duty.total.02"))
                 ),
                 value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("02").dueAmount}")
+                    content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("02").dueAmount}</span>")
                 ),
                 actions = None
             ))
@@ -142,7 +142,7 @@
                     content = Text(messages("returnAmountSummary.duty.total.03"))
                 ),
                 value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("03").dueAmount}")
+content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("03").dueAmount}</span>")
                 ),
                 actions = None
             ))
@@ -160,12 +160,11 @@
                         content = Text(messages("returnAmountSummary.total.label"))
                     ),
                     value = Value(
-                        content = Text(s"£${
-                                                createAnswers.reclaimDutyPayments.values.map(
-                                                    dutyPayment => dutyPayment.dueAmount
-                                                ).reduce((amt1, amt2) => amt1 + amt2)
-
-                                            }")
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${
+                                                createAnswers.reclaimDutyPayments.values
+                                                .map(payment => payment.dueAmount)
+                                                .reduce((amt1, amt2) => amt1 + amt2)
+                                                }</span>")
                     ),
                     actions = None
                 ))
