@@ -32,48 +32,149 @@
 
 @(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("returnAmoutSummary.tile")), backLink) {
+@layout(pageTitle = Title(messages("returnAmoutSummary.title")), backLink) {
 
-    @components.heading(messages("returnAmountSummary.tile"))
+    @components.heading(messages("returnAmountSummary.title"))
     @components.paragraph(messages("returnAmountSummary.subtitle"))
 
 
-@for((dutyType, dutyPaid) <- createAnswers.reclaimDutyPayments) {
-
-
     @summaryList(
-        id = "customs_duty_summary_section",
-        heading = Some(messages("returnAmountSummary.customsDuty.title")),
+        id = "customs-duty-summary-section",
+        heading = Some(messages("returnAmountSummary.section.title.01")),
         summaryListRows = Seq(
             Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
+                classes = "return_amount_summary_row",
                 key = Key(
-                    content = Text(messages("returnAmountSummary.customsDuty.was.paid"))
+                    content = Text(messages("returnAmountSummary.was.paid.01"))
                 ),
                 value = Value(
-                    content = Text(s"£${dutyPaid.actuallyPaid}")
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("01").actuallyPaid}")
                 ),
                 actions = None
             )),
             Some(SummaryListRow(
                 classes = "customs_duty_summary_row",
                 key = Key(
-                    content = Text(messages("returnAmountSummary.customsDuty.should.have.paid"))
+                    content = Text(messages("returnAmountSummary.should.have.paid.01"))
                 ),
                 value = Value(
-                    content = Text(s"£${dutyPaid.shouldHavePaid}")
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("01").shouldHavePaid}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "customs_duty_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.duty.total.01"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("01").dueAmount}")
                 ),
                 actions = None
             ))
         )
     )
-}
 
-    @components.subHeading(messages("check_answers.submit.heading"))
-    @components.paragraph(messages("check_answers.submit.declaration"))
+    @summaryList(
+        id = "vat-summary-section",
+        heading = Some(messages("returnAmountSummary.section.title.02")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "return_amount_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.was.paid.02"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("02").actuallyPaid}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "customs_duty_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.should.have.paid.02"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("02").shouldHavePaid}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "customs_duty_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.duty.total.02"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("02").dueAmount}")
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @summaryList(
+        id = "other-duties-summary-section",
+        heading = Some(messages("returnAmountSummary.section.title.03")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "return_amount_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.was.paid.03"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("03").actuallyPaid}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "customs_duty_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.should.have.paid.03"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("03").shouldHavePaid}")
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "customs_duty_summary_row",
+                key = Key(
+                    content = Text(messages("returnAmountSummary.duty.total.03"))
+                ),
+                value = Value(
+                    content = Text(s"£${createAnswers.reclaimDutyPayments("03").dueAmount}")
+                ),
+                actions = None
+            ))
+        )
+    )
+
+    @if(createAnswers.reclaimDutyPayments.size > 1) {
+        @summaryList(
+            id="return-amount-total-section",
+            heading = Some(messages("returnAmountSummary.total.heading")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "return_amount_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.total.label"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${
+                                                createAnswers.reclaimDutyPayments.values.map(
+                                                    dutyPayment => dutyPayment.dueAmount
+                                                ).reduce((amt1, amt2) => amt1 + amt2)
+
+                                            }")
+                    ),
+                    actions = None
+                ))
+            )
+        )
+    }
 
     @formHelper(action = makeclaim.routes.ReturnAmountSummaryController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @continueButton()
     }
 
 }
