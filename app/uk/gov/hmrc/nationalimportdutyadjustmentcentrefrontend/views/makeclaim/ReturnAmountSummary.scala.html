@@ -32,130 +32,135 @@
 
 @(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("returnAmoutSummary.title")), backLink) {
+@layout(pageTitle = Title(messages("returnAmountSummary.title")), backLink) {
 
     @components.heading(messages("returnAmountSummary.title"))
     @components.paragraph(messages("returnAmountSummary.subtitle"))
 
-
-    @summaryList(
-        id = "customs-duty-summary-section",
-        heading = Some(messages("returnAmountSummary.section.title.01")),
-        summaryListRows = Seq(
-            Some(SummaryListRow(
-                classes = "return_amount_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.was.paid.01"))
-                ),
-                value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("01").actuallyPaid}")
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.should.have.paid.01"))
-                ),
-                value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("01").shouldHavePaid}")
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.duty.total.01"))
-                ),
-                value = Value(
-                    content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("01").dueAmount}</span>")
-                ),
-                actions = None
-            ))
+    @if(createAnswers.reclaimDutyPayments.keySet.contains("01")) {
+        @summaryList(
+            id = "customs_duty_summary_section",
+            heading = Some(messages("returnAmountSummary.section.title.01")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "customs_paid_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.was.paid.01"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("01").actuallyPaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "customs_expected_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.should.have.paid.01"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("01").shouldHavePaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "customs_duty_total_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.duty.total.01"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("01").dueAmount}</span>")
+                    ),
+                    actions = None
+                ))
+            )
         )
-    )
+    }
 
-    @summaryList(
-        id = "vat-summary-section",
-        heading = Some(messages("returnAmountSummary.section.title.02")),
-        summaryListRows = Seq(
-            Some(SummaryListRow(
-                classes = "return_amount_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.was.paid.02"))
-                ),
-                value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("02").actuallyPaid}")
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.should.have.paid.02"))
-                ),
-                value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("02").shouldHavePaid}")
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.duty.total.02"))
-                ),
-                value = Value(
-                    content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("02").dueAmount}</span>")
-                ),
-                actions = None
-            ))
+    @if(createAnswers.reclaimDutyPayments.keySet.contains("02")) {
+        @summaryList(
+            id = "vat_summary_section",
+            heading = Some(messages("returnAmountSummary.section.title.02")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "vat_paid_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.was.paid.02"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("02").actuallyPaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "vat_expected_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.should.have.paid.02"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("02").shouldHavePaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "vat_total_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.duty.total.02"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("02").dueAmount}</span>")
+                    ),
+                    actions = None
+                ))
+            )
         )
-    )
+    }
 
-    @summaryList(
-        id = "other-duties-summary-section",
-        heading = Some(messages("returnAmountSummary.section.title.03")),
-        summaryListRows = Seq(
-            Some(SummaryListRow(
-                classes = "return_amount_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.was.paid.03"))
-                ),
-                value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("03").actuallyPaid}")
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.should.have.paid.03"))
-                ),
-                value = Value(
-                    content = Text(s"£${createAnswers.reclaimDutyPayments("03").shouldHavePaid}")
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "customs_duty_summary_row",
-                key = Key(
-                    content = Text(messages("returnAmountSummary.duty.total.03"))
-                ),
-                value = Value(
-content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("03").dueAmount}</span>")
-                ),
-                actions = None
-            ))
+    @if(createAnswers.reclaimDutyPayments.keySet.contains("03")) {
+        @summaryList(
+            id = "other_duties_summary_section",
+            heading = Some(messages("returnAmountSummary.section.title.03")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "other_paid_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.was.paid.03"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("03").actuallyPaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "other_expected_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.should.have.paid.03"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("03").shouldHavePaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "other_total_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.duty.total.03"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("03").dueAmount}</span>")
+                    ),
+                    actions = None
+                ))
+            )
         )
-    )
+    }
 
     @if(createAnswers.reclaimDutyPayments.size > 1) {
         @summaryList(
-            id="return-amount-total-section",
+            id="return_amount_total_section",
             heading = Some(messages("returnAmountSummary.total.heading")),
             summaryListRows = Seq(
                 Some(SummaryListRow(
-                    classes = "return_amount_summary_row",
+                    classes = "return_total_summary_row",
                     key = Key(
                         content = Text(messages("returnAmountSummary.total.label"))
                     ),
