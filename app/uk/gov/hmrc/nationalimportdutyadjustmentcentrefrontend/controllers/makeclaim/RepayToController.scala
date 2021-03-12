@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.RepayToFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, RepayTo}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, RepayToPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -58,10 +58,16 @@ class RepayToController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(repayTo = Some(value))) map {
+        data.updateCreateAnswers(answers => updateAnswers(value, answers)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }
+
+  private def updateAnswers(repayTo: RepayTo, answers: CreateAnswers) =
+    if (answers.repayTo.contains(repayTo))
+      answers
+    else
+      answers.copy(repayTo = Some(repayTo), bankDetails = None)
 
 }

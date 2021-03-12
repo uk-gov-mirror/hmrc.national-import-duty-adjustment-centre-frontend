@@ -37,12 +37,10 @@ final case class CreateAnswers(
   itemNumbers: Option[ItemNumbers] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
   uploadAnotherFile: Option[Boolean] = None,
-  importerHasEori: Option[Boolean] = None,
   importerEori: Option[EoriNumber] = None
 ) extends Answers {
 
-  val isRepresentative: Boolean     = representationType.contains(Representative)
-  val doesImporterHaveEori: Boolean = importerHasEori.contains(true)
+  val isRepresentative: Boolean = representationType.contains(Representative)
 }
 
 object CreateAnswers {

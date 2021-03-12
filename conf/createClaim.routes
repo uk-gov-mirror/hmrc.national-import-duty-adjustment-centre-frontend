@@ -12,9 +12,6 @@ POST        /contact-details                    uk.gov.hmrc.nationalimportdutyad
 GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
 POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()
 
-GET         /eori-number                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterHasEoriController.onPageLoad()
-POST        /eori-number                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterHasEoriController.onSubmit()
-
 GET         /upload-supporting-documents        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onPageLoad()
 GET         /upload-supporting-documents/progress uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onProgress(uploadId: UploadId)
 GET         /upload-supporting-documents/error  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onError(errorCode: String)

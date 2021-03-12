@@ -77,7 +77,7 @@ object Claim {
           create.ImporterBeingRepresentedDetails(
             repayTo = userAnswers.repayTo.getOrElse(missing(RepayToPage)),
             eoriNumber =
-              if (userAnswers.importerHasEori.contains(true))
+              if (userAnswers.repayTo.contains(RepayTo.Importer))
                 Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
               else None,
             contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))

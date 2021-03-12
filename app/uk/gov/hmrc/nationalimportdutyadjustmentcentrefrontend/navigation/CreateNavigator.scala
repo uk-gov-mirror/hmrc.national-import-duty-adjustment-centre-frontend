@@ -21,7 +21,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType, RepayTo}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 @Singleton
@@ -67,12 +67,8 @@ class CreateNavigator @Inject() ()
     ),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),
-    P(
-      ImporterHasEoriNumberPage,
-      makeclaim.routes.ImporterHasEoriController.onPageLoad,
-      isRepresentative,
-      importerHasEoriAnswered
-    ),
+    P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative, repayToAnswered),
+    P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always, bankDetailsAnswered),
     P(
       ImporterEoriNumberPage,
       makeclaim.routes.ImporterEoriNumberController.onPageLoad,
@@ -85,8 +81,6 @@ class CreateNavigator @Inject() ()
       isRepresentative,
       importerContactDetailsAnswered
     ),
-    P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative, repayToAnswered),
-    P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always, bankDetailsAnswered),
     P(CheckYourAnswersPage, makeclaim.routes.CheckYourAnswersController.onPageLoad, always, never),
     P(ConfirmationPage, makeclaim.routes.ConfirmationController.onPageLoad, always, never)
   )
@@ -104,7 +98,6 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.uploadSummary      => Some(UploadSummaryPage)
       case CreatePageNames.contactDetails     => Some(ContactDetailsPage)
       case CreatePageNames.contactAddress     => Some(AddressPage)
-      case CreatePageNames.importerHasEori    => Some(ImporterHasEoriNumberPage)
       case CreatePageNames.importerEori       => Some(ImporterEoriNumberPage)
       case CreatePageNames.importerDetails    => Some(ImporterContactDetailsPage)
       case CreatePageNames.repayTo            => Some(RepayToPage)
@@ -125,7 +118,6 @@ object CreatePageNames {
   val uploadSummary      = "uploaded-files"
   val contactDetails     = "contact-details"
   val contactAddress     = "contact-address"
-  val importerHasEori    = "importer-has-eori"
   val importerEori       = "importer-eori"
   val importerDetails    = "importer-details"
   val repayTo            = "repay-to"
@@ -146,7 +138,7 @@ protected trait CreateAnswerConditions {
   protected val isRepresentative: CreateAnswers => Boolean = _.isRepresentative
 
   protected val enterImporterEori: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    isRepresentative(answers) && answers.doesImporterHaveEori
+    isRepresentative(answers) && answers.repayTo.contains(RepayTo.Importer)
 
 }
 
@@ -172,11 +164,8 @@ protected trait CreateHasAnsweredConditions {
   protected val contactDetailsAnswered: CreateAnswers => Boolean = _.contactDetails.nonEmpty
   protected val claimantAnswered: CreateAnswers => Boolean       = _.claimantAddress.nonEmpty
 
-  protected val importerHasEoriAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.isRepresentative && answers.importerHasEori.nonEmpty
-
   protected val importerEoriNumberAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.isRepresentative && answers.importerHasEori.contains(true) && answers.importerEori.nonEmpty
+    answers.isRepresentative && answers.repayTo.contains(RepayTo.Importer) && answers.importerEori.nonEmpty
 
   protected val importerContactDetailsAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
     answers.isRepresentative && answers.importerContactDetails.nonEmpty

@@ -23,6 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Recl
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateAnswers,
   ReclaimDutyType,
+  RepayTo,
   RepresentationType
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
@@ -49,10 +50,10 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
           answers().copy(representationType = Some(RepresentationType.Importer))
         ) mustBe routes.BankDetailsController.onPageLoad()
       }
-      "go to does importer have Eori page if claimant is representative" in {
+      "go to who to repay page if claimant is representative" in {
         nextPage(
           answers().copy(representationType = Some(RepresentationType.Representative))
-        ) mustBe routes.ImporterHasEoriController.onPageLoad()
+        ) mustBe routes.RepayToController.onPageLoad()
       }
     }
     "going back" should {
@@ -174,8 +175,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(BankDetailsPage, _)
 
     "going forward" should {
-      "go to check your answers page" in {
-        nextPage(answers()) mustBe routes.CheckYourAnswersController.onPageLoad()
+      "go to enter importer's EORI number page" in {
+        nextPage(answers()) mustBe routes.ImporterEoriNumberController.onPageLoad()
       }
     }
     "going back" should {
@@ -236,7 +237,6 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       navigator.gotoPage(CreatePageNames.uploadSummary) mustBe routes.UploadFormSummaryController.onPageLoad
       navigator.gotoPage(CreatePageNames.contactDetails) mustBe routes.ContactDetailsController.onPageLoad
       navigator.gotoPage(CreatePageNames.contactAddress) mustBe routes.AddressController.onPageLoad
-      navigator.gotoPage(CreatePageNames.importerHasEori) mustBe routes.ImporterHasEoriController.onPageLoad
       navigator.gotoPage(CreatePageNames.importerEori) mustBe routes.ImporterEoriNumberController.onPageLoad
       navigator.gotoPage(CreatePageNames.importerDetails) mustBe routes.ImporterDetailsController.onPageLoad
       navigator.gotoPage(CreatePageNames.repayTo) mustBe routes.RepayToController.onPageLoad
@@ -251,21 +251,21 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
     }
 
-    "goto importer EORI page when changing from no to yes" in {
+    "goto importer EORI page when changing from repay agent to repay importer" in {
       val answers = completeAnswers.copy(
         importerEori = None,
-        changePage = Some(CreatePageNames.importerHasEori),
-        importerHasEori = Some(true)
+        changePage = Some(CreatePageNames.repayTo),
+        repayTo = Some(RepayTo.Importer)
       )
-      navigator.nextPage(ImporterHasEoriNumberPage, answers) mustBe routes.ImporterEoriNumberController.onPageLoad
+      navigator.nextPage(RepayToPage, answers) mustBe routes.ImporterEoriNumberController.onPageLoad
     }
 
-    "goto does importer have EORI when changing from Importer to Representative" in {
+    "goto repay to page when changing from Importer to Representative" in {
       val answers = importerAnswers.copy(
         changePage = Some(CreatePageNames.representationType),
         representationType = Some(RepresentationType.Representative)
       )
-      navigator.nextPage(RepresentationTypePage, answers) mustBe routes.ImporterHasEoriController.onPageLoad
+      navigator.nextPage(RepresentationTypePage, answers) mustBe routes.RepayToController.onPageLoad
     }
   }
 }

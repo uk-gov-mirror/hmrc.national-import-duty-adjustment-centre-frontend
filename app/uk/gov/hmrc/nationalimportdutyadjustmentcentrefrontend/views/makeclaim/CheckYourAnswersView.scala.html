@@ -245,31 +245,76 @@
         )
     )
 
+    @summaryList(
+        id = "payment_section",
+        heading = Some(messages("check_answers.payment.title")),
+        summaryListRows = Seq(
+            claim.importerBeingRepresentedDetails.map(_.repayTo).map(payTo =>
+                SummaryListRow(
+                    classes = "pay_to_row",
+                    key = Key(
+                        content = Text(messages("check_answers.payment.payTo"))
+                    ),
+                    value = Value(
+                        content = Text(MessageKey.apply("check_answers.payment.payTo", payTo.toString))
+                    ),
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("check_answers.payment.payTo.accessible"))
+                            )
+                        )
+                    ))
+                )
+            ),
+            Some(SummaryListRow(
+                classes = "bank_details_account_name_row govuk-summary-list__row--no-border",
+                key = Key(
+                    content = Text(messages("check_answers.payment.accountName"))
+                ),
+                value = Value(
+                    content = Text(claim.bankDetails.accountName)
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.payment.bankDetails.accessible"))
+                        )
+                    )
+                ))
+            )),
+            Some(SummaryListRow(
+                classes = "bank_details_sortCode_row govuk-summary-list__row--no-border",
+                key = Key(
+                    content = Text(messages("check_answers.payment.sortCode"))
+                ),
+                value = Value(
+                    content = Text(claim.bankDetails.sortCode)
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "bank_details_accountNumber_row",
+                key = Key(
+                    content = Text(messages("check_answers.payment.accountNumber"))
+                ),
+                value = Value(
+                    content = Text(claim.bankDetails.accountNumber)
+                ),
+                actions = None
+            )),
+        )
+    )
+
     @claim.importerBeingRepresentedDetails.map(importer =>
         summaryList(
             id = "importer_section",
             heading = Some(messages("check_answers.importer.title")),
             summaryListRows = Seq(
-                Some(
-                    SummaryListRow(
-                        classes = "importer_has_eori_row",
-                        key = Key(
-                            content = Text(messages("check_answers.importer.hasEori"))
-                        ),
-                        value = Value(
-                            content = Text(MessageKey.apply("check_answers.importer.hasEori", importer.eoriNumber.isDefined.toString))
-                        ),
-                        actions = Some(Actions(
-                            items = Seq(
-                                actionItem(
-                                    href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerHasEori).url,
-                                    content = HtmlContent(linkContent(messages("site.change"))),
-                                    visuallyHiddenText = Some(messages("check_answers.importer.hasEori.accessible"))
-                                )
-                            )
-                        ))
-                    )
-                ),
                 importer.eoriNumber.map(eori =>
                     SummaryListRow(
                         classes = "importer_eori_row",
@@ -319,71 +364,6 @@
             )
         )
 
-    )
-
-    @summaryList(
-        id = "payment_section",
-        heading = Some(messages("check_answers.payment.title")),
-        summaryListRows = Seq(
-            claim.importerBeingRepresentedDetails.map(_.repayTo).map(payTo =>
-                SummaryListRow(
-                    classes = "pay_to_row",
-                    key = Key(
-                        content = Text(messages("check_answers.payment.payTo"))
-                    ),
-                    value = Value(
-                        content = Text(MessageKey.apply("check_answers.payment.payTo", payTo.toString))
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("check_answers.payment.payTo.accessible"))
-                            )
-                        )
-                    ))
-                )
-            ),
-            Some(SummaryListRow(
-                classes = "bank_details_account_name_row govuk-summary-list__row--no-border",
-                key = Key(
-                    content = Text(messages("check_answers.payment.accountName"))
-                ),
-                value = Value(
-                    content = Text(claim.bankDetails.accountName)
-                ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
-                            content = HtmlContent(linkContent(messages("site.change"))),
-                            visuallyHiddenText = Some(messages("check_answers.payment.bankDetails.accessible"))
-                            )
-                        )
-                    ))
-            )),
-            Some(SummaryListRow(
-                classes = "bank_details_sortCode_row govuk-summary-list__row--no-border",
-                key = Key(
-                content = Text(messages("check_answers.payment.sortCode"))
-                ),
-                value = Value(
-                content = Text(claim.bankDetails.sortCode)
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "bank_details_accountNumber_row",
-                key = Key(
-                content = Text(messages("check_answers.payment.accountNumber"))
-                ),
-                value = Value(
-                content = Text(claim.bankDetails.accountNumber)
-                ),
-                actions = None
-            )),
-        )
     )
 
     @components.subHeading(messages("check_answers.submit.heading"))
