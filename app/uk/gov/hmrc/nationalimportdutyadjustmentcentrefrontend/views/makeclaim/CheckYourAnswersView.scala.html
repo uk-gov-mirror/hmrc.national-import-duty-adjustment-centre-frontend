@@ -169,7 +169,15 @@
                 value = Value(
                     content = Text(s"£${claim.repaymentTotal}")
                 ),
-                actions = None // TODO
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutySummary).url,
+                            content = HtmlContent(linkContent(messages("check_answers.repayment.total.change"))),
+                            visuallyHiddenText = Some(messages("check_answers.repayment.total.accessible"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "upload_row",

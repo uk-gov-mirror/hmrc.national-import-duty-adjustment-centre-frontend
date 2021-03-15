@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.16
+// @version      0.17
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -108,6 +108,9 @@ function completePage() {
     if (currentPageIs("/create/enter-other-duties")) {
         document.getElementById("actuallyPaid").value = "50.00";
         document.getElementById("shouldPaid").value = "49.99";
+        submit();
+    }
+    if (currentPageIs("/create/return-summary")) {
         submit();
     }
     if (currentPageIs("/create/claim-reason")) {

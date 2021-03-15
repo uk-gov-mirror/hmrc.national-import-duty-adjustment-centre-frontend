@@ -159,10 +159,18 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
       "contains valid reclaim duty total" in {
 
-        val reclaimDutyTypeRow = claimSection.getElementsByClass("reclaim_duty_total_row")
+        val reclaimDutyTotalRow = claimSection.getElementsByClass("reclaim_duty_total_row")
 
-        reclaimDutyTypeRow must haveSummaryKey(messages("check_answers.repayment.total"))
-        reclaimDutyTypeRow must haveSummaryValue(s"£${completeClaim.repaymentTotal}")
+        reclaimDutyTotalRow must haveSummaryKey(messages("check_answers.repayment.total"))
+        reclaimDutyTotalRow must haveSummaryValue(s"£${completeClaim.repaymentTotal}")
+
+        reclaimDutyTotalRow must haveSummaryChangeLinkText(
+          s"${messages("check_answers.repayment.total.change")} ${messages("check_answers.repayment.total.accessible")}"
+        )
+
+        reclaimDutyTotalRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.dutySummary)
+        )
       }
 
       "contains valid upload" in {

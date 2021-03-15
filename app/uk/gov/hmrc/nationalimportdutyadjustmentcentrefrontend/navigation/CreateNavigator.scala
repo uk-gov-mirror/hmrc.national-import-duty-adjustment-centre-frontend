@@ -58,7 +58,12 @@ class CreateNavigator @Inject() ()
       hasDutyType(Other),
       dutyPaymentAnswered(Other)
     ),
-    P(ReturnAmountSummaryPage, makeclaim.routes.ReturnAmountSummaryController.onPageLoad, always, always),
+    P(
+      ReturnAmountSummaryPage,
+      makeclaim.routes.ReturnAmountSummaryController.onPageLoad,
+      always,
+      returnSummaryAnswered
+    ),
     P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads, uploadPageAnswered),
     P(
       UploadSummaryPage,
@@ -96,6 +101,7 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.itemNumbers        => Some(ItemNumbersPage)
       case CreatePageNames.claimReason        => Some(ClaimReasonPage)
       case CreatePageNames.dutyTypes          => Some(ReclaimDutyTypePage)
+      case CreatePageNames.dutySummary        => Some(ReturnAmountSummaryPage)
       case CreatePageNames.uploadSummary      => Some(UploadSummaryPage)
       case CreatePageNames.contactDetails     => Some(ContactDetailsPage)
       case CreatePageNames.contactAddress     => Some(AddressPage)
@@ -116,6 +122,7 @@ object CreatePageNames {
   val itemNumbers        = "item-numbers"
   val claimReason        = "claim-reason"
   val dutyTypes          = "duty-types"
+  val dutySummary        = "duty-summary"
   val uploadSummary      = "uploaded-files"
   val contactDetails     = "contact-details"
   val contactAddress     = "contact-address"
@@ -175,5 +182,8 @@ protected trait CreateHasAnsweredConditions {
     answers.isRepresentative && answers.repayTo.nonEmpty
 
   protected val bankDetailsAnswered: CreateAnswers => Boolean = _.bankDetails.nonEmpty
+
+  protected val returnSummaryAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
+    answers.changePage != Some(CreatePageNames.dutyTypes)
 
 }
