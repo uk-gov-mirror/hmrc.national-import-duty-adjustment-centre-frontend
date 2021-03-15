@@ -1,0 +1,184 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        summaryList: summaryList,
+        continueButton: components.continueButton
+)
+
+@(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = Title(messages("returnAmountSummary.title")), backLink) {
+
+    @components.heading(messages("returnAmountSummary.title"))
+    @components.paragraph(messages("returnAmountSummary.subtitle"))
+
+    @if(createAnswers.reclaimDutyPayments.keySet.contains("01")) {
+        @summaryList(
+            id = "customs_duty_summary_section",
+            heading = Some(messages("returnAmountSummary.section.title.01")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "customs_paid_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.was.paid.01"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("01").actuallyPaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "customs_expected_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.should.have.paid.01"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("01").shouldHavePaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "customs_duty_total_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.duty.total.01"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("01").dueAmount}</span>")
+                    ),
+                    actions = None
+                ))
+            )
+        )
+    }
+
+    @if(createAnswers.reclaimDutyPayments.keySet.contains("02")) {
+        @summaryList(
+            id = "vat_summary_section",
+            heading = Some(messages("returnAmountSummary.section.title.02")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "vat_paid_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.was.paid.02"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("02").actuallyPaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "vat_expected_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.should.have.paid.02"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("02").shouldHavePaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "vat_total_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.duty.total.02"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("02").dueAmount}</span>")
+                    ),
+                    actions = None
+                ))
+            )
+        )
+    }
+
+    @if(createAnswers.reclaimDutyPayments.keySet.contains("03")) {
+        @summaryList(
+            id = "other_duties_summary_section",
+            heading = Some(messages("returnAmountSummary.section.title.03")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "other_paid_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.was.paid.03"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("03").actuallyPaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "other_expected_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.should.have.paid.03"))
+                    ),
+                    value = Value(
+                        content = Text(s"£${createAnswers.reclaimDutyPayments("03").shouldHavePaid}")
+                    ),
+                    actions = None
+                )),
+                Some(SummaryListRow(
+                    classes = "other_total_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.duty.total.03"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("03").dueAmount}</span>")
+                    ),
+                    actions = None
+                ))
+            )
+        )
+    }
+
+    @if(createAnswers.reclaimDutyPayments.size > 1) {
+        @summaryList(
+            id="return_amount_total_section",
+            heading = Some(messages("returnAmountSummary.total.heading")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "return_total_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.total.label"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${
+                                                createAnswers.reclaimDutyPayments.values
+                                                .map(payment => payment.dueAmount)
+                                                .reduce((amt1, amt2) => amt1 + amt2)
+                                                }</span>")
+                    ),
+                    actions = None
+                ))
+            )
+        )
+    }
+
+    @formHelper(action = makeclaim.routes.ReturnAmountSummaryController.onSubmit(), 'autoComplete -> "off") {
+        @continueButton()
+    }
+
+}
