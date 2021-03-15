@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name     NIDAC Authorisation
 // @namespace  http://tampermonkey.net/
-// @version   0.2
+// @version   0.3
 // @description Authenticates for NIDAC
 // @author    NIDAC Team
-// @match     http*://*/auth-login-stub/gg-sign-in?continue=*apply-for-refund-import-duty-paid-on-deposit-or-guarantee*
+// @match     http*://*/auth-login-stub/gg-sign-in?continue=*apply-for-return-import-duty-paid-on-deposit-or-guarantee*
 // @grant     none
 // @updateURL https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Auth_Stub.js
 // ==/UserScript==
 
 (function () {
     'use strict';
-    document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/apply-for-refund-import-duty-paid-on-deposit-or-guarantee";
+    document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/apply-for-return-import-duty-paid-on-deposit-or-guarantee";
     document.getElementById('global-header').appendChild(createQuickButton())
 })();
 

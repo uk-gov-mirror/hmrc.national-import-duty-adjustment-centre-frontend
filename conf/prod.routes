@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /apply-for-refund-import-duty-paid-on-deposit-or-guarantee        app.Routes
+->         /apply-for-return-import-duty-paid-on-deposit-or-guarantee        app.Routes
 ->         /                                                                 health.Routes
 
 GET        /admin/metrics                                                    com.kenshoo.play.metrics.MetricsController.metrics
