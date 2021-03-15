@@ -18,8 +18,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummaryView
 
 class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
@@ -53,6 +55,12 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         customsDutyPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.01"))
         customsDutyPaidRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.actuallyPaid}")
 
+        customsDutyPaidRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.was.paid.01.accessible")}"
+        )
+        customsDutyPaidRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms)
+        )
       }
 
       "contains customs duty should have paid" in {
@@ -62,6 +70,12 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         customsDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.01"))
         customsDutyExpectedRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.shouldHavePaid}")
 
+        customsDutyExpectedRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.should.have.paid.01.accessible")}"
+        )
+        customsDutyExpectedRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms)
+        )
       }
 
       "contains customs total" in {
@@ -86,6 +100,10 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         vatPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.02"))
         vatPaidRow must haveSummaryValue(s"£${importVatRepaymentAnswer.actuallyPaid}")
 
+        vatPaidRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.was.paid.02.accessible")}"
+        )
+        vatPaidRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT))
       }
 
       "contains vat should have paid" in {
@@ -95,6 +113,10 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         vatExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.02"))
         vatExpectedRow must haveSummaryValue(s"£${importVatRepaymentAnswer.shouldHavePaid}")
 
+        vatExpectedRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.should.have.paid.02.accessible")}"
+        )
+        vatExpectedRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT))
       }
 
       "contains vat total" in {
@@ -119,6 +141,10 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         otherPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.03"))
         otherPaidRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.actuallyPaid}")
 
+        otherPaidRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.was.paid.03.accessible")}"
+        )
+        otherPaidRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther))
       }
 
       "contains other duty should have paid" in {
@@ -128,6 +154,12 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         otherDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.03"))
         otherDutyExpectedRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.shouldHavePaid}")
 
+        otherDutyExpectedRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.should.have.paid.03.accessible")}"
+        )
+        otherDutyExpectedRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther)
+        )
       }
 
       "contains other duty total" in {

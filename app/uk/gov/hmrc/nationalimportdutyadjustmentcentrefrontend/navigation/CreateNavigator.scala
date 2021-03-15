@@ -101,6 +101,9 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.itemNumbers        => Some(ItemNumbersPage)
       case CreatePageNames.claimReason        => Some(ClaimReasonPage)
       case CreatePageNames.dutyTypes          => Some(ReclaimDutyTypePage)
+      case CreatePageNames.dutyCustoms        => Some(CustomsDutyRepaymentPage)
+      case CreatePageNames.dutyVAT            => Some(ImportVatRepaymentPage)
+      case CreatePageNames.dutyOther          => Some(OtherDutyRepaymentPage)
       case CreatePageNames.dutySummary        => Some(ReturnAmountSummaryPage)
       case CreatePageNames.uploadSummary      => Some(UploadSummaryPage)
       case CreatePageNames.contactDetails     => Some(ContactDetailsPage)
@@ -122,6 +125,9 @@ object CreatePageNames {
   val itemNumbers        = "item-numbers"
   val claimReason        = "claim-reason"
   val dutyTypes          = "duty-types"
+  val dutyCustoms        = "duty-customs"
+  val dutyVAT            = "duty-vat"
+  val dutyOther          = "duty-other"
   val dutySummary        = "duty-summary"
   val uploadSummary      = "uploaded-files"
   val contactDetails     = "contact-details"
@@ -183,7 +189,15 @@ protected trait CreateHasAnsweredConditions {
 
   protected val bankDetailsAnswered: CreateAnswers => Boolean = _.bankDetails.nonEmpty
 
+  private val dutyPages: Set[String] = Set(
+    CreatePageNames.dutyTypes,
+    CreatePageNames.dutyCustoms,
+    CreatePageNames.dutyVAT,
+    CreatePageNames.dutyOther,
+    CreatePageNames.dutySummary
+  )
+
   protected val returnSummaryAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.changePage != Some(CreatePageNames.dutyTypes)
+    answers.changePage.exists(page => !dutyPages.contains(page))
 
 }

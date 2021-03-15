@@ -16,11 +16,11 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
@@ -50,7 +50,15 @@
                     value = Value(
                         content = Text(s"£${createAnswers.reclaimDutyPayments("01").actuallyPaid}")
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("returnAmountSummary.was.paid.01.accessible"))
+                            )
+                        )
+                    ))
                 )),
                 Some(SummaryListRow(
                     classes = "customs_expected_summary_row",
@@ -60,7 +68,15 @@
                     value = Value(
                         content = Text(s"£${createAnswers.reclaimDutyPayments("01").shouldHavePaid}")
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("returnAmountSummary.should.have.paid.01.accessible"))
+                            )
+                        )
+                    ))
                 )),
                 Some(SummaryListRow(
                     classes = "customs_duty_total_row",
@@ -89,7 +105,15 @@
                     value = Value(
                         content = Text(s"£${createAnswers.reclaimDutyPayments("02").actuallyPaid}")
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("returnAmountSummary.was.paid.02.accessible"))
+                            )
+                        )
+                    ))
                 )),
                 Some(SummaryListRow(
                     classes = "vat_expected_summary_row",
@@ -99,7 +123,15 @@
                     value = Value(
                         content = Text(s"£${createAnswers.reclaimDutyPayments("02").shouldHavePaid}")
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("returnAmountSummary.should.have.paid.02.accessible"))
+                            )
+                        )
+                    ))
                 )),
                 Some(SummaryListRow(
                     classes = "vat_total_row",
@@ -128,7 +160,15 @@
                     value = Value(
                         content = Text(s"£${createAnswers.reclaimDutyPayments("03").actuallyPaid}")
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("returnAmountSummary.was.paid.03.accessible"))
+                            )
+                        )
+                    ))
                 )),
                 Some(SummaryListRow(
                     classes = "other_expected_summary_row",
@@ -138,7 +178,15 @@
                     value = Value(
                         content = Text(s"£${createAnswers.reclaimDutyPayments("03").shouldHavePaid}")
                     ),
-                    actions = None
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther).url,
+                                content = HtmlContent(linkContent(messages("site.change"))),
+                                visuallyHiddenText = Some(messages("returnAmountSummary.should.have.paid.03.accessible"))
+                            )
+                        )
+                    ))
                 )),
                 Some(SummaryListRow(
                     classes = "other_total_row",

@@ -273,6 +273,11 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       navigator.nextPage(ReclaimDutyTypePage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
     }
 
+    "goto repayment summary page when changing VAT duty amounts" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.dutyVAT))
+      navigator.nextPage(ImportVatRepaymentPage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
+    }
+
     "skip repayment summary page when changing earlier question" in {
       val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
       navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
