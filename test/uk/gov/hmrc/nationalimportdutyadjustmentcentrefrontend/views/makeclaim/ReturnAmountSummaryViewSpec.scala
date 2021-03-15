@@ -150,7 +150,9 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         val totalRow = totalSection.getElementsByClass("return_total_summary_row")
 
         totalRow must haveSummaryKey(messages("returnAmountSummary.total.label"))
-        totalRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.dueAmount + importVatRepaymentAnswer.dueAmount + otherDutyRepaymentAnswer.dueAmount}")
+        totalRow must haveSummaryValue(
+          s"£${customsDutyRepaymentAnswer.dueAmount + importVatRepaymentAnswer.dueAmount + otherDutyRepaymentAnswer.dueAmount}"
+        )
 
       }
 
@@ -158,39 +160,34 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
     "not have total section when only one repayment type" in {
 
-      val vatOnlyAnswers = completeAnswers.copy(reclaimDutyPayments = Map(
-        Vat.toString -> importVatRepaymentAnswer
-      ))
+      val vatOnlyAnswers = completeAnswers.copy(reclaimDutyPayments = Map(Vat.toString -> importVatRepaymentAnswer))
 
       view(vatOnlyAnswers).getElementById("return_amount_total_section") must notBePresent
     }
 
     "not have vat section when vat not reclaimed" in {
 
-      val vatMissingAnswers = completeAnswers.copy(reclaimDutyPayments = Map(
-        Customs.toString -> customsDutyRepaymentAnswer,
-        Other.toString   -> otherDutyRepaymentAnswer
-      ))
+      val vatMissingAnswers = completeAnswers.copy(reclaimDutyPayments =
+        Map(Customs.toString -> customsDutyRepaymentAnswer, Other.toString -> otherDutyRepaymentAnswer)
+      )
 
       view(vatMissingAnswers).getElementById("vat_summary_section") must notBePresent
     }
 
     "not have customs duty section when customs duty not reclaimed" in {
 
-      val customsMissingAnswers = completeAnswers.copy(reclaimDutyPayments = Map(
-        Vat.toString     -> importVatRepaymentAnswer,
-        Other.toString   -> otherDutyRepaymentAnswer
-      ))
+      val customsMissingAnswers = completeAnswers.copy(reclaimDutyPayments =
+        Map(Vat.toString -> importVatRepaymentAnswer, Other.toString -> otherDutyRepaymentAnswer)
+      )
 
       view(customsMissingAnswers).getElementById("customs_duty_summary_section") must notBePresent
     }
 
     "not have other section when other not reclaimed" in {
 
-      val otherMissingAnswers = completeAnswers.copy(reclaimDutyPayments = Map(
-        Customs.toString -> customsDutyRepaymentAnswer,
-        Vat.toString     -> importVatRepaymentAnswer
-      ))
+      val otherMissingAnswers = completeAnswers.copy(reclaimDutyPayments =
+        Map(Customs.toString -> customsDutyRepaymentAnswer, Vat.toString -> importVatRepaymentAnswer)
+      )
 
       view(otherMissingAnswers).getElementById("other_duties_summary_section") must notBePresent
     }

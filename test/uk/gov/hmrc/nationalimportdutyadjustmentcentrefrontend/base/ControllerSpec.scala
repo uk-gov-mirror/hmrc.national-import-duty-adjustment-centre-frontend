@@ -84,12 +84,12 @@ trait ControllerSpec
   }
 
   protected def theUpdatedCreateAnswers: CreateAnswers =
-    theUpdatedCacheDate.getCreateAnswers
+    theUpdatedCacheData.getCreateAnswers
 
   protected def theUpdatedAmendAnswers: AmendAnswers =
-    theUpdatedCacheDate.getAmendAnswers
+    theUpdatedCacheData.getAmendAnswers
 
-  private def theUpdatedCacheDate: CacheData = {
+  private def theUpdatedCacheData: CacheData = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
     verify(dataRepository).update(captor.capture())
     captor.getValue
