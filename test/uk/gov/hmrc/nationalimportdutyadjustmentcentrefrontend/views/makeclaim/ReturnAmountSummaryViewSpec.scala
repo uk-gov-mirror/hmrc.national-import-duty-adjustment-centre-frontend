@@ -20,11 +20,11 @@ import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummary
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummaryView
 
 class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[ReturnAmountSummary]
+  private val page = instanceOf[ReturnAmountSummaryView]
 
   private def view(answers: CreateAnswers = completeAnswers): Document = page(answers, navigatorBack)
 

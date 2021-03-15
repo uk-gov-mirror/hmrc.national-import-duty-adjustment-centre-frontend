@@ -23,12 +23,12 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ReturnAmountSummaryPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummary
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummaryView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ReturnAmountSummaryControllerSpec extends ControllerSpec with TestData {
 
-  private val page = mock[ReturnAmountSummary]
+  private val page = mock[ReturnAmountSummaryView]
 
   private def controller =
     new ReturnAmountSummaryController(
