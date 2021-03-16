@@ -25,10 +25,10 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 
 @this(
-layout: Layout,
-formHelper: FormWithCSRF,
-summaryList: summaryList,
-continueButton: components.continueButton
+    layout: Layout,
+    formHelper: FormWithCSRF,
+    summaryList: summaryList,
+    submitButton: components.submitButton
 )
 
 @(amendClaim: AmendClaim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
@@ -122,7 +122,7 @@ continueButton: components.continueButton
     @components.paragraph(messages("amend.check_answers.submit.declaration"))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @submitButton()
     }
 
 }

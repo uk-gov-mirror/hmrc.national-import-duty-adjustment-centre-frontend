@@ -327,7 +327,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Submit' button" in {
-      view().getElementById("submit") must includeMessage("check_answers.submit")
+      view().getElementById("nidac-submit") must includeMessage("check_answers.submit")
     }
 
   }

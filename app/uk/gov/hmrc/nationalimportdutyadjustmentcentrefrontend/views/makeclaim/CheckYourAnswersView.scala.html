@@ -29,7 +29,7 @@
         layout: Layout,
         formHelper: FormWithCSRF,
         summaryList: summaryList,
-        continueButton: components.continueButton
+        submitButton: components.submitButton
 )
 
 @(claim: Claim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
@@ -378,7 +378,7 @@
     @components.paragraph(messages("check_answers.submit.declaration"))
 
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @submitButton()
     }
 
 }

@@ -18,12 +18,12 @@
 
 @this(govukButton: GovukButton)
 
-@(messageKey: String = "site.continue", disabled: Boolean = false)(implicit messages: Messages)
+@(messageKey: String = "check_answers.submit", disabled: Boolean = false)(implicit messages: Messages)
 
 @govukButton(
  Button(
   content = Text(messages(messageKey)),
-  attributes = Map("id" -> "nidac-continue"),
+  attributes = Map("id" -> "nidac-submit"),
   disabled = disabled,
   preventDoubleClick = true
  )

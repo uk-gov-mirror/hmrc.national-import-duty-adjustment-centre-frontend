@@ -67,7 +67,9 @@ class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      messagePrefixs.foreach(prefix => view(prefix).getElementById("submit") must includeMessage("site.continue"))
+      messagePrefixs.foreach(
+        prefix => view(prefix).getElementById("nidac-continue") must includeMessage("site.continue")
+      )
     }
 
   }

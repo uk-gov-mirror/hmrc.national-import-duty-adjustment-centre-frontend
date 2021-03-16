@@ -57,7 +57,7 @@ class EntryDetailsViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
