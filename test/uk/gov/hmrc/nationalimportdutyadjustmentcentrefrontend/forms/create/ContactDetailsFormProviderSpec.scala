@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 
 class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -67,7 +66,6 @@ class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "emailAddress"
     val requiredKey = "contactDetails.emailAddress.error.required"
-    val invalidKey  = "contactDetails.emailAddress.error.invalid"
     val lengthKey   = "contactDetails.emailAddress.error.length"
     val maxLength   = 85
 

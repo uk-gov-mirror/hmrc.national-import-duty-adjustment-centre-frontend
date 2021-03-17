@@ -86,10 +86,9 @@ class EntryDetailsViewSpec extends UnitViewSpec with TestData {
       val answersWithoutDate = Map("entryProcessingUnit" -> "007", "entryNumber" -> "654321Q")
 
       "EPU missing" in {
-        view(form.bind(answers - "entryProcessingUnit")) must haveFieldError(
-          "entryProcessingUnit",
-          "entryDetails.claimEpu.error.required"
-        )
+        val errorView = view(form.bind(answers - "entryProcessingUnit"))
+        errorView must haveFieldError("entryProcessingUnit", "entryDetails.claimEpu.error.required")
+        errorView must havePageError("entryDetails.claimEpu.error.required")
       }
 
       "EPU invalid" in {

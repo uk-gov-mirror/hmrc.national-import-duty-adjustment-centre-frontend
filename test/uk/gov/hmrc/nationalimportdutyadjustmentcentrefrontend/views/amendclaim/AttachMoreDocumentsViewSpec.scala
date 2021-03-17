@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.amendclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.Form
-import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.AttachMoreDocumentsView
@@ -27,7 +27,7 @@ class AttachMoreDocumentsViewSpec extends UnitViewSpec {
   private val page = instanceOf[AttachMoreDocumentsView]
   private val form = new YesNoFormProvider().apply("amend.attach_more_documents.required")
 
-  private def view(form: Form[Boolean] = form): Html = page(form, navigatorBack)
+  private def view(form: Form[Boolean] = form): Document = page(form, navigatorBack)
 
   "AttachMoreDocumentsPage on empty form" should {
 
@@ -76,9 +76,7 @@ class AttachMoreDocumentsViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("yesOrNo" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages(
-        "amend.attach_more_documents.required"
-      )
+      errorView must havePageError("amend.attach_more_documents.required")
 
     }
 

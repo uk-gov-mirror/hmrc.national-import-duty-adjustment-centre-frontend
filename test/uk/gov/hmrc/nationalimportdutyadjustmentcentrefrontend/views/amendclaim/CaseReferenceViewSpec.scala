@@ -65,10 +65,9 @@ class CaseReferenceViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "case reference missing" in {
-        view(form.bind(Map("caseReference" -> ""))) must haveFieldError(
-          "caseReference",
-          "amend.case.reference.error.required"
-        )
+        val errorView = view(form.bind(Map("caseReference" -> "")))
+        errorView must haveFieldError("caseReference", "amend.case.reference.error.required")
+        errorView must havePageError("amend.case.reference.error.required")
       }
 
     }

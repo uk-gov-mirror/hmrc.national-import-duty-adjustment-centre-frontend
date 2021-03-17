@@ -65,10 +65,9 @@ class FurtherInformationViewSpec extends UnitViewSpec with TestData {
     "display error when" when {
 
       "claim reason missing" in {
-        view(form.bind(Map("furtherInformation" -> ""))) must haveFieldError(
-          "furtherInformation",
-          "further_information.error.required"
-        )
+        val errorView = view(form.bind(Map("furtherInformation" -> "")))
+        errorView must haveFieldError("furtherInformation", "further_information.error.required")
+        errorView must havePageError("further_information.error.required")
       }
     }
   }

@@ -21,8 +21,8 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 
@@ -106,9 +106,7 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "answer missing" in {
-        view(form.bind(Map("yesOrNo" -> ""))).getElementsByClass("govuk-error-summary") must containMessage(
-          "upload_documents_summary.add.required"
-        )
+        view(form.bind(Map("yesOrNo" -> ""))) must havePageError("upload_documents_summary.add.required")
       }
 
     }

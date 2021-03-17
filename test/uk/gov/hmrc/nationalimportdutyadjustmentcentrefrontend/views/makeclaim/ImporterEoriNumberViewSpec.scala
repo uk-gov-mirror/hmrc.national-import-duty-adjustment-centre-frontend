@@ -65,7 +65,9 @@ class ImporterEoriNumberViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "eori number missing" in {
-        view(form.bind(Map("eoriNumber" -> ""))) must haveFieldError("eoriNumber", "importer.eori.error.required")
+        val errorView = view(form.bind(Map("eoriNumber" -> "")))
+        errorView must haveFieldError("eoriNumber", "importer.eori.error.required")
+        errorView must havePageError("importer.eori.error.required")
       }
 
     }

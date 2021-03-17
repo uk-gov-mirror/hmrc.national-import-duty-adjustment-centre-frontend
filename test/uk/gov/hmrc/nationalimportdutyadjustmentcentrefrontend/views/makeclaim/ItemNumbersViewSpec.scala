@@ -65,7 +65,9 @@ class ItemNumbersViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "item numbers missing" in {
-        view(form.bind(Map("itemNumbers" -> ""))) must haveFieldError("itemNumbers", "itemNumbers.error.required")
+        val errorView = view(form.bind(Map("itemNumbers" -> "")))
+        errorView must haveFieldError("itemNumbers", "itemNumbers.error.required")
+        errorView must havePageError("itemNumbers.error.required")
       }
 
     }

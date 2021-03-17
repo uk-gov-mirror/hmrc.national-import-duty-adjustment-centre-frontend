@@ -73,9 +73,7 @@ class ClaimTypeViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("claim-type" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("claim_type.error.required")
-
-      errorView.title() must startWith("Error:")
+      errorView must havePageError("claim_type.error.required")
     }
 
   }

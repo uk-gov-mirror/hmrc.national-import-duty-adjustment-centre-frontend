@@ -73,8 +73,7 @@ class RepayToViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("repay_to" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("repay_to.error.required")
-
+      errorView must havePageError("repay_to.error.required")
     }
 
   }

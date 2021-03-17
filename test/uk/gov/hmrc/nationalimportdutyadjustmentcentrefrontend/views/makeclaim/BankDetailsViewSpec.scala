@@ -82,32 +82,33 @@ class BankDetailsViewSpec extends UnitViewSpec with TestData {
       val answers = Map("accountName" -> "ACME Bank", "sortCode" -> "654321", "accountNumber" -> "87654321")
 
       "account name missing" in {
-        view(form.bind(answers - "accountName")) must haveFieldError("accountName", "bankDetails.name.error.required")
+        val errorView = view(form.bind(answers - "accountName"))
+        errorView must haveFieldError("accountName", "bankDetails.name.error.required")
+        errorView must havePageError("bankDetails.name.error.required")
       }
 
       "sort code missing" in {
-        view(form.bind(answers - "sortCode")) must haveFieldError("sortCode", "bankDetails.sortCode.error.required")
+        val errorView = view(form.bind(answers - "sortCode"))
+        errorView must haveFieldError("sortCode", "bankDetails.sortCode.error.required")
+        errorView must havePageError("bankDetails.sortCode.error.required")
       }
 
       "sort code invalid" in {
-        view(form.bind(answers + ("sortCode" -> "1234"))) must haveFieldError(
-          "sortCode",
-          "bankDetails.sortCode.error.invalid"
-        )
+        val errorView = view(form.bind(answers + ("sortCode" -> "1234")))
+        errorView must haveFieldError("sortCode", "bankDetails.sortCode.error.invalid")
+        errorView must havePageError("bankDetails.sortCode.error.invalid")
       }
 
       "account number missing" in {
-        view(form.bind(answers - "accountNumber")) must haveFieldError(
-          "accountNumber",
-          "bankDetails.accountNumber.error.required"
-        )
+        val errorView = view(form.bind(answers - "accountNumber"))
+        errorView must haveFieldError("accountNumber", "bankDetails.accountNumber.error.required")
+        errorView must havePageError("bankDetails.accountNumber.error.required")
       }
 
       "account number invalid" in {
-        view(form.bind(answers + ("accountNumber" -> "invalid"))) must haveFieldError(
-          "accountNumber",
-          "bankDetails.accountNumber.error.invalid"
-        )
+        val errorView = view(form.bind(answers + ("accountNumber" -> "invalid")))
+        errorView must haveFieldError("accountNumber", "bankDetails.accountNumber.error.invalid")
+        errorView must havePageError("bankDetails.accountNumber.error.invalid")
       }
     }
 

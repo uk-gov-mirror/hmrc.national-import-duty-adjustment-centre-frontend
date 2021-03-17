@@ -69,7 +69,7 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
 
     "display error when no choice is made" in {
       val errorView = view(error = Some(FormError("key", "error.file-upload.required")))
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("error.file-upload.required")
+      errorView must havePageError("error.file-upload.required")
     }
 
     "have label for file selector" when {

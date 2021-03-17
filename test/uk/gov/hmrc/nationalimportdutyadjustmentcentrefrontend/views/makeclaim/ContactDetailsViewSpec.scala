@@ -79,35 +79,33 @@ class ContactDetailsViewSpec extends UnitViewSpec with TestData {
       )
 
       "first name missing" in {
-        view(form.bind(answers - "firstName")) must haveFieldError(
-          "firstName",
-          "contactDetails.firstName.error.required"
-        )
+        val errorView = view(form.bind(answers - "firstName"))
+        errorView must haveFieldError("firstName", "contactDetails.firstName.error.required")
+        errorView must havePageError("contactDetails.firstName.error.required")
       }
 
       "last name missing" in {
-        view(form.bind(answers - "lastName")) must haveFieldError("lastName", "contactDetails.lastName.error.required")
+        val errorView = view(form.bind(answers - "lastName"))
+        errorView must haveFieldError("lastName", "contactDetails.lastName.error.required")
+        errorView must havePageError("contactDetails.lastName.error.required")
       }
 
       "email invalid" in {
-        view(form.bind(answers + ("emailAddress" -> "invalid"))) must haveFieldError(
-          "emailAddress",
-          "contactDetails.emailAddress.error.invalid"
-        )
+        val errorView = view(form.bind(answers + ("emailAddress" -> "invalid")))
+        errorView must haveFieldError("emailAddress", "contactDetails.emailAddress.error.invalid")
+        errorView must havePageError("contactDetails.emailAddress.error.invalid")
       }
 
       "phone number too short" in {
-        view(form.bind(answers + ("telephoneNumber" -> "123"))) must haveFieldError(
-          "telephoneNumber",
-          "contactDetails.telephoneNumber.error.length"
-        )
+        val errorView = view(form.bind(answers + ("telephoneNumber" -> "123")))
+        errorView must haveFieldError("telephoneNumber", "contactDetails.telephoneNumber.error.length")
+        errorView must havePageError("contactDetails.telephoneNumber.error.length")
       }
 
       "phone number too long" in {
-        view(form.bind(answers + ("telephoneNumber" -> "123456789012345678901234567890123"))) must haveFieldError(
-          "telephoneNumber",
-          "contactDetails.telephoneNumber.error.length"
-        )
+        val errorView = view(form.bind(answers + ("telephoneNumber" -> "123456789012345678901234567890123")))
+        errorView must haveFieldError("telephoneNumber", "contactDetails.telephoneNumber.error.length")
+        errorView must havePageError("contactDetails.telephoneNumber.error.length")
       }
     }
   }

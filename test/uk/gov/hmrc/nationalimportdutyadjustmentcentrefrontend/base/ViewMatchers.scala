@@ -57,14 +57,14 @@ trait ViewMatchers extends Matchers {
   def haveNavigatorBackLink(href: String)(implicit messages: Messages): Matcher[Element] =
     new ElementHasNavigatorBacklinkMatcher(href)
 
-  def haveFieldError(fieldName: String, content: String)(implicit messages: Messages): Matcher[Element] =
+  def haveFieldError(fieldName: String, content: String)(implicit messages: Messages): Matcher[Document] =
     new ContainElementWithIDMatcher(s"$fieldName-error") and new ElementContainsGovukFieldError(
       fieldName,
       messages(content)
-    )
+    ) and new ContainErrorTitle
 
-  def haveSummaryError(key: String)(implicit messages: Messages): Matcher[Element] =
-    new ContainErrorSummaryWithMessage(messages(key))
+  def havePageError(key: String)(implicit messages: Messages): Matcher[Document] =
+    new ContainErrorSummaryWithMessage(messages(key)) and new ContainErrorTitle
 
   def beEmpty: Matcher[Elements] = (left: Elements) => {
     MatchResult(left.size() == 0, "Elements was not empty", "Elements was empty")
@@ -184,9 +184,20 @@ trait ViewMatchers extends Matchers {
 
     override def apply(left: Element): MatchResult =
       MatchResult(
-        left != null && left.getElementsByClass("govuk-error-summary__list").text().contains(text),
+        left != null && left.getElementsByClass("govuk-error-summary__body").text().contains(text),
         s"Document did not contain error element with message {$text}\n${actualContentWas(left)}",
         s"Document contained an error element with message {$text}"
+      )
+
+  }
+
+  class ContainErrorTitle extends Matcher[Document] {
+
+    override def apply(left: Document): MatchResult =
+      MatchResult(
+        left != null && left.title().startsWith("Error:"),
+        s"Document did not have title starting with 'Error:'\n${actualContentWas(left)}",
+        s"Document contained title with 'Error:'"
       )
 
   }

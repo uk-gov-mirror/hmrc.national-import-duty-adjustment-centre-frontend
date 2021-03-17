@@ -73,9 +73,7 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "answer missing" in {
-        view(form.bind(Map("yesOrNo" -> ""))).getElementsByClass("govuk-error-summary") must containMessage(
-          "upload_documents_summary.add.required"
-        )
+        view(form.bind(Map("yesOrNo" -> ""))) must havePageError("upload_documents_summary.add.required")
       }
 
     }

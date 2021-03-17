@@ -88,10 +88,9 @@ class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
       val answers = Map("actuallyPaid" -> "100.00", "shouldPaid" -> "89.99")
 
       "actuallyPaid missing" in {
-        view("customsDutyPaid", form.bind(answers - "actuallyPaid")) must haveFieldError(
-          "actuallyPaid",
-          "dutyPaid.actual.error.required"
-        )
+        val errorView = view("customsDutyPaid", form.bind(answers - "actuallyPaid"))
+        errorView must haveFieldError("actuallyPaid", "dutyPaid.actual.error.required")
+        errorView must havePageError("dutyPaid.actual.error.required")
       }
 
       "shouldPaid missing" in {

@@ -65,7 +65,9 @@ class ClaimReasonViewSpec extends UnitViewSpec with TestData {
     "display error when" when {
 
       "claim reason missing" in {
-        view(form.bind(Map("claimReason" -> ""))) must haveFieldError("claimReason", "claim_reason.error.required")
+        val errorView = view(form.bind(Map("claimReason" -> "")))
+        errorView must haveFieldError("claimReason", "claim_reason.error.required")
+        errorView must havePageError("claim_reason.error.required")
       }
     }
   }
