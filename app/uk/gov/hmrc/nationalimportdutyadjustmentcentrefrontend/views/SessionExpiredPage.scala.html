@@ -15,14 +15,14 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ErrorTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages)
 
-    @layout(pageTitle = Title(messages("session_expired.title")), NavigatorBack(None)) {
+    @layout(pageTitle = ErrorTitle(messages("session_expired.title")), NavigatorBack(None)) {
 
         @components.heading(messages("session_expired.title"))
         @components.paragraph(messages("session_expired.guidance"))

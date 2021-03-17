@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
@@ -26,7 +26,7 @@
 
 @(reference: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("confirmation.title")), NavigatorBack(None)) {
+@layout(pageTitle = InformationTitle(messages("confirmation.title")), NavigatorBack(None)) {
 
     @govukPanel(Panel(
         title = Text(messages("confirmation.title")),

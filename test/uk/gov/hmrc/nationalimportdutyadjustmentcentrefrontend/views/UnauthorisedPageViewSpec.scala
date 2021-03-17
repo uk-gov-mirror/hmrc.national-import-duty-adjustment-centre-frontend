@@ -29,7 +29,7 @@ class UnauthorisedPageViewSpec extends UnitViewSpec {
   "UnauthorisedPage" should {
 
     "have correct title" in {
-      view.title() must startWith(messages("unauthorised.title"))
+      view.title() must startWith(s"Error: ${messages("unauthorised.title")}")
     }
 
     "have correct heading" in {

@@ -30,7 +30,7 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("what_do_you_want_to_do.title")), NavigatorBack(None)) {
+@layout(pageTitle = Title(form, messages("what_do_you_want_to_do.title")), NavigatorBack(None)) {
 
     @formHelper(action = WhatDoYouWantToDoController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)

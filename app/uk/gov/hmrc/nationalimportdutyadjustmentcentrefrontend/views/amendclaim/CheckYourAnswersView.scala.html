@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
@@ -33,7 +33,7 @@
 
 @(amendClaim: AmendClaim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("amend.check_answers.title")), backLink) {
+@layout(pageTitle = InformationTitle(messages("amend.check_answers.title")), backLink) {
 
     @components.heading(messages("amend.check_answers.title"))
 

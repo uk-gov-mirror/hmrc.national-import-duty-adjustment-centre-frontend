@@ -15,13 +15,13 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ErrorTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(layout: Layout)
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
-@layout(pageTitle = Title(pageTitle), NavigatorBack(None)) {
+@layout(pageTitle = ErrorTitle(pageTitle), NavigatorBack(None)) {
 
     @components.heading(heading)
     @components.paragraph(message)

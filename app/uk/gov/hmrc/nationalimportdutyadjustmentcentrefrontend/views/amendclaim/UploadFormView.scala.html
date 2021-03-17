@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ErrorTitle
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
@@ -39,8 +39,11 @@
         backLink: NavigatorBack
 )(implicit request: Request[_], messages: Messages)
 
+@title = @{
+ error.map(_ => ErrorTitle(messages("upload_documents.title"))).getOrElse(InformationTitle(messages("upload_documents.title")))
+}
 
-@layout(pageTitle = Title(messages("amend.upload_documents.title")), backLink) {
+@layout(pageTitle = title, backLink) {
     @errorSummary(error.map(Seq(_)).getOrElse(Seq.empty))
 
     @components.heading(messages("amend.upload_documents.title"))

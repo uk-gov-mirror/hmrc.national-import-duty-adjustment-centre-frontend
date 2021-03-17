@@ -75,6 +75,7 @@ class ClaimTypeViewSpec extends UnitViewSpec {
 
       errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("claim_type.error.required")
 
+      errorView.title() must startWith("Error:")
     }
 
   }
