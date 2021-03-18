@@ -35,6 +35,7 @@ final case class AmendClaim(
 
 object AmendClaim {
   implicit val formats: OFormat[AmendClaim] = Json.format[AmendClaim]
+  private val logger: Logger                = Logger(this.getClass)
 
   def apply(answers: AmendAnswers): AmendClaim = new AmendClaim(
     caseReference = answers.caseReference.getOrElse(missing(CaseReferencePage)),
@@ -45,7 +46,7 @@ object AmendClaim {
 
   private def missing(answer: Any) = {
     val message = s"Missing answer - $answer"
-    Logger(this.getClass).warn(message)
+    logger.warn(message)
     throw new MissingAnswersException(message)
   }
 

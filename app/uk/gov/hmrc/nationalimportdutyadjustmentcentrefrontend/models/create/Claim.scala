@@ -19,9 +19,9 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.Logger
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 import scala.util.Try
@@ -46,6 +46,8 @@ case class Claim(
 }
 
 object Claim {
+
+  private val logger: Logger = Logger(this.getClass)
 
   def apply(userAnswers: CreateAnswers): Claim = {
     if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
@@ -87,7 +89,7 @@ object Claim {
 
   private def missing(answer: Any) = {
     val message = s"Missing answer - $answer"
-    Logger(this.getClass).warn(message)
+    logger.warn(message)
     throw new MissingAnswersException(message)
   }
 
