@@ -68,7 +68,7 @@ class ReclaimDutyTypeController @Inject() (
     answers.copy(
       reclaimDutyTypes = dutyTypes,
       reclaimDutyPayments =
-        answers.reclaimDutyPayments.filterKeys(key => dutyTypes.contains(ReclaimDutyType.typeFromString(key)))
+        answers.reclaimDutyPayments.filterKeys(key => dutyTypes.map(_.toString).contains(key))
     )
 
 }

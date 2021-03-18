@@ -48,7 +48,4 @@ object ReclaimDutyType extends Enumerable.Implicits {
 
   implicit def typeToString: ReclaimDutyType => String = _.toString
 
-  def typeFromString(key: String): ReclaimDutyType =
-    values.find(_.toString == key).getOrElse(throw new IllegalArgumentException(s"Unknown duty type $key"))
-
 }
