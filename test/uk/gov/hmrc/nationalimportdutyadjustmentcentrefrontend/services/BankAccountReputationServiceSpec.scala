@@ -40,7 +40,6 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(Some(validMetaDataResponse)))
     when(connector.assessBusinessBankDetails(any())(any())).thenReturn(Future.successful(validAssessResponse))
   }
 
@@ -54,7 +53,6 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
     "return valid response when BARs returns valid response" in {
       service.validate(bankDetailsAnswer).futureValue.isValid mustBe true
 
-      verify(connector).sortcodeMetadata(any())(any())
       verify(connector).assessBusinessBankDetails(any())(any())
     }
 
@@ -65,30 +63,7 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
 
       service.validate(bankDetailsAnswer).futureValue.isValid mustBe false
 
-      verify(connector).sortcodeMetadata(any())(any())
       verify(connector).assessBusinessBankDetails(any())(any())
-    }
-
-    "not call 'assess' if metadata invalid" in {
-      when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(Some(noBacsMetaDataResponse)))
-
-      service.validate(bankDetailsAnswer).futureValue.isValid mustBe false
-
-      verify(connector).sortcodeMetadata(any())(any())
-      verifyNoMoreInteractions(connector)
-    }
-
-    "return 'Bars Not Found' result when BARS response with 404" in {
-      when(connector.sortcodeMetadata(any())(any())).thenReturn(Future.successful(None))
-
-      val result = service.validate(bankDetailsAnswer).futureValue
-
-      result.isValid mustBe false
-      result.sortcodeExists mustBe false
-
-      verify(connector).sortcodeMetadata(any())(any())
-      verifyNoMoreInteractions(connector)
-
     }
 
   }

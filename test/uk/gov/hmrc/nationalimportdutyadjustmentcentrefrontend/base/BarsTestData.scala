@@ -18,35 +18,36 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{
   AssessBusinessBankDetailsResponse,
-  BARSResult,
-  MetadataResponse
+  BARSResult
 }
 
 trait BarsTestData extends TestData {
 
-  // Metadata
-  val validMetaDataResponse: MetadataResponse  = MetadataResponse("M")
-  val noBacsMetaDataResponse: MetadataResponse = MetadataResponse("N")
-
   // Assess
   val validAssessResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("yes", "no", "yes", "yes")
+    AssessBusinessBankDetailsResponse("yes", "yes", "no", "yes", "yes", "yes")
+
+  val invalidSortcodeDoesNotExistResponse: AssessBusinessBankDetailsResponse =
+    AssessBusinessBankDetailsResponse("no", "no", "no", "indeterminate", "indeterminate", "error")
 
   val invalidAccountNumberAssessResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("no", "no", "yes", "yes")
+    AssessBusinessBankDetailsResponse("yes", "no", "no", "yes", "yes", "indeterminate")
 
   val invalidNonStandardAccountNumberAssessResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("yes", "yes", "yes", "yes")
+    AssessBusinessBankDetailsResponse("yes", "yes", "yes", "yes", "yes", "yes")
+
+  val invalidNoDirectCreditSupportResponse: AssessBusinessBankDetailsResponse =
+    AssessBusinessBankDetailsResponse("yes", "yes", "no", "yes", "yes", "no")
 
   // Bars
-  val barsSuccessResult: BARSResult = BARSResult(validMetaDataResponse, validAssessResponse)
+  val barsSuccessResult: BARSResult = BARSResult(validAssessResponse)
 
-  val barsBacsNotSupportedResult: BARSResult =
-    BARSResult(noBacsMetaDataResponse, AssessBusinessBankDetailsResponse.notApplicable)
+  val barsSortcodeDoesNotExistResult: BARSResult = BARSResult(invalidSortcodeDoesNotExistResponse)
 
-  val barsInvalidAccountResult: BARSResult = BARSResult(validMetaDataResponse, invalidAccountNumberAssessResponse)
+  val barsBacsNotSupportedResult: BARSResult = BARSResult(invalidNoDirectCreditSupportResponse)
 
-  val barsRollRequiredResult: BARSResult =
-    BARSResult(validMetaDataResponse, invalidNonStandardAccountNumberAssessResponse)
+  val barsInvalidAccountResult: BARSResult = BARSResult(invalidAccountNumberAssessResponse)
+
+  val barsRollRequiredResult: BARSResult = BARSResult(invalidNonStandardAccountNumberAssessResponse)
 
 }

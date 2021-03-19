@@ -22,46 +22,29 @@ class BARSResultSpec extends UnitSpec with BarsTestData {
 
   "BARSResult" should {
 
-    "be valid if metadata and assess calls are valid" in {
+    "be valid if assess call is valid" in {
 
-      BARSResult(validMetaDataResponse, validAssessResponse).isValid mustBe true
+      BARSResult(validAssessResponse).isValid mustBe true
     }
 
     "be invalid if sort code does not match account" in {
 
-      BARSResult(
-        validMetaDataResponse,
-        validAssessResponse.copy(accountNumberWithSortCodeIsValid = "no")
-      ).isValid mustBe false
+      BARSResult(validAssessResponse.copy(accountNumberWithSortCodeIsValid = "no")).isValid mustBe false
     }
 
     "be invalid if it is indeterminate if sort code and account match" in {
 
-      BARSResult(
-        validMetaDataResponse,
-        validAssessResponse.copy(accountNumberWithSortCodeIsValid = "indeterminate")
-      ).isValid mustBe false
+      BARSResult(validAssessResponse.copy(accountNumberWithSortCodeIsValid = "indeterminate")).isValid mustBe false
     }
 
     "be invalid if roll IS required" in {
 
-      BARSResult(
-        validMetaDataResponse,
-        validAssessResponse.copy(nonStandardAccountDetailsRequiredForBacs = "yes")
-      ).isValid mustBe false
-    }
-
-    "be invalid if bacs is not supported" in {
-
-      BARSResult(validMetaDataResponse.copy(bacsOfficeStatus = "N"), validAssessResponse).isValid mustBe false
+      BARSResult(validAssessResponse.copy(nonStandardAccountDetailsRequiredForBacs = "yes")).isValid mustBe false
     }
 
     "be invalid if bacs credits is not supported" in {
 
-      BARSResult(
-        validMetaDataResponse.copy(disallowedTransactions = Seq("CR")),
-        validAssessResponse
-      ).isValid mustBe false
+      BARSResult(validAssessResponse.copy(sortCodeSupportsDirectCredit = "no")).isValid mustBe false
     }
   }
 

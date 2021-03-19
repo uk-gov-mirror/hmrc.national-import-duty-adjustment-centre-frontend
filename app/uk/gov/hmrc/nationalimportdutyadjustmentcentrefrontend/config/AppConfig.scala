@@ -64,9 +64,6 @@ class AppConfig @Inject() (
 
   private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
 
-  val barsSortcodeMetadataUrl: String =
-    s"$barsBaseUrl${servicesConfig("bank-account-reputation.sortcodeMetadata")}"
-
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
 

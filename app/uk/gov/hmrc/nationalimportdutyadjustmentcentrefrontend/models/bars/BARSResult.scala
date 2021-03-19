@@ -16,29 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-case class BARSResult(
-  metadataResponse: MetadataResponse,
-  assessBusinessBankDetailsResponse: AssessBusinessBankDetailsResponse
-) {
+case class BARSResult(assessBusinessBankDetailsResponse: AssessBusinessBankDetailsResponse) {
 
-  val sortcodeExists: Boolean        = metadataResponse != MetadataResponse.notFound
-  val validSortcodeMetadata: Boolean = metadataResponse.acceptsBacsPayments
-
-  val validAccountAndSortCode: Boolean = assessBusinessBankDetailsResponse.validAccountAndSortCode
-  val rollNotRequired: Boolean         = assessBusinessBankDetailsResponse.rollNotRequired
-  val accountValid: Boolean            = assessBusinessBankDetailsResponse.accountValid
-  val companyNameValid: Boolean        = assessBusinessBankDetailsResponse.companyNameValid
+  val sortcodeExists: Boolean              = assessBusinessBankDetailsResponse.sortcodeExists
+  val validAccountAndSortCode: Boolean     = assessBusinessBankDetailsResponse.validAccountAndSortCode
+  val rollNotRequired: Boolean             = assessBusinessBankDetailsResponse.rollNotRequired
+  val accountValid: Boolean                = assessBusinessBankDetailsResponse.accountValid
+  val companyNameValid: Boolean            = assessBusinessBankDetailsResponse.companyNameValid
+  val sortcodeAcceptsDirectCredit: Boolean = assessBusinessBankDetailsResponse.sortcodeSupportsDirectCredit
 
   val isValid: Boolean =
-    sortcodeExists && validSortcodeMetadata && validAccountAndSortCode && rollNotRequired && accountValid && companyNameValid
-
-}
-
-object BARSResult {
-
-  def apply(metadataResponse: MetadataResponse): BARSResult =
-    new BARSResult(metadataResponse, AssessBusinessBankDetailsResponse.notApplicable)
-
-  val notFound: BARSResult = new BARSResult(MetadataResponse.notFound, AssessBusinessBankDetailsResponse.notApplicable)
+    sortcodeExists && validAccountAndSortCode && rollNotRequired && accountValid && companyNameValid && sortcodeAcceptsDirectCredit
 
 }

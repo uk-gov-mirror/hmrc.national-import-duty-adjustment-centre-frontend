@@ -83,11 +83,11 @@ class BankDetailsController @Inject() (
       case bars if !bars.sortcodeExists =>
         Seq(FormError("sortCode", "bankDetails.bars.validation.sortcodeNotFound"))
 
-      case bars if !bars.validSortcodeMetadata =>
-        Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
-
       case bars if !bars.validAccountAndSortCode =>
         Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
+
+      case bars if !bars.sortcodeAcceptsDirectCredit =>
+        Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
 
       case bars if !bars.rollNotRequired => Seq(FormError("sortCode", "bankDetails.bars.validation.rollRequired"))
 

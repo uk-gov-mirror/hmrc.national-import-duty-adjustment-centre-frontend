@@ -24,27 +24,26 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.Assess
 }
 
 case class AssessBusinessBankDetailsResponse(
+  sortCodeIsPresentOnEISCD: String,
   accountNumberWithSortCodeIsValid: String,
   nonStandardAccountDetailsRequiredForBacs: String,
   accountExists: String,
-  companyNameMatches: String
+  companyNameMatches: String,
+  sortCodeSupportsDirectCredit: String
 ) {
-  val validAccountAndSortCode: Boolean = accountNumberWithSortCodeIsValid == yes
-  val rollNotRequired: Boolean         = nonStandardAccountDetailsRequiredForBacs == no
-  val accountValid: Boolean            = Set(yes, indeterminate).contains(accountExists)
-  val companyNameValid: Boolean        = Set(yes, indeterminate).contains(companyNameMatches)
+  val sortcodeExists: Boolean               = sortCodeIsPresentOnEISCD == yes
+  val validAccountAndSortCode: Boolean      = accountNumberWithSortCodeIsValid == yes
+  val sortcodeSupportsDirectCredit: Boolean = sortCodeSupportsDirectCredit == yes
+  val rollNotRequired: Boolean              = nonStandardAccountDetailsRequiredForBacs == no
+  val accountValid: Boolean                 = Set(yes, indeterminate).contains(accountExists)
+  val companyNameValid: Boolean             = Set(yes, indeterminate).contains(companyNameMatches)
 }
 
 object AssessBusinessBankDetailsResponse {
   implicit val format: OFormat[AssessBusinessBankDetailsResponse] = Json.format[AssessBusinessBankDetailsResponse]
 
-  private val notApplicableValue = "n/a"
-
   private val yes           = "yes"
   private val no            = "no"
   private val indeterminate = "indeterminate"
-
-  val notApplicable =
-    AssessBusinessBankDetailsResponse(notApplicableValue, notApplicableValue, notApplicableValue, notApplicableValue)
 
 }

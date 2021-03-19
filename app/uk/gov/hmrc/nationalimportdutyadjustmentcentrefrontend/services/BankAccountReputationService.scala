@@ -27,13 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class BankAccountReputationService @Inject() (connector: BARSConnector)(implicit ec: ExecutionContext) {
 
   def validate(bankDetails: BankDetails)(implicit hc: HeaderCarrier): Future[BARSResult] =
-    connector.sortcodeMetadata(bankDetails.sortCode) flatMap {
-      case Some(metadata) if metadata.acceptsBacsPayments =>
-        connector.assessBusinessBankDetails(AssessBusinessBankDetailsRequest(bankDetails)) map { assessment =>
-          BARSResult(metadata, assessment)
-        }
-      case Some(metadata) => Future(BARSResult.apply(metadata))
-      case None           => Future(BARSResult.notFound)
+    connector.assessBusinessBankDetails(AssessBusinessBankDetailsRequest(bankDetails)) map { assessment =>
+      BARSResult(assessment)
     }
 
 }
