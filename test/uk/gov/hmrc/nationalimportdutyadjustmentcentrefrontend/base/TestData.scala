@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
-
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
@@ -29,7 +28,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Recl
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, JourneyId, UploadId}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  EoriNumber,
+  FileTransferResult,
+  JourneyId,
+  UploadId
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -147,6 +151,24 @@ trait TestData {
       hasMoreDocuments = Some(hasMoreDocumentsAnswer),
       uploads = Seq(uploadAnswer, uploadAnswer2),
       uploadAnotherFile = Some(uploadAnotherFileAnswer)
+    )
+
+  val claim: Claim = Claim(completeAnswers)
+
+  val validCreateClaimResponse: CreateClaimResponse =
+    CreateClaimResponse(
+      correlationId = "123456",
+      error = None,
+      result = Some(
+        CreateClaimResult(
+          caseReference = "654321",
+          fileTransferResults = Seq(
+            new FileTransferResult("up-ref-1", true, 201, LocalDateTime.now(), None),
+            new FileTransferResult("up-ref-2", true, 201, LocalDateTime.now(), None),
+            new FileTransferResult("up-ref-3", true, 201, LocalDateTime.now(), None)
+          )
+        )
+      )
     )
 
 }
