@@ -34,7 +34,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
   implicit val ec: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 
-  implicit val hc: HeaderCarrier = new HeaderCarrier(requestId = Some(RequestId("123456")))
+  implicit val hc: HeaderCarrier = HeaderCarrier(requestId = Some(RequestId("123456")))
 
   private val auditConnector = mock[AuditConnector]
   private val nidacConnector = mock[NIDACConnector]
