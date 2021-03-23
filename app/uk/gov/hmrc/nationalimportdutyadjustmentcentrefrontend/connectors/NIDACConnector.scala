@@ -38,13 +38,8 @@ class NIDACConnector @Inject() (auditConnector: AuditConnector, httpClient: Http
       s"$baseUrl/create-claim",
       request,
       Seq("X-Correlation-Id" -> correlationId)
-    ).map(createClaimResponse => {
-      createClaimResponse
-    }
-
-    ) recover {
-      case httpException: HttpException =>
-        failResponse(correlationId, httpException.responseCode, httpException.message)
+    ).map(createClaimResponse => createClaimResponse) recover {
+      case httpException: HttpException => failResponse(correlationId, httpException.responseCode, httpException.message)
     }
 
   def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit
