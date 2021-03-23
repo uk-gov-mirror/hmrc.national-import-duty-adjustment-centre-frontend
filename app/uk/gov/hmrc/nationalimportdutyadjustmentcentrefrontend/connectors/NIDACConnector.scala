@@ -22,12 +22,11 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class NIDACConnector @Inject() (auditConnector: AuditConnector, httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
+class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
   private val baseUrl = appConfig.nidacServiceBaseUrl
 
