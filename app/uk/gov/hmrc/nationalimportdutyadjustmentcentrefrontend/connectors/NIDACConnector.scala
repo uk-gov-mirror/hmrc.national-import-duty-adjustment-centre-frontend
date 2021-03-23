@@ -38,7 +38,7 @@ class NIDACConnector @Inject() (auditConnector: AuditConnector, httpClient: Http
       s"$baseUrl/create-claim",
       request,
       Seq("X-Correlation-Id" -> correlationId)
-    ).map(createClaimResponse => createClaimResponse) recover {
+    ) recover {
       case httpException: HttpException => failResponse(correlationId, httpException.responseCode, httpException.message)
     }
 
