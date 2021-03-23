@@ -75,6 +75,13 @@ class AppConfig @Inject() (
     approvedFileTypes = loadConfig("upscan.approved-file-types")
   )
 
+  val eoriEnrolments: Seq[String] = config.get[Seq[String]]("eori.enrolments")
+
+  private val allowListEnabled = config.get[Boolean]("eori.allowList.enabled")
+  private val allowedEoris     = config.get[Seq[String]]("eori.allowList.eoris")
+
+  def allowEori(eoriNumber: String): Boolean = !allowListEnabled || allowedEoris.contains(eoriNumber)
+
   private def servicesConfig(key: String): String = servicesConfig.getConfString(key, throwNotFound(key))
 
   private def loadConfig(key: String) =

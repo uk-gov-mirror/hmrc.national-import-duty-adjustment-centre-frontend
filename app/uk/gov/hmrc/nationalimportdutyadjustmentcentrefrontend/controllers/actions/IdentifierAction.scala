@@ -20,10 +20,12 @@ import com.google.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, internalId}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -39,16 +41,41 @@ class AuthenticatedIdentifierAction @Inject() (
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction with AuthorisedFunctions {
 
+  val eoriIdentifier = "EORINumber"
+
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map {
-        internalId => block(IdentifierRequest(request, internalId))
-      }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+    authorised().retrieve(internalId and allEnrolments) {
+
+      case userInternalId ~ allUsersEnrolments =>
+        def eoriForEnrolment(enrolmentKey: String) =
+          allUsersEnrolments.getEnrolment(enrolmentKey).flatMap(
+            enrolment => enrolment.getIdentifier(eoriIdentifier).map(_.value)
+          )
+
+        val eoriNumber: String = config.eoriEnrolments.map(eoriForEnrolment).flatten.headOption.getOrElse(
+          throw InsufficientEnrolments("User does not have enrolment with EORI")
+        )
+
+        if (config.allowEori(eoriNumber))
+          userInternalId.map(
+            internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))
+          ).getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+        else
+          Future.successful(
+            // TODO - crete new page for "not allowed"
+            Redirect(routes.UnauthorisedController.onPageLoad())
+          )
+
     } recover {
+      case _: InsufficientEnrolments =>
+        Redirect(
+          // TODO - redirect to ECC to enrol for NIDAC (Trader Services)
+          routes.UnauthorisedController.onPageLoad()
+        )
       case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: AuthorisationException =>
