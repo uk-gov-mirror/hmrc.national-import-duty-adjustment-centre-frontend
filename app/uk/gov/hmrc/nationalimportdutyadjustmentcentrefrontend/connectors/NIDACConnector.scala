@@ -16,19 +16,18 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
-  AmendEISClaimRequest,
-  CreateEISClaimRequest
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
+class NIDACConnector @Inject() (auditConnector: AuditConnector, httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
   private val baseUrl = appConfig.nidacServiceBaseUrl
 
@@ -39,7 +38,14 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
       s"$baseUrl/create-claim",
       request,
       Seq("X-Correlation-Id" -> correlationId)
-    )
+    ).map(createClaimResponse => {
+      createClaimResponse
+    }
+
+    ) recover {
+      case httpException: HttpException =>
+        failResponse(correlationId, httpException.responseCode, httpException.message)
+    }
 
   def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit
     hc: HeaderCarrier
@@ -49,5 +55,11 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
       request,
       Seq("X-Correlation-Id" -> correlationId)
     )
+
+  private def failResponse(correlationId: String, errorCode: Int, errorMessage: String) = CreateClaimResponse(
+    correlationId = correlationId,
+    error = Some(new ApiError(errorCode.toString, Some(errorMessage))),
+    result = None
+  )
 
 }
