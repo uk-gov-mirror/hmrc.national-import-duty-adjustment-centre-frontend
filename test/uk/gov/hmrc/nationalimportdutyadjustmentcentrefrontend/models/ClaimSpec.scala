@@ -30,7 +30,7 @@ class ClaimSpec extends UnitSpec with TestData {
       "reclaim Customs Duty specified but no calculations present" in {
 
         intercept[MissingAnswersException] {
-          Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Customs))
+          Claim(claimantEori, completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Customs))
         }.getMessage mustBe s"Missing answer - DutyPayment $Customs"
 
       }
@@ -38,7 +38,7 @@ class ClaimSpec extends UnitSpec with TestData {
       "reclaim Import VAT specified but no calculations present" in {
 
         intercept[MissingAnswersException] {
-          Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Vat))
+          Claim(claimantEori, completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Vat))
         }.getMessage mustBe s"Missing answer - DutyPayment $Vat"
 
       }
@@ -46,7 +46,7 @@ class ClaimSpec extends UnitSpec with TestData {
       "reclaim Other Duty specified but no calculations present" in {
 
         intercept[MissingAnswersException] {
-          Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Other))
+          Claim(claimantEori, completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Other))
         }.getMessage mustBe s"Missing answer - DutyPayment $Other"
 
       }
@@ -55,7 +55,7 @@ class ClaimSpec extends UnitSpec with TestData {
         val invalidAnswer =
           completeAnswers.copy(representationType = Some(RepresentationType.Representative), repayTo = None)
         intercept[MissingAnswersException] {
-          Claim(invalidAnswer)
+          Claim(claimantEori, invalidAnswer)
         }.getMessage mustBe s"Missing answer - RepayToPage"
 
       }
@@ -65,7 +65,7 @@ class ClaimSpec extends UnitSpec with TestData {
       val expected =
         customsDutyRepaymentAnswer.dueAmount + importVatRepaymentAnswer.dueAmount + otherDutyRepaymentAnswer.dueAmount
 
-      Claim(completeAnswers).repaymentTotal mustBe expected
+      Claim(claimantEori, completeAnswers).repaymentTotal mustBe expected
     }
 
     "ignore 'importer being represented' answers when representation type is 'importer'" in {
@@ -73,7 +73,7 @@ class ClaimSpec extends UnitSpec with TestData {
         representationType = Some(RepresentationType.Importer),
         repayTo = Some(RepayTo.Representative)
       )
-      Claim(answersWithRepayTo).importerBeingRepresentedDetails mustBe None
+      Claim(claimantEori, answersWithRepayTo).importerBeingRepresentedDetails mustBe None
     }
   }
 

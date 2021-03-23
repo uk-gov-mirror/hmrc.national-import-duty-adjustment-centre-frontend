@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
@@ -29,7 +30,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -47,7 +47,7 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { answers =>
-      Ok(checkYourAnswersView(Claim(answers), backLink(answers)))
+      Ok(checkYourAnswersView(Claim(request.eoriNumber, answers), backLink(answers)))
     } recover {
       case _: MissingAnswersException =>
         Redirect(controllers.routes.StartController.start())
@@ -62,7 +62,7 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
-      val claim = Claim(answers)
+      val claim = Claim(request.eoriNumber, answers)
       service.submitClaim(claim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>

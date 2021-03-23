@@ -37,6 +37,8 @@ trait TestData {
   val fixedDate: LocalDate         = LocalDate.now()
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
 
+  val claimantEori = EoriNumber("GB434586395327")
+
   // CreateAnswers
   val emptyAnswers: CreateAnswers = CreateAnswers()
 

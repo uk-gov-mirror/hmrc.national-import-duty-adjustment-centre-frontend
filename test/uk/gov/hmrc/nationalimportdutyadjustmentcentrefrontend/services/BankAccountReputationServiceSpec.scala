@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, verify, verifyNoMoreInteractions, when}
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar.mock

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{
   Importer,
   Representative
@@ -28,6 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   ImporterBeingRepresentedDetails
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 
 case class ImporterDetails(EORI: Option[String], Name: String, Address: ImporterAddress)
 
@@ -41,12 +41,16 @@ object ImporterDetails {
           throw new MissingAnswersException("Missing ImporterBeingRepresentedDetails")
         )
       )
-    case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)
+    case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.claimantAddress)
   }
 
-  private def forImporterApplicant(contactDetails: ContactDetails, address: create.Address): ImporterDetails =
+  private def forImporterApplicant(
+    claimantEori: EoriNumber,
+    contactDetails: ContactDetails,
+    address: create.Address
+  ): ImporterDetails =
     new ImporterDetails(
-      EORI = None, // TODO - capture applicant's EORI
+      EORI = Some(claimantEori.number),
       Name = address.name,
       Address = ImporterAddress(
         AddressLine1 = address.addressLine1,

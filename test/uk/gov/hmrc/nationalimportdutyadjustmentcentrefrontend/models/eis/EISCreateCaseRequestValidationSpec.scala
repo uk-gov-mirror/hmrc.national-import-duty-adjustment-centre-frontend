@@ -79,7 +79,7 @@ class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidat
       AcknowledgementReference = UUID.randomUUID().toString.replace("-", "").takeRight(32),
       ApplicationType = "NIDAC",
       OriginatingSystem = "Digital",
-      Content = EISCreateCaseRequest.Content(Claim(answers))
+      Content = EISCreateCaseRequest.Content(Claim(claimantEori, answers))
     )
 
   private def validationErrors(eisRequest: EISCreateCaseRequest) =

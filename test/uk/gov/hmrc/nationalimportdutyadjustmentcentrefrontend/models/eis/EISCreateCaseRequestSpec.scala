@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import java.time.LocalDate
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
@@ -37,7 +37,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 
-class EISCreateCaseRequestSpec extends UnitSpec {
+class EISCreateCaseRequestSpec extends UnitSpec with TestData {
 
   "EISCreateCaseRequest" should {
 
@@ -53,6 +53,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   }
 
   val claimByRepresentative: Claim = create.Claim(
+    claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     claimantAddress = UkAddress("Representative Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
@@ -99,7 +100,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     ),
     AgentDetails = Some(
       AgentDetails(
-        None,
+        Some(claimantEori.number),
         "Representative Co Ltd",
         AgentAddress(
           "Address Line 1",
@@ -127,6 +128,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   )
 
   val claimByImporter: Claim = create.Claim(
+    claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     claimantAddress = UkAddress("Acme Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,
@@ -146,7 +148,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     RepresentationType = "Importer",
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
-      None,
+      Some(claimantEori.number),
       "Acme Import Co Ltd",
       ImporterAddress(
         "Address Line 1",

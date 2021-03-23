@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.Logger
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
@@ -27,6 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import scala.util.Try
 
 case class Claim(
+  claimantEori: EoriNumber,
   contactDetails: ContactDetails,
   claimantAddress: Address,
   representationType: RepresentationType,
@@ -49,10 +50,11 @@ object Claim {
 
   private val logger: Logger = Logger(this.getClass)
 
-  def apply(userAnswers: CreateAnswers): Claim = {
+  def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
     if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
+      claimantEori = claimantEori,
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
