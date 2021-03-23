@@ -36,7 +36,6 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   val page: CheckYourAnswersView = mock[CheckYourAnswersView]
   val service: ClaimService      = mock[ClaimService]
-  val auditConnector: AuditConnector = mock[AuditConnector]
   val claimRef                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
@@ -59,8 +58,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       cacheDataService,
       service,
       navigator,
-      page,
-      auditConnector
+      page
     )
 
   "GET" should {
