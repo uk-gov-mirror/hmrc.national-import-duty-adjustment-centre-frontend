@@ -21,7 +21,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
+  AmendEISClaimRequest,
+  CreateEISClaimRequest
+}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,7 +41,8 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
       request,
       Seq("X-Correlation-Id" -> correlationId)
     ) recover {
-      case httpException: HttpException => failResponse(correlationId, httpException.responseCode, httpException.message)
+      case httpException: HttpException =>
+        failResponse(correlationId, httpException.responseCode, httpException.message)
     }
 
   def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit

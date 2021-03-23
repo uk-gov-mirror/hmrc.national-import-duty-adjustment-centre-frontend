@@ -63,7 +63,6 @@ class CheckYourAnswersController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-
     data.getCreateAnswers flatMap { answers =>
       val claim = Claim(answers)
       service.submitClaim(answers, claim) flatMap {

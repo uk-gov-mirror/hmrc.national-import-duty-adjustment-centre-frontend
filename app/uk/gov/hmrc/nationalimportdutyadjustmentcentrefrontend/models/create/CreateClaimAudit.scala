@@ -44,10 +44,3 @@ object CreateClaimAudit {
   implicit val claimWrites: Writes[CreateClaimAudit] = Json.writes[CreateClaimAudit]
 
 }
-
-
-
-
-
-
-
