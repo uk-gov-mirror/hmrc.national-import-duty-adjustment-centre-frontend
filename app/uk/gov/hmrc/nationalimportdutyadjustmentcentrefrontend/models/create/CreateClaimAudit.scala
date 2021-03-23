@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, FileTransferResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 case class CreateClaimAudit(
@@ -35,6 +35,7 @@ case class CreateClaimAudit(
   entryDetails: Option[EntryDetails] = None,
   itemNumbers: Option[ItemNumbers] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
+  fileTransferResults: Seq[FileTransferResult] = Seq.empty,
   importerEori: Option[EoriNumber] = None
 )
 

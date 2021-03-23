@@ -72,7 +72,6 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
            (implicit hc: HeaderCarrier, ec: ExecutionContext)
   : Unit = {
 
-
     val audit = new CreateClaimAudit(
       success,
       claimResponse.result.map(result => result.caseReference),
@@ -88,6 +87,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       answers.entryDetails,
       answers.itemNumbers,
       answers.uploads,
+      claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
       answers.importerEori
 
     )
