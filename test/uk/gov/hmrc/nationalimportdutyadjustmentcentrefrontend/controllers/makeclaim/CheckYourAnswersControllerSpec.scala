@@ -26,6 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateClaimResponse, CreateClaimResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
@@ -35,6 +36,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
   val page: CheckYourAnswersView = mock[CheckYourAnswersView]
   val service: ClaimService      = mock[ClaimService]
+  val auditConnector: AuditConnector = mock[AuditConnector]
   val claimRef                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
@@ -57,7 +59,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       cacheDataService,
       service,
       navigator,
-      page
+      page,
+      auditConnector
     )
 
   "GET" should {

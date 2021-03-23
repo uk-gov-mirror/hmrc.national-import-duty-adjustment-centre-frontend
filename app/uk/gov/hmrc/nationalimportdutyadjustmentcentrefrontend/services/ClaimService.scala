@@ -16,21 +16,21 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
-  AmendEISClaimRequest,
-  CreateEISClaimRequest
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.Future
 
 class ClaimService @Inject() (connector: NIDACConnector) {
+
   private val APPLICATION_TYPE_NIDAC            = "NIDAC"
   private val ORIGINATING_SYSTEM_DIGITAL        = "Digital"
   private val acknowledgementReferenceMaxLength = 32

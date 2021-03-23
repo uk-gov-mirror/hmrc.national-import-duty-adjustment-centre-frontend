@@ -22,12 +22,13 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers, CreateClaimAudit, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
@@ -39,7 +40,8 @@ class CheckYourAnswersController @Inject() (
   data: CacheDataService,
   service: ClaimService,
   val navigator: CreateNavigator,
-  checkYourAnswersView: CheckYourAnswersView
+  checkYourAnswersView: CheckYourAnswersView,
+  val auditConnector: AuditConnector
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
@@ -61,11 +63,39 @@ class CheckYourAnswersController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
+
+    def audit(success: Boolean, answers: CreateAnswers, claimResponse: Option[CreateClaimResponse]): Unit = {
+
+
+      val audit = new CreateClaimAudit(
+        success,
+        claimResponse.map(response => response.result.map(result => result.caseReference).getOrElse("No Case Reference")),
+        answers.contactDetails,
+        answers.claimantAddress,
+        answers.representationType,
+        answers.claimType,
+        answers.claimReason,
+        answers.reclaimDutyPayments,
+        answers.bankDetails,
+        answers.importerContactDetails,
+        answers.repayTo,
+        answers.entryDetails,
+        answers.itemNumbers,
+        answers.uploads,
+        answers.importerEori
+
+      )
+      auditConnector.sendExplicitAudit("CreateClaim", audit)
+    }
+
     data.getCreateAnswers flatMap { answers =>
       val claim = Claim(request.eoriNumber, answers)
       service.submitClaim(claim) flatMap {
-        case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
+        case response if response.error.isDefined =>
+          audit(success = false, answers, Some(response))
+          throw new Exception(s"Error - ${response.error}")
         case response =>
+          audit(success = true, answers, Some(response))
           data.storeCreateResponse(response) map {
             _ => Redirect(nextPage(answers))
           }
