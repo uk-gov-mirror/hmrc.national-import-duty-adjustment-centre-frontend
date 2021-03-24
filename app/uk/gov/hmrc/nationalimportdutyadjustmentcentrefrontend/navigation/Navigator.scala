@@ -41,8 +41,13 @@ trait Navigator[T <: Answers] {
       viewFor(pageOrder, nextPageAfterChangeFor(pageOrder, currentPage, userAnswers)).getOrElse(checkYourAnswersPage)
   }
 
+  private val jsBackLink: Call = Call("GET", "javascript:history.back()")
+
   def previousPage(currentPage: Page, userAnswers: T): NavigatorBack =
-    NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
+    if (userAnswers.changePage.isDefined)
+      NavigatorBack(Some(jsBackLink))
+    else
+      NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
 
   private val nextPageFor: (Seq[P], Page, T) => Option[Page] = (pages, currentPage, userAnswers) =>
     after(pages, currentPage)
