@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimAudit, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimAudit, CreateClaimResponse, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -82,7 +82,11 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       claim.representationType,
       claim.claimType,
       claim.claimReason,
-      claim.reclaimDutyPayments.map{ case (dutyType, paid) => (dutyType.toString, paid)},
+      claim.reclaimDutyPayments.map(kv => (kv._1 match {
+        case ReclaimDutyType.Customs => "Customs"
+        case ReclaimDutyType.Vat => "Vat"
+        case ReclaimDutyType.Other => "Other"
+      }, kv._2)),
       claim.bankDetails,
       claim.importerBeingRepresentedDetails.map(details => details.contactDetails),
       claim.importerBeingRepresentedDetails.map(details => details.repayTo),
@@ -90,7 +94,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       claim.itemNumbers,
       claim.uploads,
       claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
-      claim.importerBeingRepresentedDetails.map(details => details.eoriNumber.get)
+      claim.importerBeingRepresentedDetails.flatMap(details => details.eoriNumber)
     )
     auditConnector.sendExplicitAudit("CreateClaim", audit)
   }
