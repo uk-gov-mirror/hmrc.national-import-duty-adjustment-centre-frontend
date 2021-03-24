@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
@@ -39,7 +40,10 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
       s"$baseUrl/create-claim",
       request,
       Seq("X-Correlation-Id" -> correlationId)
-    )
+    ) recover {
+      case httpException: HttpException =>
+        failResponse(correlationId, httpException.responseCode, httpException.message)
+    }
 
   def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit
     hc: HeaderCarrier
@@ -49,5 +53,11 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
       request,
       Seq("X-Correlation-Id" -> correlationId)
     )
+
+  private def failResponse(correlationId: String, errorCode: Int, errorMessage: String) = CreateClaimResponse(
+    correlationId = correlationId,
+    error = Some(new ApiError(errorCode.toString, Some(errorMessage))),
+    result = None
+  )
 
 }

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
-
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
@@ -29,7 +28,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Recl
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, JourneyId, UploadId}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  EoriNumber,
+  FileTransferResult,
+  JourneyId,
+  UploadId
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -148,5 +152,47 @@ trait TestData {
       uploads = Seq(uploadAnswer, uploadAnswer2),
       uploadAnotherFile = Some(uploadAnotherFileAnswer)
     )
+
+  val claim: Claim = Claim(claimantEori, completeAnswers)
+
+  val validCreateClaimResponse: CreateClaimResponse =
+    CreateClaimResponse(
+      correlationId = "123456",
+      error = None,
+      result = Some(
+        CreateClaimResult(
+          caseReference = "NID21134557697RM8WIB14",
+          fileTransferResults = Seq(
+            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+          )
+        )
+      )
+    )
+
+  val createClaimAudit: CreateClaimAudit = CreateClaimAudit(
+    true,
+    Some("NID21134557697RM8WIB14"),
+    contactDetailsAnswer,
+    addressAnswer,
+    representationTypeAnswer,
+    claimTypeAnswer,
+    claimReasonAnswer,
+    Map("Customs" -> DutyPaid("100", "9.99"), "Vat" -> DutyPaid("100", "9.99"), "Other" -> DutyPaid("100", "9.99")),
+    bankDetailsAnswer,
+    Some(importerContactDetailsAnswer),
+    Some(repayToAnswer),
+    entryDetailsAnswer,
+    itemNumbersAnswer,
+    Seq(uploadAnswer),
+    Seq(
+      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+    ),
+    claimantEori,
+    Some(importerEoriNumberAnswer)
+  )
 
 }

@@ -19,23 +19,30 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  Claim,
+  CreateClaimAudit,
+  CreateClaimResponse,
+  ReclaimDutyType
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
   AmendEISClaimRequest,
   CreateEISClaimRequest
 }
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.util.UUID
 import javax.inject.Inject
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimService @Inject() (connector: NIDACConnector) {
+class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACConnector) {
+
   private val APPLICATION_TYPE_NIDAC            = "NIDAC"
   private val ORIGINATING_SYSTEM_DIGITAL        = "Digital"
   private val acknowledgementReferenceMaxLength = 32
 
-  def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {
+  def submitClaim(claim: Claim)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CreateClaimResponse] = {
 
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISCreateCaseRequest = EISCreateCaseRequest(
@@ -46,6 +53,10 @@ class ClaimService @Inject() (connector: NIDACConnector) {
     )
 
     connector.submitClaim(CreateEISClaimRequest(eisRequest, claim.uploads), correlationId)
+      .map { response =>
+        auditConnector.sendExplicitAudit("CreateClaim", CreateClaimAudit(response.error.isEmpty, claim, response))
+        response
+      }
 
   }
 
@@ -60,7 +71,6 @@ class ClaimService @Inject() (connector: NIDACConnector) {
     )
 
     connector.amendClaim(AmendEISClaimRequest(eisRequest, amendClaim.uploads), correlationId)
-
   }
 
 }
