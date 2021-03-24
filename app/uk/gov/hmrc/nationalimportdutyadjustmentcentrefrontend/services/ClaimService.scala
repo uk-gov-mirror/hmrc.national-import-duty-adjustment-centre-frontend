@@ -54,7 +54,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
 
     connector.submitClaim(CreateEISClaimRequest(eisRequest, claim.uploads), correlationId)
       .map { response =>
-        audit(response.error.isEmpty, claim, response)
+        auditConnector.sendExplicitAudit("CreateClaim", CreateClaimAudit(response.error.isEmpty, claim, response))
         response
       }
 
@@ -71,39 +71,6 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
     )
 
     connector.amendClaim(AmendEISClaimRequest(eisRequest, amendClaim.uploads), correlationId)
-
-  }
-
-  def audit(success: Boolean, claim: Claim, claimResponse: CreateClaimResponse)(implicit
-    hc: HeaderCarrier,
-    ec: ExecutionContext
-  ): Unit = {
-
-    val audit = new CreateClaimAudit(
-      success,
-      claimResponse.result.map(result => result.caseReference),
-      claim.contactDetails,
-      claim.claimantAddress,
-      claim.representationType,
-      claim.claimType,
-      claim.claimReason,
-      claim.reclaimDutyPayments.map(kv => (dutyTypeToString(kv._1), kv._2)),
-      claim.bankDetails,
-      claim.importerBeingRepresentedDetails.map(details => details.contactDetails),
-      claim.importerBeingRepresentedDetails.map(details => details.repayTo),
-      claim.entryDetails,
-      claim.itemNumbers,
-      claim.uploads,
-      claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
-      claim.importerBeingRepresentedDetails.flatMap(details => details.eoriNumber)
-    )
-    auditConnector.sendExplicitAudit("CreateClaim", audit)
-  }
-
-  def dutyTypeToString: ReclaimDutyType => String = {
-    case ReclaimDutyType.Customs => "Customs"
-    case ReclaimDutyType.Vat     => "Vat"
-    case ReclaimDutyType.Other   => "Other"
   }
 
 }

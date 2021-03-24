@@ -28,19 +28,47 @@ case class CreateClaimAudit(
   representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,
-  reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
+  reclaimDutyPayments: Map[String, DutyPaid],
   bankDetails: BankDetails,
-  importerContactDetails: Option[ImporterContactDetails] = None,
-  repayTo: Option[RepayTo] = None,
+  importerContactDetails: Option[ImporterContactDetails],
+  repayTo: Option[RepayTo],
   entryDetails: EntryDetails,
   itemNumbers: ItemNumbers,
-  uploads: Seq[UploadedFile] = Seq.empty,
-  fileTransferResults: Seq[FileTransferResult] = Seq.empty,
-  importerEori: Option[EoriNumber] = None
+  uploads: Seq[UploadedFile],
+  fileTransferResults: Seq[FileTransferResult],
+  claimantEori: EoriNumber,
+  importerEori: Option[EoriNumber]
 )
 
 object CreateClaimAudit {
 
   implicit val claimWrites: Writes[CreateClaimAudit] = Json.writes[CreateClaimAudit]
+
+  def apply(success: Boolean, claim: Claim, claimResponse: CreateClaimResponse): CreateClaimAudit =
+    new CreateClaimAudit(
+      success,
+      claimResponse.result.map(result => result.caseReference),
+      claim.contactDetails,
+      claim.claimantAddress,
+      claim.representationType,
+      claim.claimType,
+      claim.claimReason,
+      claim.reclaimDutyPayments.map(kv => (dutyTypeToString(kv._1), kv._2)),
+      claim.bankDetails,
+      claim.importerBeingRepresentedDetails.map(details => details.contactDetails),
+      claim.importerBeingRepresentedDetails.map(details => details.repayTo),
+      claim.entryDetails,
+      claim.itemNumbers,
+      claim.uploads,
+      claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
+      claim.claimantEori,
+      claim.importerBeingRepresentedDetails.flatMap(details => details.eoriNumber)
+    )
+
+  def dutyTypeToString: ReclaimDutyType => String = {
+    case ReclaimDutyType.Customs => "Customs"
+    case ReclaimDutyType.Vat     => "Vat"
+    case ReclaimDutyType.Other   => "Other"
+  }
 
 }

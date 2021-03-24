@@ -153,7 +153,7 @@ trait TestData {
       uploadAnotherFile = Some(uploadAnotherFileAnswer)
     )
 
-  val claim: Claim = Claim(completeAnswers)
+  val claim: Claim = Claim(claimantEori, completeAnswers)
 
   val validCreateClaimResponse: CreateClaimResponse =
     CreateClaimResponse(
@@ -191,6 +191,7 @@ trait TestData {
       new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
       new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
     ),
+    claimantEori,
     Some(importerEoriNumberAnswer)
   )
 
