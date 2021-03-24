@@ -18,17 +18,19 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.UnauthorisedPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ServiceUnavailablePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 
 @Singleton
-class UnauthorisedController @Inject() (mcc: MessagesControllerComponents, unauthorisedPage: UnauthorisedPage)
-    extends FrontendController(mcc) {
+class ServiceUnavailableController @Inject() (
+  mcc: MessagesControllerComponents,
+  unavailablePage: ServiceUnavailablePage
+) extends FrontendController(mcc) {
 
-  val onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(unauthorisedPage())
+  val onPageLoad: Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(unavailablePage()))
   }
 
 }

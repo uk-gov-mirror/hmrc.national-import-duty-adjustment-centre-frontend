@@ -28,6 +28,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{~, Retrieval}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
@@ -112,18 +113,18 @@ class AuthenticatedIdentifierActionSpec extends UnitSpec with MockitoSugar with 
         val result: Future[Result] = handleAuthWithEnrolments(enrolmentsWithoutEORI)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must beTheUnauthorisedPage
+        redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
       }
     }
 
     "user's EORI not on allow list" must {
-      "redirect to unauthorised page" in {
+      "redirect to service unavailable page" in {
         when(mockConfig.get[Boolean]("eori.allowList.enabled")).thenReturn(true)
 
         val result: Future[Result] = handleAuthWithEnrolments(enrolmentsWithEORI)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must beTheUnauthorisedPage
+        redirectLocation(result) mustBe Some(controllers.routes.ServiceUnavailableController.onPageLoad().url)
       }
     }
 
@@ -141,9 +142,6 @@ class AuthenticatedIdentifierActionSpec extends UnitSpec with MockitoSugar with 
 
   private def beTheLoginPage =
     startWith(appConfig.loginUrl)
-
-  private def beTheUnauthorisedPage =
-    endWith("/unauthorised")
 
   private def handleAuthError(exc: AuthorisationException): Future[Result] = {
 

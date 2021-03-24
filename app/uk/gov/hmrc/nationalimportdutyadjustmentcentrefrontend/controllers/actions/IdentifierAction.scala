@@ -56,7 +56,7 @@ class AuthenticatedIdentifierAction @Inject() (
             enrolment => enrolment.getIdentifier(eoriIdentifier).map(_.value)
           )
 
-        val eoriNumber: String = config.eoriEnrolments.map(eoriForEnrolment).flatten.headOption.getOrElse(
+        val eoriNumber: String = config.eoriEnrolments.flatMap(eoriForEnrolment).headOption.getOrElse(
           throw InsufficientEnrolments("User does not have enrolment with EORI")
         )
 
@@ -65,10 +65,7 @@ class AuthenticatedIdentifierAction @Inject() (
             internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))
           ).getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
         else
-          Future.successful(
-            // TODO - crete new page for "not allowed"
-            Redirect(routes.UnauthorisedController.onPageLoad())
-          )
+          Future(Redirect(routes.ServiceUnavailableController.onPageLoad()))
 
     } recover {
       case _: InsufficientEnrolments =>

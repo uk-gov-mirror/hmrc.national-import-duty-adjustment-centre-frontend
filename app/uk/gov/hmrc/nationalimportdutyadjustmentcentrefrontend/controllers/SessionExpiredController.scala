@@ -27,8 +27,8 @@ import scala.concurrent.Future
 class SessionExpiredController @Inject() (mcc: MessagesControllerComponents, sessionExpiredPage: SessionExpiredPage)
     extends FrontendController(mcc) {
 
-  val onPageLoad: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(sessionExpiredPage()))
+  val onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Ok(sessionExpiredPage())
   }
 
 }

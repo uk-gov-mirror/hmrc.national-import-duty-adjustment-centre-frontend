@@ -23,6 +23,10 @@ session_expired.guidance = The details you have given have been deleted because 
 
 unauthorised.title = You can’t access this service with this account
 
+service.unavailable.title = Sorry, the service is unavailable
+service.unavailable.paragraph.1 = We are working on updating this service.
+service.unavailable.paragraph.2 = In the meantime you can continue to submit NIDAC claims using the existing method.
+
 representation_type.title = Are you the importer or their representative?
 representation_type.error.required = Select if you are the importer or their representative
 representation_type.Importer = I am the importer
