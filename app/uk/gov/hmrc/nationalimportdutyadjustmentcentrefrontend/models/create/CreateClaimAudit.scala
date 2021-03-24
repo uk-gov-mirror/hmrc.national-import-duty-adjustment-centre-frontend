@@ -45,7 +45,7 @@ object CreateClaimAudit {
   implicit val claimWrites: Writes[CreateClaimAudit] = Json.writes[CreateClaimAudit]
 
   def apply(success: Boolean, claim: Claim, claimResponse: CreateClaimResponse): CreateClaimAudit =
-    new CreateClaimAudit(
+    CreateClaimAudit(
       success,
       claimResponse.result.map(result => result.caseReference),
       claim.contactDetails,
