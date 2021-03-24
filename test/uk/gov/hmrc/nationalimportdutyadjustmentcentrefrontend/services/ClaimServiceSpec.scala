@@ -55,7 +55,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
   "ClaimService" should {
 
     "return valid response when claim is submitted succesfully" in {
-      service.submitClaim(completeAnswers, claim).futureValue.correlationId mustBe "123456"
+      service.submitClaim(claim).futureValue.correlationId mustBe "123456"
 
     }
   }

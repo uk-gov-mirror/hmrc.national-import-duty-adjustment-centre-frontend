@@ -16,21 +16,12 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
-  Claim,
-  CreateAnswers,
-  CreateClaimAudit,
-  CreateClaimResponse
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimAudit, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
-  AmendEISClaimRequest,
-  CreateEISClaimRequest
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.util.UUID
@@ -43,7 +34,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
   private val ORIGINATING_SYSTEM_DIGITAL        = "Digital"
   private val acknowledgementReferenceMaxLength = 32
 
-  def submitClaim(answers: CreateAnswers, claim: Claim)(implicit
+  def submitClaim(claim: Claim)(implicit
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[CreateClaimResponse] = {
@@ -58,7 +49,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
 
     connector.submitClaim(CreateEISClaimRequest(eisRequest, claim.uploads), correlationId)
       .map { response =>
-        audit(response.error.isEmpty, answers, response)
+        audit(response.error.isEmpty, claim, response)
         response
       }
 
@@ -78,28 +69,28 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
 
   }
 
-  def audit(success: Boolean, answers: CreateAnswers, claimResponse: CreateClaimResponse)(implicit
-    hc: HeaderCarrier,
-    ec: ExecutionContext
+  def audit(success: Boolean, claim: Claim, claimResponse: CreateClaimResponse)(implicit
+                                                                                hc: HeaderCarrier,
+                                                                                ec: ExecutionContext
   ): Unit = {
 
     val audit = new CreateClaimAudit(
       success,
       claimResponse.result.map(result => result.caseReference),
-      answers.contactDetails,
-      answers.claimantAddress,
-      answers.representationType,
-      answers.claimType,
-      answers.claimReason,
-      answers.reclaimDutyPayments,
-      answers.bankDetails,
-      answers.importerContactDetails,
-      answers.repayTo,
-      answers.entryDetails,
-      answers.itemNumbers,
-      answers.uploads,
+      claim.contactDetails,
+      claim.claimantAddress,
+      claim.representationType,
+      claim.claimType,
+      claim.claimReason,
+      claim.reclaimDutyPayments.map{ case (dutyType, paid) => (dutyType.toString, paid)},
+      claim.bankDetails,
+      claim.importerBeingRepresentedDetails.map(details => details.contactDetails),
+      claim.importerBeingRepresentedDetails.map(details => details.repayTo),
+      claim.entryDetails,
+      claim.itemNumbers,
+      claim.uploads,
       claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
-      answers.importerEori
+      claim.importerBeingRepresentedDetails.map(details => details.eoriNumber.get)
     )
     auditConnector.sendExplicitAudit("CreateClaim", audit)
   }

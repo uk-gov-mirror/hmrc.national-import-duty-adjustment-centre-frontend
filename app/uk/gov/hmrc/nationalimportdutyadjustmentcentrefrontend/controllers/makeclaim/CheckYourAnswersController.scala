@@ -65,7 +65,7 @@ class CheckYourAnswersController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
       val claim = Claim(answers)
-      service.submitClaim(answers, claim) flatMap {
+      service.submitClaim(claim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>
           data.storeCreateResponse(response) map {
