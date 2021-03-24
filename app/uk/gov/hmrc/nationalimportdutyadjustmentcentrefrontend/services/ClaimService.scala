@@ -19,9 +19,17 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimAudit, CreateClaimResponse, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  Claim,
+  CreateClaimAudit,
+  CreateClaimResponse,
+  ReclaimDutyType
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
+  AmendEISClaimRequest,
+  CreateEISClaimRequest
+}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.util.UUID
@@ -34,10 +42,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
   private val ORIGINATING_SYSTEM_DIGITAL        = "Digital"
   private val acknowledgementReferenceMaxLength = 32
 
-  def submitClaim(claim: Claim)(implicit
-    hc: HeaderCarrier,
-    ec: ExecutionContext
-  ): Future[CreateClaimResponse] = {
+  def submitClaim(claim: Claim)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CreateClaimResponse] = {
 
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISCreateCaseRequest = EISCreateCaseRequest(
@@ -70,8 +75,8 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
   }
 
   def audit(success: Boolean, claim: Claim, claimResponse: CreateClaimResponse)(implicit
-                                                                                hc: HeaderCarrier,
-                                                                                ec: ExecutionContext
+    hc: HeaderCarrier,
+    ec: ExecutionContext
   ): Unit = {
 
     val audit = new CreateClaimAudit(
@@ -97,8 +102,8 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
 
   def dutyTypeToString: ReclaimDutyType => String = {
     case ReclaimDutyType.Customs => "Customs"
-    case ReclaimDutyType.Vat => "Vat"
-    case ReclaimDutyType.Other => "Other"
+    case ReclaimDutyType.Vat     => "Vat"
+    case ReclaimDutyType.Other   => "Other"
   }
 
 }

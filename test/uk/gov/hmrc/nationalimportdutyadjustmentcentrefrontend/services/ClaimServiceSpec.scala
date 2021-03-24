@@ -65,12 +65,15 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
       service.submitClaim(claim)
 
-      val carrierCaptor = ArgumentCaptor.forClass(classOf[HeaderCarrier])
+      val carrierCaptor   = ArgumentCaptor.forClass(classOf[HeaderCarrier])
       val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
-      val auditCaptor = ArgumentCaptor.forClass(classOf[CreateClaimAudit])
+      val auditCaptor     = ArgumentCaptor.forClass(classOf[CreateClaimAudit])
 
-
-      (verify(auditConnector) sendExplicitAudit(any(), auditCaptor.capture()))(carrierCaptor.capture(), executionCaptor.capture(), any())
+      (verify(auditConnector) sendExplicitAudit (any(), auditCaptor.capture()))(
+        carrierCaptor.capture(),
+        executionCaptor.capture(),
+        any()
+      )
 
       val audit = auditCaptor.getValue.asInstanceOf[CreateClaimAudit]
       audit mustBe createClaimAudit
