@@ -161,14 +161,37 @@ trait TestData {
       error = None,
       result = Some(
         CreateClaimResult(
-          caseReference = "654321",
+          caseReference = "NID21134557697RM8WIB14",
           fileTransferResults = Seq(
-            new FileTransferResult("up-ref-1", true, 201, LocalDateTime.now(), None),
-            new FileTransferResult("up-ref-2", true, 201, LocalDateTime.now(), None),
-            new FileTransferResult("up-ref-3", true, 201, LocalDateTime.now(), None)
+            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
           )
         )
       )
     )
+
+  val createClaimAudit: CreateClaimAudit = CreateClaimAudit(
+    true,
+    Some("NID21134557697RM8WIB14"),
+    contactDetailsAnswer,
+    addressAnswer,
+    representationTypeAnswer,
+    claimTypeAnswer,
+    claimReasonAnswer,
+    Map("Customs" -> DutyPaid("100", "9.99"), "Vat" -> DutyPaid("100", "9.99"), "Other" -> DutyPaid("100", "9.99")),
+    bankDetailsAnswer,
+    Some(importerContactDetailsAnswer),
+    Some(repayToAnswer),
+    entryDetailsAnswer,
+    itemNumbersAnswer,
+    Seq(uploadAnswer),
+    Seq(
+      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+    ),
+    Some(importerEoriNumberAnswer)
+  )
 
 }

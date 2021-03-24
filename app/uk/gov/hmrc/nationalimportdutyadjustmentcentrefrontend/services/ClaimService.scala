@@ -82,11 +82,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       claim.representationType,
       claim.claimType,
       claim.claimReason,
-      claim.reclaimDutyPayments.map(kv => (kv._1 match {
-        case ReclaimDutyType.Customs => "Customs"
-        case ReclaimDutyType.Vat => "Vat"
-        case ReclaimDutyType.Other => "Other"
-      }, kv._2)),
+      claim.reclaimDutyPayments.map(kv => (dutyTypeToString(kv._1), kv._2)),
       claim.bankDetails,
       claim.importerBeingRepresentedDetails.map(details => details.contactDetails),
       claim.importerBeingRepresentedDetails.map(details => details.repayTo),
@@ -97,6 +93,12 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       claim.importerBeingRepresentedDetails.flatMap(details => details.eoriNumber)
     )
     auditConnector.sendExplicitAudit("CreateClaim", audit)
+  }
+
+  def dutyTypeToString: ReclaimDutyType => String = {
+    case ReclaimDutyType.Customs => "Customs"
+    case ReclaimDutyType.Vat => "Vat"
+    case ReclaimDutyType.Other => "Other"
   }
 
 }

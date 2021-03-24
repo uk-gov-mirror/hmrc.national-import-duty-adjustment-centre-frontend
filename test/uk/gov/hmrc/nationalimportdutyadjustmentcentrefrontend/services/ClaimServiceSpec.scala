@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, when}
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.{any, matches}
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -25,6 +26,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.RequestId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimAudit
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -56,6 +58,22 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
     "return valid response when claim is submitted succesfully" in {
       service.submitClaim(claim).futureValue.correlationId mustBe "123456"
+
+    }
+
+    "audit Create Claim when claim is submitted succesfully" in {
+
+      service.submitClaim(claim)
+
+      val carrierCaptor = ArgumentCaptor.forClass(classOf[HeaderCarrier])
+      val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
+      val auditCaptor = ArgumentCaptor.forClass(classOf[CreateClaimAudit])
+
+
+      (verify(auditConnector) sendExplicitAudit(any(), auditCaptor.capture()))(carrierCaptor.capture(), executionCaptor.capture(), any())
+
+      val audit = auditCaptor.getValue.asInstanceOf[CreateClaimAudit]
+      audit mustBe createClaimAudit
 
     }
   }
