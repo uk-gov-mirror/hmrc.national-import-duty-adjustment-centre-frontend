@@ -45,5 +45,8 @@ final case class CreateAnswers(
 
 object CreateAnswers {
 
+  // import required since play 2.8 to discover implicit read/writes of Enumerable
+  import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType._
+
   implicit val formats: OFormat[CreateAnswers] = Json.format[CreateAnswers]
 }
