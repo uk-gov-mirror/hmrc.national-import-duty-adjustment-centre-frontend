@@ -68,7 +68,8 @@ trait TestData {
     Other.toString   -> otherDutyRepaymentAnswer
   )
 
-  val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
+  val importerBankDetailsAnswer: BankDetails       = BankDetails("importer account name", "001100", "12345678")
+  val representativeBankDetailsAnswer: BankDetails = BankDetails("representative account name", "001100", "87654321")
 
   val repayToAnswer = RepayTo.Importer
 
@@ -98,7 +99,8 @@ trait TestData {
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
     repayTo = Some(repayToAnswer),
-    bankDetails = Some(bankDetailsAnswer),
+    importerBankDetails = Some(importerBankDetailsAnswer),
+    representativeBankDetails = Some(representativeBankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer),
     importerEori = Some(importerEoriNumberAnswer),
@@ -115,7 +117,7 @@ trait TestData {
     uploadAnotherFile = Some(uploadAnotherFileAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
-    bankDetails = Some(bankDetailsAnswer),
+    importerBankDetails = Some(importerBankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer)
   )
@@ -180,7 +182,7 @@ trait TestData {
     claimTypeAnswer,
     claimReasonAnswer,
     Map("Customs" -> DutyPaid("100", "9.99"), "Vat" -> DutyPaid("100", "9.99"), "Other" -> DutyPaid("100", "9.99")),
-    bankDetailsAnswer,
+    importerBankDetailsAnswer,
     Some(importerContactDetailsAnswer),
     Some(repayToAnswer),
     entryDetailsAnswer,

@@ -51,7 +51,7 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
   "BankAccountReputationService" should {
 
     "return valid response when BARs returns valid response" in {
-      service.validate(bankDetailsAnswer).futureValue.isValid mustBe true
+      service.validate(importerBankDetailsAnswer).futureValue.isValid mustBe true
 
       verify(connector).assessBusinessBankDetails(any())(any())
     }
@@ -61,7 +61,7 @@ class BankAccountReputationServiceSpec extends UnitSpec with BeforeAndAfterEach 
         Future.successful(invalidAccountNumberAssessResponse)
       )
 
-      service.validate(bankDetailsAnswer).futureValue.isValid mustBe false
+      service.validate(importerBankDetailsAnswer).futureValue.isValid mustBe false
 
       verify(connector).assessBusinessBankDetails(any())(any())
     }

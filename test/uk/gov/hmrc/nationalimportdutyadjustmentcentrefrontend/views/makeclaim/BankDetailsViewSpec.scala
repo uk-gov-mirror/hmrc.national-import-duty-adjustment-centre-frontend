@@ -70,11 +70,11 @@ class BankDetailsViewSpec extends UnitViewSpec with TestData {
   "ReclaimDutyTypePage on filled form" should {
 
     "have populated fields" in {
-      val filledView = view(form.fill(bankDetailsAnswer))
+      val filledView = view(form.fill(importerBankDetailsAnswer))
 
-      filledView.getElementById("accountName") must haveValue(bankDetailsAnswer.accountName)
-      filledView.getElementById("sortCode") must haveValue(bankDetailsAnswer.sortCode)
-      filledView.getElementById("accountNumber") must haveValue(bankDetailsAnswer.accountNumber)
+      filledView.getElementById("accountName") must haveValue(importerBankDetailsAnswer.accountName)
+      filledView.getElementById("sortCode") must haveValue(importerBankDetailsAnswer.sortCode)
+      filledView.getElementById("accountNumber") must haveValue(importerBankDetailsAnswer.accountNumber)
     }
 
     "display error when " when {

@@ -58,16 +58,10 @@ class RepayToController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => updateAnswers(value, answers)) map {
+        data.updateCreateAnswers(answers => answers.copy(repayTo = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }
-
-  private def updateAnswers(repayTo: RepayTo, answers: CreateAnswers) =
-    if (answers.repayTo.contains(repayTo))
-      answers
-    else
-      answers.copy(repayTo = Some(repayTo), bankDetails = None)
 
 }

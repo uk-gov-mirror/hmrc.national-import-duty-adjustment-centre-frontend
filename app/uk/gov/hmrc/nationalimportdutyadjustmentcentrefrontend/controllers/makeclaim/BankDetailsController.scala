@@ -66,7 +66,7 @@ class BankDetailsController @Inject() (
       value =>
         bankAccountReputationService.validate(value) flatMap {
           case barsResult if barsResult.isValid =>
-            data.updateCreateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+            data.updateCreateAnswers(answers => answers.updateBankDetails(value)) map {
               updatedAnswers => Redirect(nextPage(updatedAnswers))
             }
           case barsResult => processBarsFailure(value, barsResult)

@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{BarsTestData, ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, RepayTo, RepresentationType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.BankAccountReputationService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
@@ -78,21 +78,47 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData with BarsTe
       theResponseForm.value mustBe None
     }
 
-    "display page when cache has answer" in {
-      withCacheCreateAnswers(CreateAnswers(bankDetails = Some(bankDetailsAnswer)))
+    "display page when cache has answer for importer" in {
+      withCacheCreateAnswers(completeAnswers.copy(representationType = Some(RepresentationType.Importer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe Some(bankDetailsAnswer)
+      theResponseForm.value mustBe Some(importerBankDetailsAnswer)
+    }
+
+    "display page when cache has answer for representative paying themselves" in {
+      withCacheCreateAnswers(
+        completeAnswers.copy(
+          representationType = Some(RepresentationType.Representative),
+          repayTo = Some(RepayTo.Representative)
+        )
+      )
+      val result = controller.onPageLoad()(fakeGetRequest)
+      status(result) mustBe Status.OK
+
+      theResponseForm.value mustBe Some(representativeBankDetailsAnswer)
+    }
+
+    "display page when cache has answer for representative paying importer" in {
+      withCacheCreateAnswers(
+        completeAnswers.copy(
+          representationType = Some(RepresentationType.Representative),
+          repayTo = Some(RepayTo.Importer)
+        )
+      )
+      val result = controller.onPageLoad()(fakeGetRequest)
+      status(result) mustBe Status.OK
+
+      theResponseForm.value mustBe Some(importerBankDetailsAnswer)
     }
   }
 
   "POST" should {
 
     val validRequest = postRequest(
-      "accountName"   -> bankDetailsAnswer.accountName,
-      "sortCode"      -> bankDetailsAnswer.sortCode,
-      "accountNumber" -> bankDetailsAnswer.accountNumber
+      "accountName"   -> importerBankDetailsAnswer.accountName,
+      "sortCode"      -> importerBankDetailsAnswer.sortCode,
+      "accountNumber" -> importerBankDetailsAnswer.accountNumber
     )
 
     "update cache and redirect when valid answer is submitted" in {
@@ -101,7 +127,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData with BarsTe
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.bankDetails mustBe Some(bankDetailsAnswer)
+      theUpdatedCreateAnswers.bankDetails mustBe Some(importerBankDetailsAnswer)
       redirectLocation(result) mustBe Some(navigator.nextPage(BankDetailsPage, emptyAnswers).url)
     }
 

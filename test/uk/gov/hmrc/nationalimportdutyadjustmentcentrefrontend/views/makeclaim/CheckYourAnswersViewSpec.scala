@@ -303,7 +303,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       "contains account name" in {
         val accountNameRow = paymentSection.getElementsByClass("bank_details_account_name_row")
         accountNameRow must haveSummaryKey(messages("check_answers.payment.accountName"))
-        accountNameRow must haveSummaryValue(bankDetailsAnswer.accountName)
+        accountNameRow must haveSummaryValue(importerBankDetailsAnswer.accountName)
 
         accountNameRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("check_answers.payment.bankDetails.accessible")}"
@@ -318,13 +318,13 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       "does account sort code" in {
         val accountSortCodeRow = paymentSection.getElementsByClass("bank_details_sortCode_row")
         accountSortCodeRow must haveSummaryKey(messages("check_answers.payment.sortCode"))
-        accountSortCodeRow must haveSummaryValue(bankDetailsAnswer.sortCode)
+        accountSortCodeRow must haveSummaryValue(importerBankDetailsAnswer.sortCode)
       }
 
       "contains account number" in {
         val accountNumberRow = paymentSection.getElementsByClass("bank_details_accountNumber_row")
         accountNumberRow must haveSummaryKey(messages("check_answers.payment.accountNumber"))
-        accountNumberRow must haveSummaryValue(bankDetailsAnswer.accountNumber)
+        accountNumberRow must haveSummaryValue(importerBankDetailsAnswer.accountNumber)
       }
     }
 
