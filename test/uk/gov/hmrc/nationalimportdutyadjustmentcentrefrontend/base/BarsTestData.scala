@@ -17,27 +17,27 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{
-  AssessBusinessBankDetailsResponse,
+  AddressLookupResponse,
   BARSResult
 }
 
 trait BarsTestData extends TestData {
 
   // Assess
-  val validAssessResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("yes", "yes", "no", "yes", "yes", "yes")
+  val validAssessResponse: AddressLookupResponse =
+    AddressLookupResponse("yes", "yes", "no", "yes", "yes", "yes")
 
-  val invalidSortcodeDoesNotExistResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("no", "no", "no", "indeterminate", "indeterminate", "error")
+  val invalidSortcodeDoesNotExistResponse: AddressLookupResponse =
+    AddressLookupResponse("no", "no", "no", "indeterminate", "indeterminate", "error")
 
-  val invalidAccountNumberAssessResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("yes", "no", "no", "yes", "yes", "indeterminate")
+  val invalidAccountNumberAssessResponse: AddressLookupResponse =
+    AddressLookupResponse("yes", "no", "no", "yes", "yes", "indeterminate")
 
-  val invalidNonStandardAccountNumberAssessResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("yes", "yes", "yes", "yes", "yes", "yes")
+  val invalidNonStandardAccountNumberAssessResponse: AddressLookupResponse =
+    AddressLookupResponse("yes", "yes", "yes", "yes", "yes", "yes")
 
-  val invalidNoDirectCreditSupportResponse: AssessBusinessBankDetailsResponse =
-    AssessBusinessBankDetailsResponse("yes", "yes", "no", "yes", "yes", "no")
+  val invalidNoDirectCreditSupportResponse: AddressLookupResponse =
+    AddressLookupResponse("yes", "yes", "no", "yes", "yes", "no")
 
   // Bars
   val barsSuccessResult: BARSResult = BARSResult(validAssessResponse)

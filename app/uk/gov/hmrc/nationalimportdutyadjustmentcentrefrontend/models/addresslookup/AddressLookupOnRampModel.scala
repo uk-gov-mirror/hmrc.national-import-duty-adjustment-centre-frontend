@@ -16,14 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, Reads}
 
-case class AddressLookupCountry(code: String, name: String)
+case class AddressLookupOnRampModel(redirectUrl: String)
 
-object AddressLookupCountry {
-  implicit val format: OFormat[AddressLookupCountry] = Json.format[AddressLookupCountry]
-
-  def apply(code: String, name: String): AddressLookupCountry =
-    new AddressLookupCountry(code, name)
-
+object AddressLookupOnRampModel {
+  implicit val rds: Reads[AddressLookupOnRampModel] = Json.reads[AddressLookupOnRampModel]
 }

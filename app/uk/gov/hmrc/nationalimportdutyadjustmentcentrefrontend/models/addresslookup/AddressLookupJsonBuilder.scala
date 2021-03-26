@@ -16,14 +16,33 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 
-case class AddressLookupCountry(code: String, name: String)
 
-object AddressLookupCountry {
-  implicit val format: OFormat[AddressLookupCountry] = Json.format[AddressLookupCountry]
+case class AddressLookupJsonBuilder(continueUrl: String) {
 
-  def apply(code: String, name: String): AddressLookupCountry =
-    new AddressLookupCountry(code, name)
+  // general journey overrides
+  val showPhaseBanner: Boolean = true
+  val ukMode: Boolean = true
 
+  object Version2 {
+    val version: Int = 2
+  }
+
+}
+
+object AddressLookupJsonBuilder {
+
+  implicit val writes: Writes[AddressLookupJsonBuilder] = new Writes[AddressLookupJsonBuilder] {
+    def writes(data: AddressLookupJsonBuilder): JsObject =
+    {
+      Json.obj(fields =
+        "version" -> 2,
+        "options" -> Json.obj(
+          "continueUrl" -> data.continueUrl
+        ),
+        "labels" -> Json.obj()
+      )
+    }
+  }
 }

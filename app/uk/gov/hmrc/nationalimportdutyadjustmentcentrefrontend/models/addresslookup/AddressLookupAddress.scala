@@ -1,30 +1,29 @@
+/*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup
+
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
-case class AddressLookupConfirmation(auditRef: String, id: String, addressLine2: Option[String], city: String, postCode: String)
+case class AddressLookupAddress(lines: Seq[String], postcode: String, country: AddressLookupCountry)
 
-object AddressLookupConfirmation {
-  implicit val format: OFormat[AddressLookupConfirmation] = Json.format[AddressLookupConfirmation]
+object AddressLookupAddress {
+  implicit val format: OFormat[AddressLookupAddress] = Json.format[AddressLookupAddress]
 
-  def apply(auditRef: String, id: String, address: Option[String], city: String, postCode: String): AddressLookupConfirmation =
-    new AddressLookupConfirmation(name, addressLine1, addressLine2, city, postCode.stripExternalAndReduceInternalSpaces())
+  def apply(lines: Seq[String], postcode: String, country: AddressLookupCountry): AddressLookupAddress =
+    new AddressLookupAddress(lines, postcode, country)
 
 }
-}
-/*
-/*
-{
-    "auditRef" : "bed4bd24-72da-42a7-9338-f43431b7ed72",
-    "id" : "GB990091234524",
-    "address" : {
-        "lines" : [ "10 Other Place", "Some District", "Anytown" ],
-        "postcode" : "ZZ1 1ZZ",
-        "country" : {
-            "code" : "GB",
-            "name" : "United Kingdom"
-        }
-    }
-}
- */
- */

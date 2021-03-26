@@ -17,34 +17,68 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Address
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
     layout: Layout,
     formHelper: FormWithCSRF,
+    summaryList: summaryList,
     fieldSet: components.fieldSet,
     addressFields: components.addressInputFields,
     errorSummary: errorSummary,
     continueButton: components.continueButton
 )
 
-@(form: Form[Address], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(form: Form[Address], createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("address.title")), backLink) {
+@layout(pageTitle = InformationTitle(messages("address.title")), backLink) {
+
+
 
     @formHelper(action = AddressController.onSubmit(), 'autoComplete -> "off") {
-        @errorSummary(form.errors)
 
         @fieldSet(
             legend = "address.title",
             hint = Some(Html(messages("address.hint")))
         ) {
-          @addressFields(form)
         }
+
+        @createAnswers.claimantAddress.map(claimantAddress => {
+claimantAddress.name
+            summaryList(
+                id = "your_address_row",
+                summaryListRows = Seq(
+                    Some(SummaryListRow(
+                        classes = "your_address_row",
+                        value = Value(
+                            content = HtmlContent(Seq(
+                                Some(claimantAddress.name),
+                                Some(claimantAddress.addressLine1),
+                                claimantAddress.addressLine2,
+                                Some(claimantAddress.city),
+                                Some(claimantAddress.postCode)
+                            ).flatten.mkString("<br>"))
+                        ),
+                        actions = Some(Actions(
+                            items = Seq(
+                                actionItem(
+                                    href = "/apply-for-return-import-duty-paid-on-deposit-or-guarantee/create/your-address/change",
+                                    content = HtmlContent(linkContent(messages("site.change"))),
+                                    visuallyHiddenText = Some(messages("check_answers.information.representation.type.accessible"))
+                                )
+                            )
+                        ))
+                    ))
+                )
+            )
+        })
 
         @continueButton()
     }

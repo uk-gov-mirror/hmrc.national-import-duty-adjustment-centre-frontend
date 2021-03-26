@@ -67,6 +67,12 @@ class AppConfig @Inject() (
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
 
+  private val addressLookupBaseUrl: String = servicesConfig.baseUrl("address-lookup")
+  val addressLookupInitUrl: String = s"$addressLookupBaseUrl${servicesConfig("address-lookup.init")}"
+  val addressLookupConfirmedUrl: String = s"$addressLookupBaseUrl${servicesConfig("address-lookup.confirmed")}"
+
+  val addressLookupCallbackUrl: String = "http://localhost:8490/apply-for-return-import-duty-paid-on-deposit-or-guarantee/create/your-address/update"
+
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),
     redirectBase = loadConfig("upscan.redirect-base"),
