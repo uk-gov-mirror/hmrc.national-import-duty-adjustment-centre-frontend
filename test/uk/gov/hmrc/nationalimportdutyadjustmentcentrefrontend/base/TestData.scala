@@ -20,6 +20,10 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
+  AmendClaim,
+  AmendClaimAudit,
+  AmendClaimResponse,
+  AmendClaimResult,
   CaseReference,
   FurtherInformation
 }
@@ -155,7 +159,8 @@ trait TestData {
       uploadAnotherFile = Some(uploadAnotherFileAnswer)
     )
 
-  val claim: Claim = Claim(claimantEori, completeAnswers)
+  val claim: Claim           = Claim(claimantEori, completeAnswers)
+  val amendClaim: AmendClaim = AmendClaim(completeAmendAnswers)
 
   val validCreateClaimResponse: CreateClaimResponse =
     CreateClaimResponse(
@@ -173,8 +178,23 @@ trait TestData {
       )
     )
 
+  val validAmendClaimResponse: AmendClaimResponse =
+    AmendClaimResponse(
+      correlationId = "123456",
+      error = None,
+      result = Some(
+        AmendClaimResult(
+          caseReference = "NID21134557697RM8WIB14",
+          fileTransferResults = Seq(
+            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+          )
+        )
+      )
+    )
+
   val createClaimAudit: CreateClaimAudit = CreateClaimAudit(
-    true,
+    success = true,
     Some("NID21134557697RM8WIB14"),
     contactDetailsAnswer,
     addressAnswer,
@@ -195,6 +215,17 @@ trait TestData {
     ),
     claimantEori,
     Some(importerEoriNumberAnswer)
+  )
+
+  val amendClaimAudit: AmendClaimAudit = AmendClaimAudit(
+    success = true,
+    Some("NID21134557697RM8WIB14"),
+    Seq(uploadAnswer, uploadAnswer2),
+    Seq(
+      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+    ),
+    furtherInformationAnswer
   )
 
 }
