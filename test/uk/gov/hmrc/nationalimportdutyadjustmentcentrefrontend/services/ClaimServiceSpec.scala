@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import org.apache.http.conn.HttpHostConnectException
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{reset, verify, verifyNoInteractions, verifyZeroInteractions, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -102,6 +103,16 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
       val audit = amendAuditCaptor.getValue.asInstanceOf[AmendClaimAudit]
       audit mustBe amendClaimAudit
+
+    }
+
+    "do not audit amend claim when unexpected downstream error" in {
+
+      when(nidacConnector.amendClaim(any(), any())(any())).thenReturn(Future.failed(new Exception("mock")))
+
+      service.amendClaim(amendClaim)
+
+      verifyNoInteractions(auditConnector)
 
     }
 
