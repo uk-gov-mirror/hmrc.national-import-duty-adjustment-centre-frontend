@@ -41,9 +41,6 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
   private val auditConnector = mock[AuditConnector]
   private val nidacConnector = mock[NIDACConnector]
 
-  val carrierCaptor   = ArgumentCaptor.forClass(classOf[HeaderCarrier])
-  val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
-
   private def service = new ClaimService(auditConnector, nidacConnector)
 
   override protected def beforeEach(): Unit = {
@@ -68,6 +65,9 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
       service.submitClaim(claim)
 
+      val carrierCaptor   = ArgumentCaptor.forClass(classOf[HeaderCarrier])
+      val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
+
       val auditCaptor = ArgumentCaptor.forClass(classOf[CreateClaimAudit])
 
       (verify(auditConnector) sendExplicitAudit (any(), auditCaptor.capture()))(
@@ -89,11 +89,14 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
       service.amendClaim(amendClaim)
 
+      val headerCarrier    = ArgumentCaptor.forClass(classOf[HeaderCarrier])
+      val executionCarrier = ArgumentCaptor.forClass(classOf[ExecutionContext])
+
       val amendAuditCaptor = ArgumentCaptor.forClass(classOf[AmendClaimAudit])
 
       (verify(auditConnector) sendExplicitAudit (any(), amendAuditCaptor.capture()))(
-        carrierCaptor.capture(),
-        executionCaptor.capture(),
+        headerCarrier.capture(),
+        executionCarrier.capture(),
         any()
       )
 
