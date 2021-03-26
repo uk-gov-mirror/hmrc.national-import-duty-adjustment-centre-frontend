@@ -16,15 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import org.apache.http.conn.HttpHostConnectException
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{reset, verify, verifyNoInteractions, verifyZeroInteractions, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar.mock
 import uk.gov.hmrc.http.{HeaderCarrier, RequestId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimAudit
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimAudit
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
@@ -46,6 +48,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
     super.beforeEach()
 
     when(nidacConnector.submitClaim(any(), any())(any())).thenReturn(Future.successful(validCreateClaimResponse))
+    when(nidacConnector.amendClaim(any(), any())(any())).thenReturn(Future.successful(validAmendClaimResponse))
   }
 
   override protected def afterEach(): Unit = {
@@ -57,7 +60,6 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
     "return valid response when claim is submitted succesfully" in {
       service.submitClaim(claim).futureValue.correlationId mustBe "123456"
-
     }
 
     "audit Create Claim when claim is submitted succesfully" in {
@@ -66,7 +68,8 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
       val carrierCaptor   = ArgumentCaptor.forClass(classOf[HeaderCarrier])
       val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
-      val auditCaptor     = ArgumentCaptor.forClass(classOf[CreateClaimAudit])
+
+      val auditCaptor = ArgumentCaptor.forClass(classOf[CreateClaimAudit])
 
       (verify(auditConnector) sendExplicitAudit (any(), auditCaptor.capture()))(
         carrierCaptor.capture(),
@@ -78,5 +81,40 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
       audit mustBe createClaimAudit
 
     }
+
+    "return valid response when claim is amended succesfully" in {
+      service.amendClaim(amendClaim).futureValue.correlationId mustBe "123456"
+    }
+
+    "audit Amend Claim when claim is amended succesfully" in {
+
+      service.amendClaim(amendClaim)
+
+      val headerCarrier    = ArgumentCaptor.forClass(classOf[HeaderCarrier])
+      val executionCarrier = ArgumentCaptor.forClass(classOf[ExecutionContext])
+
+      val amendAuditCaptor = ArgumentCaptor.forClass(classOf[AmendClaimAudit])
+
+      (verify(auditConnector) sendExplicitAudit (any(), amendAuditCaptor.capture()))(
+        headerCarrier.capture(),
+        executionCarrier.capture(),
+        any()
+      )
+
+      val audit = amendAuditCaptor.getValue.asInstanceOf[AmendClaimAudit]
+      audit mustBe amendClaimAudit
+
+    }
+
+    "do not audit amend claim when unexpected downstream error" in {
+
+      when(nidacConnector.amendClaim(any(), any())(any())).thenReturn(Future.failed(new Exception("mock")))
+
+      service.amendClaim(amendClaim)
+
+      verifyNoInteractions(auditConnector)
+
+    }
+
   }
 }

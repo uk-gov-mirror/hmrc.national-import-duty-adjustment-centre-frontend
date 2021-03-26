@@ -20,6 +20,10 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
+  AmendClaim,
+  AmendClaimAudit,
+  AmendClaimResponse,
+  AmendClaimResult,
   CaseReference,
   FurtherInformation
 }
@@ -40,6 +44,7 @@ trait TestData {
 
   val fixedDate: LocalDate         = LocalDate.now()
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
+  val fixedZoneTime: ZonedDateTime = ZonedDateTime.now()
 
   val claimantEori = EoriNumber("GB434586395327")
 
@@ -51,10 +56,10 @@ trait TestData {
   val claimTypeAnswer: ClaimType = AntiDumping
 
   val uploadAnswer: UploadedFile =
-    UploadedFile("upscanRef1", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
+    UploadedFile("upscanRef1", "/url", fixedZoneTime, "checksum", "filename", "mime/type")
 
   val uploadAnswer2: UploadedFile =
-    UploadedFile("upscanRef2", "/url2", ZonedDateTime.now(), "checksum2", "filename2", "mime/type2")
+    UploadedFile("upscanRef2", "/url2", fixedZoneTime, "checksum2", "filename2", "mime/type2")
 
   val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat, Other)
 
@@ -155,7 +160,8 @@ trait TestData {
       uploadAnotherFile = Some(uploadAnotherFileAnswer)
     )
 
-  val claim: Claim = Claim(claimantEori, completeAnswers)
+  val claim: Claim           = Claim(claimantEori, completeAnswers)
+  val amendClaim: AmendClaim = AmendClaim(completeAmendAnswers)
 
   val validCreateClaimResponse: CreateClaimResponse =
     CreateClaimResponse(
@@ -173,8 +179,23 @@ trait TestData {
       )
     )
 
+  val validAmendClaimResponse: AmendClaimResponse =
+    AmendClaimResponse(
+      correlationId = "123456",
+      error = None,
+      result = Some(
+        AmendClaimResult(
+          caseReference = "NID21134557697RM8WIB13",
+          fileTransferResults = Seq(
+            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+          )
+        )
+      )
+    )
+
   val createClaimAudit: CreateClaimAudit = CreateClaimAudit(
-    true,
+    success = true,
     Some("NID21134557697RM8WIB14"),
     contactDetailsAnswer,
     addressAnswer,
@@ -195,6 +216,17 @@ trait TestData {
     ),
     claimantEori,
     Some(importerEoriNumberAnswer)
+  )
+
+  val amendClaimAudit: AmendClaimAudit = AmendClaimAudit(
+    success = true,
+    "NID21134557697RM8WIB13",
+    Seq(uploadAnswer, uploadAnswer2),
+    Seq(
+      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+    ),
+    furtherInformationAnswer
   )
 
 }

@@ -18,7 +18,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
+  AmendClaim,
+  AmendClaimAudit,
+  AmendClaimResponse
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   Claim,
   CreateClaimAudit,
@@ -60,7 +64,9 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
 
   }
 
-  def amendClaim(amendClaim: AmendClaim)(implicit hc: HeaderCarrier): Future[AmendClaimResponse] = {
+  def amendClaim(
+    amendClaim: AmendClaim
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AmendClaimResponse] = {
 
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISAmendCaseRequest = EISAmendCaseRequest(
@@ -71,6 +77,10 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
     )
 
     connector.amendClaim(AmendEISClaimRequest(eisRequest, amendClaim.uploads), correlationId)
+      .map { response =>
+        auditConnector.sendExplicitAudit("AmendClaim", AmendClaimAudit(response.error.isEmpty, amendClaim, response))
+        response
+      }
   }
 
 }
