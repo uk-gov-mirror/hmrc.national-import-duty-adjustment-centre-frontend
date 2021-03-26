@@ -22,7 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 
 case class AmendClaimAudit(
   success: Boolean,
-  caseReferenceNumber: Option[String],
+  caseReferenceNumber: String,
   uploads: Seq[UploadedFile],
   fileTransferResults: Seq[FileTransferResult],
   furtherInformation: FurtherInformation
@@ -35,7 +35,7 @@ object AmendClaimAudit {
   def apply(success: Boolean, claim: AmendClaim, claimResponse: AmendClaimResponse): AmendClaimAudit =
     AmendClaimAudit(
       success,
-      claimResponse.result.map(result => result.caseReference),
+      claim.caseReference.number,
       claim.uploads,
       claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
       claim.furtherInformation

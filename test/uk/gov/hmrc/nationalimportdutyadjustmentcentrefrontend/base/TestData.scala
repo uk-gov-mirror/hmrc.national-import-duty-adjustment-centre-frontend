@@ -219,7 +219,7 @@ trait TestData {
 
   val amendClaimAudit: AmendClaimAudit = AmendClaimAudit(
     success = true,
-    Some("NID21134557697RM8WIB14"),
+    "NID21134557697RM8WIB13",
     Seq(uploadAnswer, uploadAnswer2),
     Seq(
       new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
