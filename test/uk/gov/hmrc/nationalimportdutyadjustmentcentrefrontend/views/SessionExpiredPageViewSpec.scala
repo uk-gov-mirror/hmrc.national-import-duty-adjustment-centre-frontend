@@ -36,5 +36,9 @@ class SessionExpiredPageViewSpec extends UnitViewSpec {
       view.getElementsByTag("h1").text() mustBe messages("session_expired.title")
     }
 
+    "not have signout link" in {
+      view.getElementById("hmrc-sign-out-nav__link") must notBePresent
+    }
+
   }
 }

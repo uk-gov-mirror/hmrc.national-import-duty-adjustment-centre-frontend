@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ServiceUnavailablePage
 
 class ServiceUnavailablePageViewSpec extends UnitViewSpec {
@@ -34,6 +35,10 @@ class ServiceUnavailablePageViewSpec extends UnitViewSpec {
 
     "have correct heading" in {
       view.getElementsByTag("h1").text() mustBe messages("service.unavailable.title")
+    }
+
+    "have sign out link" in {
+      view.getElementsByClass("hmrc-sign-out-nav__link").attr("href") mustBe routes.SignOutController.signOut().url
     }
 
   }

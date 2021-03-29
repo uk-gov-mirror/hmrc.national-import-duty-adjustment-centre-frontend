@@ -53,6 +53,7 @@
                 SummaryListRow(
                     key = Key(content = Text(s"${doc._2 + 1}.")),
                     value = Value(content = Text(doc._1.fileName)),
+                    classes = s"upload_row_${doc._2 + 1}",
                     actions = Some(Actions(
                         items = Seq(
                             actionItem(

@@ -38,7 +38,8 @@
 )
 @(      pageTitle: Title,
         backLink: NavigatorBack,
-        headBlock: Option[Html] = None
+        headBlock: Option[Html] = None,
+        logout: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @beforeContentBlock = {
@@ -55,10 +56,7 @@
 }
 
 @signOutHref = @{
-    if(request.isInstanceOf[IdentifierRequest[_]])
-        Some(SignOutController.signOut().url)
-    else
-        None
+    if(logout) Some(SignOutController.signOut().url) else None
 }
 @headerBlock = {
     @hmrcHeader(
