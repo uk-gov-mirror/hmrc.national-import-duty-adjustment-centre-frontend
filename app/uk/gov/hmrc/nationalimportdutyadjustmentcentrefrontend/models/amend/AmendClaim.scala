@@ -23,7 +23,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
   AttachMoreDocumentsPage,
   CaseReferencePage,
-  FurtherInformationPage
+  FurtherInformationPage,
+  Page
 }
 
 final case class AmendClaim(
@@ -44,10 +45,9 @@ object AmendClaim {
     furtherInformation = answers.furtherInformation.getOrElse(missing(FurtherInformationPage))
   )
 
-  private def missing(answer: Any) = {
-    val message = s"Missing answer - $answer"
-    logger.warn(message)
-    throw new MissingAnswersException(message)
+  private def missing(answerPage: Page) = {
+    logger.warn(s"Missing answer - $answerPage")
+    throw new MissingAnswersException(answerPage)
   }
 
 }

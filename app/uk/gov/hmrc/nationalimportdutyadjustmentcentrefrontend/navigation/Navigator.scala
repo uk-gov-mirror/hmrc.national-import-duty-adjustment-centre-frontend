@@ -34,6 +34,11 @@ trait Navigator[T <: Answers] {
 
   def gotoPage(pageName: String): Call = viewFor(pageOrder, pageFor(pageName)).getOrElse(pageOrder.head.destination())
 
+  def firstMissingAnswer(userAnswers: T): Call =
+    viewFor(pageOrder, nextPageAfterChangeFor(pageOrder, pageOrder.head.page, userAnswers)).getOrElse(
+      checkYourAnswersPage
+    )
+
   def nextPage(currentPage: Page, userAnswers: T): Call = userAnswers.changePage match {
     case None =>
       viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(pageOrder.head.destination())

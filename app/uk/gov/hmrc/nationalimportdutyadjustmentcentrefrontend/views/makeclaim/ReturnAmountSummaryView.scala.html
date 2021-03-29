@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
@@ -27,182 +28,98 @@
         layout: Layout,
         formHelper: FormWithCSRF,
         summaryList: summaryList,
+        warning : GovukWarningText,
         continueButton: components.continueButton
 )
 
 @(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
+@changeText(answer: Option[_]) = @{
+    messages(if(answer.nonEmpty) "site.change" else "site.resolve")
+}
+
+@dutySummary(dutyType: String, pageName: String) = @{
+    summaryList(
+        id = s"duty_summary_section_$dutyType",
+        heading = Some(messages(s"returnAmountSummary.section.title.$dutyType")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = s"${dutyType}_paid_summary_row",
+                key = Key(
+                    content = Text(messages(s"returnAmountSummary.was.paid.${dutyType}"))
+                ),
+                value = Value(
+                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.actuallyPaid}"))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
+                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
+                            visuallyHiddenText = Some(messages(s"returnAmountSummary.was.paid.${dutyType}.accessible"))
+                        )
+                    )
+                ))
+            )),
+            Some(SummaryListRow(
+                classes = s"${dutyType}_expected_summary_row",
+                key = Key(
+                    content = Text(messages(s"returnAmountSummary.should.have.paid.${dutyType}"))
+                ),
+                value = Value(
+                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.shouldHavePaid}"))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
+                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
+                            visuallyHiddenText = Some(messages(s"returnAmountSummary.should.have.paid.${dutyType}.accessible"))
+                        )
+                    )
+                ))
+            )),
+            Some(SummaryListRow(
+                classes = s"${dutyType}_duty_total_row",
+                key = Key(
+                    content = Text(messages(s"returnAmountSummary.duty.total.${dutyType}"))
+                ),
+                value = Value(
+                    content = HtmlContent(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"<span class='govuk-!-font-weight-bold'>£${duty.dueAmount}</span>"))
+                ),
+                actions = None
+            ))
+        )
+    )
+}
+
 @layout(pageTitle = InformationTitle(messages("returnAmountSummary.title")), backLink) {
 
     @components.heading(messages("returnAmountSummary.title"))
-    @components.paragraph(messages("returnAmountSummary.subtitle"))
 
-    @if(createAnswers.reclaimDutyPayments.keySet.contains("01")) {
-        @summaryList(
-            id = "customs_duty_summary_section",
-            heading = Some(messages("returnAmountSummary.section.title.01")),
-            summaryListRows = Seq(
-                Some(SummaryListRow(
-                    classes = "customs_paid_summary_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.was.paid.01"))
-                    ),
-                    value = Value(
-                        content = Text(s"£${createAnswers.reclaimDutyPayments("01").actuallyPaid}")
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("returnAmountSummary.was.paid.01.accessible"))
-                            )
-                        )
-                    ))
-                )),
-                Some(SummaryListRow(
-                    classes = "customs_expected_summary_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.should.have.paid.01"))
-                    ),
-                    value = Value(
-                        content = Text(s"£${createAnswers.reclaimDutyPayments("01").shouldHavePaid}")
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("returnAmountSummary.should.have.paid.01.accessible"))
-                            )
-                        )
-                    ))
-                )),
-                Some(SummaryListRow(
-                    classes = "customs_duty_total_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.duty.total.01"))
-                    ),
-                    value = Value(
-                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("01").dueAmount}</span>")
-                    ),
-                    actions = None
-                ))
-            )
-        )
+    @if(createAnswers.reclaimDutyComplete) {
+        @components.paragraph(messages("returnAmountSummary.subtitle"))
+    }
+    @if(!createAnswers.reclaimDutyComplete) {
+        @warning(WarningText(
+            iconFallbackText = messages("check_answers.missing.icon"),
+            content = Text(messages("returnAmountSummary.warning"))
+        ))
     }
 
-    @if(createAnswers.reclaimDutyPayments.keySet.contains("02")) {
-        @summaryList(
-            id = "vat_summary_section",
-            heading = Some(messages("returnAmountSummary.section.title.02")),
-            summaryListRows = Seq(
-                Some(SummaryListRow(
-                    classes = "vat_paid_summary_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.was.paid.02"))
-                    ),
-                    value = Value(
-                        content = Text(s"£${createAnswers.reclaimDutyPayments("02").actuallyPaid}")
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("returnAmountSummary.was.paid.02.accessible"))
-                            )
-                        )
-                    ))
-                )),
-                Some(SummaryListRow(
-                    classes = "vat_expected_summary_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.should.have.paid.02"))
-                    ),
-                    value = Value(
-                        content = Text(s"£${createAnswers.reclaimDutyPayments("02").shouldHavePaid}")
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("returnAmountSummary.should.have.paid.02.accessible"))
-                            )
-                        )
-                    ))
-                )),
-                Some(SummaryListRow(
-                    classes = "vat_total_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.duty.total.02"))
-                    ),
-                    value = Value(
-                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("02").dueAmount}</span>")
-                    ),
-                    actions = None
-                ))
-            )
-        )
+    @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Customs)) {
+        @dutySummary(ReclaimDutyType.Customs.toString, CreatePageNames.dutyCustoms)
     }
 
-    @if(createAnswers.reclaimDutyPayments.keySet.contains("03")) {
-        @summaryList(
-            id = "other_duties_summary_section",
-            heading = Some(messages("returnAmountSummary.section.title.03")),
-            summaryListRows = Seq(
-                Some(SummaryListRow(
-                    classes = "other_paid_summary_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.was.paid.03"))
-                    ),
-                    value = Value(
-                        content = Text(s"£${createAnswers.reclaimDutyPayments("03").actuallyPaid}")
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("returnAmountSummary.was.paid.03.accessible"))
-                            )
-                        )
-                    ))
-                )),
-                Some(SummaryListRow(
-                    classes = "other_expected_summary_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.should.have.paid.03"))
-                    ),
-                    value = Value(
-                        content = Text(s"£${createAnswers.reclaimDutyPayments("03").shouldHavePaid}")
-                    ),
-                    actions = Some(Actions(
-                        items = Seq(
-                            actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther).url,
-                                content = HtmlContent(linkContent(messages("site.change"))),
-                                visuallyHiddenText = Some(messages("returnAmountSummary.should.have.paid.03.accessible"))
-                            )
-                        )
-                    ))
-                )),
-                Some(SummaryListRow(
-                    classes = "other_total_row",
-                    key = Key(
-                        content = Text(messages("returnAmountSummary.duty.total.03"))
-                    ),
-                    value = Value(
-                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${createAnswers.reclaimDutyPayments("03").dueAmount}</span>")
-                    ),
-                    actions = None
-                ))
-            )
-        )
+    @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Vat)) {
+        @dutySummary(ReclaimDutyType.Vat.toString, CreatePageNames.dutyVAT)
     }
 
-    @if(createAnswers.reclaimDutyPayments.size > 1) {
+    @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Other)) {
+        @dutySummary(ReclaimDutyType.Other.toString, CreatePageNames.dutyOther)
+    }
+
+    @if(createAnswers.reclaimDutyTypes.size > 1) {
         @summaryList(
             id="return_amount_total_section",
             heading = Some(messages("returnAmountSummary.total.heading")),
@@ -213,11 +130,9 @@
                         content = Text(messages("returnAmountSummary.total.label"))
                     ),
                     value = Value(
-                        content = HtmlContent(s"<span class='govuk-!-font-weight-bold'>£${
-                                                createAnswers.reclaimDutyPayments.values
-                                                .map(payment => payment.dueAmount)
-                                                .reduce((amt1, amt2) => amt1 + amt2)
-                                                }</span>")
+                        content = HtmlContent(if(createAnswers.reclaimDutyComplete) s"<span class='govuk-!-font-weight-bold'>£${
+                                                createAnswers.reclaimDutyTotal
+                                                }</span>" else "")
                     ),
                     actions = None
                 ))

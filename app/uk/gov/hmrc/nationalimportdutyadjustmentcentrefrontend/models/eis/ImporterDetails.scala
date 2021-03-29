@@ -28,6 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 
 case class ImporterDetails(EORI: Option[String], Name: String, Address: ImporterAddress)
 
@@ -37,9 +38,7 @@ object ImporterDetails {
   def forClaim(claim: Claim): ImporterDetails = claim.representationType match {
     case Representative =>
       forRepresentativeApplicant(
-        claim.importerBeingRepresentedDetails.getOrElse(
-          throw new MissingAnswersException("Missing ImporterBeingRepresentedDetails")
-        )
+        claim.importerBeingRepresentedDetails.getOrElse(throw new MissingAnswersException(ImporterContactDetailsPage))
       )
     case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.claimantAddress)
   }

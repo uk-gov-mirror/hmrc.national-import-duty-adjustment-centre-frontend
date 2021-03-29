@@ -29,7 +29,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject() (
@@ -45,11 +45,16 @@ class CheckYourAnswersController @Inject() (
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.updateAmendAnswers(answers => answers.copy(changePage = None)) map { answers =>
-      Ok(checkYourAnswersView(AmendClaim(answers), backLink(answers)))
-    } recover {
-      case _: MissingAnswersException =>
-        Redirect(routes.AmendClaimController.start())
+    data.getAmendAnswers flatMap { answers =>
+      try {
+        val amendClaim = AmendClaim(answers)
+        data.updateAmendAnswers(answers => answers.copy(changePage = None)) map { updatedAnswers =>
+          Ok(checkYourAnswersView(amendClaim, backLink(updatedAnswers)))
+        }
+      } catch {
+        case _: MissingAnswersException =>
+          Future(Redirect(navigator.firstMissingAnswer(answers)))
+      }
     }
   }
 

@@ -46,6 +46,9 @@ final case class CreateAnswers(
 
   val isRepresentative: Boolean = representationType.contains(Representative)
 
+  val reclaimDutyComplete: Boolean = reclaimDutyTypes.nonEmpty && reclaimDutyTypes.size == reclaimDutyPayments.size
+  val reclaimDutyTotal: BigDecimal = reclaimDutyPayments.values.map(_.dueAmount).sum
+
   private val useImportersBankDetails  = representationType.contains(Importer) || repayTo.contains(RepayTo.Importer)
   val bankDetails: Option[BankDetails] = if (useImportersBankDetails) importerBankDetails else representativeBankDetails
 

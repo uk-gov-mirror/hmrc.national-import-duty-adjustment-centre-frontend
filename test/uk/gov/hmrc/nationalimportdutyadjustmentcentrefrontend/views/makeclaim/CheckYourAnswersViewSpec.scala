@@ -19,7 +19,12 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, RepayTo}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  Claim,
+  CreateAnswers,
+  RepayTo,
+  RepresentationType
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.{DateFormatter, MessageKey}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
@@ -28,8 +33,8 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersView]
 
-  private val completeClaim                                = Claim(claimantEori, completeAnswers)
-  private def view(claim: Claim = completeClaim): Document = page(claim, navigatorBack)
+  private val completeClaim                                            = Claim(claimantEori, completeAnswers)
+  private def view(answers: CreateAnswers = completeAnswers): Document = page(answers, navigatorBack)
 
   "CheckYourAnswersPage" should {
 
@@ -231,7 +236,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
     }
 
     "not have importer details when claimant is importer" in {
-      view(completeClaim.copy(importerBeingRepresentedDetails = None)).getElementById(
+      view(completeAnswers.copy(representationType = Some(RepresentationType.Importer))).getElementById(
         "importer_section"
       ) must notBePresent
     }
@@ -252,9 +257,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
       "does not contains Eori number when repayment is to representative" in {
         val importerNoEoriSection =
-          view(Claim(claimantEori, completeAnswers.copy(repayTo = Some(RepayTo.Representative)))).getElementById(
-            "importer_section"
-          )
+          view(completeAnswers.copy(repayTo = Some(RepayTo.Representative))).getElementById("importer_section")
 
         val eoriRow = importerNoEoriSection.getElementsByClass("importer_eori_row")
         eoriRow must beEmpty

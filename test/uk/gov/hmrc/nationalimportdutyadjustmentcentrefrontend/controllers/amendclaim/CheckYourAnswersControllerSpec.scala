@@ -68,21 +68,21 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe Status.OK
     }
 
-    "redirect to start when cache empty" in {
+    "redirect to first question when cache empty" in {
       withEmptyCache
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.AmendClaimController.start().url)
+      redirectLocation(result) mustBe Some(routes.CaseReferenceController.onPageLoad().url)
     }
 
-    "redirect to start when answers missing" in {
-      withCacheAmendAnswers(emptyAmendAnswers)
+    "redirect to first missing question when answers missing" in {
+      withCacheAmendAnswers(completeAmendAnswers.copy(furtherInformation = None))
 
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.AmendClaimController.start().url)
+      redirectLocation(result) mustBe Some(routes.FurtherInformationController.onPageLoad().url)
     }
   }
 

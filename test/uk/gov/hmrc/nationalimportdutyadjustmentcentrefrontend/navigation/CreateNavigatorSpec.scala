@@ -292,4 +292,17 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
 
     }
   }
+
+  "Navigating to first missing answer" should {
+
+    "goto check your answers when no further answers required" in {
+      val answers = completeAnswers
+      navigator.firstMissingAnswer(answers) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+
+    "find first missing answers" in {
+      val answers = completeAnswers.copy(claimReason = None)
+      navigator.firstMissingAnswer(answers) mustBe routes.ClaimReasonController.onPageLoad
+    }
+  }
 }

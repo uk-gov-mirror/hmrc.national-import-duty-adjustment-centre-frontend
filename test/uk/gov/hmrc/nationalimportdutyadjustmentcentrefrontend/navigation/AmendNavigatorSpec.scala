@@ -146,4 +146,16 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
     }
   }
 
+  "Amend Navigating to first missing answer" should {
+
+    "goto check your answers when no further answers required" in {
+      val answers = completeAmendAnswers
+      amendNavigator.firstMissingAnswer(answers) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+
+    "find first missing answers" in {
+      val answers = completeAmendAnswers.copy(furtherInformation = None)
+      amendNavigator.firstMissingAnswer(answers) mustBe routes.FurtherInformationController.onPageLoad
+    }
+  }
 }

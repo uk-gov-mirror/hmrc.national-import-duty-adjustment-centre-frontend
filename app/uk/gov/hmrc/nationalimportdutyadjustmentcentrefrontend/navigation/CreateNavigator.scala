@@ -29,6 +29,7 @@ class CreateNavigator @Inject() ()
     extends Navigator[CreateAnswers] with CreateAnswerConditions with CreateHasAnsweredConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
+    P(FirstPage, makeclaim.routes.RepresentationTypeController.onPageLoad, never, always),
     P(
       RepresentationTypePage,
       makeclaim.routes.RepresentationTypeController.onPageLoad,
@@ -112,6 +113,7 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.importerDetails    => Some(ImporterContactDetailsPage)
       case CreatePageNames.repayTo            => Some(RepayToPage)
       case CreatePageNames.bankDetails        => Some(BankDetailsPage)
+      case CreatePageNames.checkYourAnswers   => Some(CheckYourAnswersPage)
       case _                                  => None
     }
   }
@@ -136,6 +138,7 @@ object CreatePageNames {
   val importerDetails    = "importer-details"
   val repayTo            = "repay-to"
   val bankDetails        = "bank-details"
+  val checkYourAnswers   = "check-answers"
 }
 
 protected trait CreateAnswerConditions {
@@ -198,6 +201,6 @@ protected trait CreateHasAnsweredConditions {
   )
 
   protected val returnSummaryAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.changePage.exists(page => !dutyPages.contains(page))
+    !answers.changePage.exists(page => dutyPages.contains(page))
 
 }

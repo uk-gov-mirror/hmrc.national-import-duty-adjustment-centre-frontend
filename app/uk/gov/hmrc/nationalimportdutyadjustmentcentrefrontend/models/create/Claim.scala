@@ -19,9 +19,9 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.Logger
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 import scala.util.Try
@@ -63,7 +63,7 @@ object Claim {
       uploads = userAnswers.uploads,
       reclaimDutyPayments = userAnswers.reclaimDutyTypes.map(
         dutyType =>
-          dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
+          dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(pageForDutyType(dutyType)))
       ).toMap,
       importerBeingRepresentedDetails = importerBeingRepresentedDetails(userAnswers),
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
@@ -71,6 +71,12 @@ object Claim {
       itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),
       submissionDate = LocalDate.now()
     )
+  }
+
+  private def pageForDutyType(dutyType: ReclaimDutyType): Page = dutyType match {
+    case ReclaimDutyType.Customs => CustomsDutyRepaymentPage
+    case ReclaimDutyType.Vat     => ImportVatRepaymentPage
+    case _                       => OtherDutyRepaymentPage
   }
 
   private def importerBeingRepresentedDetails(userAnswers: CreateAnswers): Option[ImporterBeingRepresentedDetails] =
@@ -89,10 +95,9 @@ object Claim {
         )
     }
 
-  private def missing(answer: Any) = {
-    val message = s"Missing answer - $answer"
-    logger.warn(message)
-    throw new MissingAnswersException(message)
+  private def missing(answerPage: Page) = {
+    logger.warn(s"Missing answer - $answerPage")
+    throw MissingAnswersException(answerPage)
   }
 
 }

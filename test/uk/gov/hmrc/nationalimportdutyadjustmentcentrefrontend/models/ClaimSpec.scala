@@ -20,6 +20,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, RepayTo, RepresentationType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
+  CustomsDutyRepaymentPage,
+  ImportVatRepaymentPage,
+  OtherDutyRepaymentPage,
+  RepayToPage
+}
 
 class ClaimSpec extends UnitSpec with TestData {
 
@@ -31,7 +37,7 @@ class ClaimSpec extends UnitSpec with TestData {
 
         intercept[MissingAnswersException] {
           Claim(claimantEori, completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Customs))
-        }.getMessage mustBe s"Missing answer - DutyPayment $Customs"
+        }.getMessage mustBe s"$CustomsDutyRepaymentPage"
 
       }
 
@@ -39,7 +45,7 @@ class ClaimSpec extends UnitSpec with TestData {
 
         intercept[MissingAnswersException] {
           Claim(claimantEori, completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Vat))
-        }.getMessage mustBe s"Missing answer - DutyPayment $Vat"
+        }.getMessage mustBe s"$ImportVatRepaymentPage"
 
       }
 
@@ -47,7 +53,7 @@ class ClaimSpec extends UnitSpec with TestData {
 
         intercept[MissingAnswersException] {
           Claim(claimantEori, completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Other))
-        }.getMessage mustBe s"Missing answer - DutyPayment $Other"
+        }.getMessage mustBe s"$OtherDutyRepaymentPage"
 
       }
 
@@ -56,7 +62,7 @@ class ClaimSpec extends UnitSpec with TestData {
           completeAnswers.copy(representationType = Some(RepresentationType.Representative), repayTo = None)
         intercept[MissingAnswersException] {
           Claim(claimantEori, invalidAnswer)
-        }.getMessage mustBe s"Missing answer - RepayToPage"
+        }.getMessage mustBe s"$RepayToPage"
 
       }
     }

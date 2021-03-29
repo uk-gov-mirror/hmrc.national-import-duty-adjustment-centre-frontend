@@ -1,0 +1,392 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
+
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        warning : GovukWarningText,
+        summaryList: summaryList,
+        submitButton: components.submitButton )
+
+@(answers: CreateAnswers)(implicit request: Request[_], messages: Messages)
+
+@changeText(answer: Option[_]) = @{
+  messages(if(answer.nonEmpty) "site.change" else "site.resolve")
+}
+
+@summaryList(
+    id = "important_information_section",
+    heading = Some(messages("check_answers.information.title")),
+    summaryListRows = Seq(
+        Some(
+            SummaryListRow(
+                classes = "representation_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.information.representation.type"))
+                ),
+                value = Value(
+                    content = Text(answers.representationType.map(rep => MessageKey.apply("check_answers.information.representation", rep.toString)).getOrElse(""))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.representationType).url,
+                            content = HtmlContent(linkContent(changeText(answers.representationType))),
+                            visuallyHiddenText = Some(messages("check_answers.information.representation.type.accessible"))
+                        )
+                    )
+                ))
+            ))
+    )
+)
+
+@summaryList(
+    id = "claim_section",
+    heading = Some(messages("check_answers.claim.title")),
+    summaryListRows = Seq(
+      Some(
+        SummaryListRow(
+            classes = "claim_type_row",
+            key = Key(
+                content = Text(messages("check_answers.claim.claimType"))
+            ),
+            value = Value(
+                content = Text(answers.claimType.map(claimType => MessageKey.apply("claim_type", claimType.toString)).getOrElse(""))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimType).url,
+                        content = HtmlContent(linkContent(changeText(answers.claimType))),
+                        visuallyHiddenText = Some(messages("check_answers.claim.claimType.accessible"))
+                    )
+                )
+            ))
+        )),
+      Some(
+        SummaryListRow(
+            classes = "entry_details_row",
+            key = Key(
+                content = Text(messages("check_answers.claim.entryDetails"))
+            ),
+            value = Value(
+                content = HtmlContent(answers.entryDetails.map(entryDetails => Seq(
+                    messages("check_answers.claim.entryDetails.epu", entryDetails.entryProcessingUnit),
+                    messages("check_answers.claim.entryDetails.entryNumber", entryDetails.entryNumber),
+                    messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(entryDetails.entryDate))
+                ).mkString("<br>")).getOrElse(""))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.entryDetails).url,
+                        content = HtmlContent(linkContent(changeText(answers.entryDetails))),
+                        visuallyHiddenText = Some(messages("check_answers.claim.entryDetails.accessible"))
+                    )
+                )
+            ))
+        )),
+      Some(
+        SummaryListRow(
+            classes = "item_numbers_row",
+            key = Key(
+                content = Text(messages("check_answers.claim.itemNumbers"))
+            ),
+            value = Value(
+                content = Text(answers.itemNumbers.map(itemNumbers => itemNumbers.numbers).getOrElse(""))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.itemNumbers).url,
+                        content = HtmlContent(linkContent(changeText(answers.itemNumbers))),
+                        visuallyHiddenText = Some(messages("check_answers.claim.itemNumbers.accessible"))
+                    )
+                )
+            ))
+        )),
+      Some(
+        SummaryListRow(
+            classes = "claim_reason_row",
+            key = Key(
+                content = Text(messages("check_answers.claim.reason"))
+            ),
+            value = Value(
+                content = Text(answers.claimReason.map(_.reason).getOrElse(""))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimReason).url,
+                        content = HtmlContent(linkContent(changeText(answers.claimReason))),
+                        visuallyHiddenText = Some(messages("check_answers.claim.reason.accessible"))
+                    )
+                )
+            ))
+        )),
+        Some(SummaryListRow(
+            classes = "reclaim_duty_type_row",
+            key = Key(
+                content = Text(messages("check_answers.repayment.reclaimDutyType"))
+            ),
+            value = Value(
+                content = HtmlContent(answers.reclaimDutyTypes.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType)).mkString(", "))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyTypes).url,
+                        content = HtmlContent(linkContent(messages(if(answers.reclaimDutyTypes.nonEmpty) "site.change" else "site.resolve"))),
+                        visuallyHiddenText = Some(messages("check_answers.repayment.reclaimDutyType.accessible"))
+                    )
+                )
+            ))
+        )),
+        Some(SummaryListRow(
+            classes = "reclaim_duty_total_row",
+            key = Key(
+                content = Text(messages("check_answers.repayment.total"))
+            ),
+            value = Value(
+                content = Text(if(answers.reclaimDutyComplete) s"£${answers.reclaimDutyTotal}" else "")
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutySummary).url,
+                        content = HtmlContent(linkContent(messages(if(answers.reclaimDutyComplete) "check_answers.repayment.total.change" else "site.resolve"))),
+                        visuallyHiddenText = Some(messages("check_answers.repayment.total.accessible"))
+                    )
+                )
+            ))
+        )),
+        Some(SummaryListRow(
+            classes = "upload_row",
+            key = Key(
+                content = Text(messages("check_answers.claim.uploaded"))
+            ),
+            value = Value(
+                content = HtmlContent(answers.uploads.map(_.fileName).mkString("<br>"))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.uploadSummary).url,
+                        content = HtmlContent(linkContent(messages(if(answers.uploads.nonEmpty) "site.change" else "site.resolve"))),
+                        visuallyHiddenText = Some(messages("check_answers.claim.uploaded.accessible"))
+                    )
+                )
+            ))
+        ))
+    )
+)
+
+@summaryList(
+    id = "your_details_section",
+    heading = Some(messages("check_answers.yourDetails.title")),
+    summaryListRows = Seq(
+      Some(
+        SummaryListRow(
+            classes = "contact_details_row",
+            key = Key(
+                content = Text(messages("check_answers.yourDetails.contactDetails"))
+            ),
+            value = Value(
+                content = HtmlContent(answers.contactDetails.map(contactDetails =>  Seq(
+                    Some(s"${contactDetails.firstName} ${contactDetails.lastName}"),
+                    Some(contactDetails.emailAddress),
+                    contactDetails.telephoneNumber
+                ).flatten.mkString("<br>")).getOrElse(""))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactDetails).url,
+                        content = HtmlContent(linkContent(changeText(answers.contactDetails))),
+                        visuallyHiddenText = Some(messages("check_answers.yourDetails.contactDetails.accessible"))
+                    )
+                )
+            ))
+        )),
+      Some(
+        SummaryListRow(
+            classes = "your_address_row",
+            key = Key(
+                content = Text(messages("check_answers.yourDetails.yourAddress"))
+            ),
+            value = Value(
+                content = HtmlContent(answers.claimantAddress.map(claimantAddress => Seq(
+                    Some(claimantAddress.name),
+                    Some(claimantAddress.addressLine1),
+                    claimantAddress.addressLine2,
+                    Some(claimantAddress.city),
+                    Some(claimantAddress.postCode)
+                ).flatten.mkString("<br>")).getOrElse(""))
+            ),
+            actions = Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactAddress).url,
+                        content = HtmlContent(linkContent(changeText(answers.claimantAddress))),
+                        visuallyHiddenText = Some(messages("check_answers.yourDetails.yourAddress.accessible"))
+                    )
+                )
+            ))
+        ))
+    )
+)
+
+@summaryList(
+    id = "payment_section",
+    heading = Some(messages("check_answers.payment.title")),
+    summaryListRows = Seq(
+      if(answers.isRepresentative)
+        Some(
+            SummaryListRow(
+                classes = "pay_to_row",
+                key = Key(
+                    content = Text(messages("check_answers.payment.payTo"))
+                ),
+                value = Value(
+                    content = Text(answers.repayTo.map(payTo => MessageKey.apply("check_answers.payment.payTo", payTo.toString)).getOrElse(""))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo).url,
+                            content = HtmlContent(linkContent(changeText(answers.repayTo))),
+                            visuallyHiddenText = Some(messages("check_answers.payment.payTo.accessible"))
+                        )
+                    )
+                ))
+            )
+        ) else None,
+        Some(
+            SummaryListRow(
+                classes = "bank_details_account_name_row govuk-summary-list__row--no-border",
+                key = Key(
+                    content = Text(messages("check_answers.payment.accountName"))
+                ),
+                value = Value(
+                    content = Text(answers.bankDetails.map(_.accountName).getOrElse(""))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
+                            content = HtmlContent(linkContent(changeText(answers.bankDetails))),
+                            visuallyHiddenText = Some(messages("check_answers.payment.bankDetails.accessible"))
+                        )
+                    )
+                ))
+            )
+          ),
+        Some(
+            SummaryListRow(
+                classes = "bank_details_sortCode_row govuk-summary-list__row--no-border",
+                key = Key(
+                    content = Text(messages("check_answers.payment.sortCode"))
+                ),
+                value = Value(
+                    content = Text(answers.bankDetails.map(_.sortCode).getOrElse(""))
+                ),
+                actions = None
+            )
+          ),
+        Some(
+            SummaryListRow(
+                classes = "bank_details_accountNumber_row",
+                key = Key(
+                    content = Text(messages("check_answers.payment.accountNumber"))
+                ),
+                value = Value(
+                    content = Text(answers.bankDetails.map(_.accountNumber).getOrElse(""))
+                ),
+                actions = None
+            )
+          ),
+    )
+)
+
+@if(answers.isRepresentative) {
+    @summaryList(
+        id = "importer_section",
+        heading = Some(messages("check_answers.importer.title")),
+        summaryListRows = Seq(
+          if(answers.repayTo.contains(RepayTo.Importer))
+            Some(
+                SummaryListRow(
+                    classes = "importer_eori_row",
+                    key = Key(
+                        content = Text(messages("check_answers.importer.eori"))
+                    ),
+                    value = Value(
+                        content = Text(answers.importerEori.map(_.number).getOrElse(""))
+                    ),
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerEori).url,
+                                content = HtmlContent(linkContent(changeText(answers.importerEori))),
+                                visuallyHiddenText = Some(messages("check_answers.importer.eori.accessible"))
+                            )
+                        )
+                    ))
+                )
+            ) else None,
+            Some(
+                SummaryListRow(
+                    classes = "importer_contact_details_row",
+                    key = Key(
+                        content = Text(messages("check_answers.importer.contactDetails"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(answers.importerContactDetails.map( contactDetails => Seq(
+                            Some(contactDetails.name),
+                            Some(contactDetails.addressLine1),
+                            contactDetails.addressLine2,
+                            Some(contactDetails.city),
+                            Some(contactDetails.postCode)
+                        ).flatten.mkString("<br>")).getOrElse(""))
+                    ),
+                    actions = Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerDetails).url,
+                                content = HtmlContent(linkContent(changeText(answers.importerContactDetails))),
+                                visuallyHiddenText = Some(messages("check_answers.importer.contactDetails.accessible"))
+                            )
+                        )
+                    ))
+                )
+            )
+        )
+    )
+}
+
+

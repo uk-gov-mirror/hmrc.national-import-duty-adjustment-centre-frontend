@@ -8,6 +8,7 @@ site.title.error = Error: {0} - {1} - GOV.UK
 site.yes = Yes
 site.no = No
 site.change = Change
+site.resolve = Resolve
 
 date.day = Day
 date.month = Month
@@ -110,6 +111,7 @@ otherDutyPaid.should.label = How much of other duties do you think should have b
 
 returnAmountSummary.title = Return amount summary
 returnAmountSummary.subtitle = Check your amounts are correct before you continue
+returnAmountSummary.warning = Some return amounts are missing. Check your amounts are correct before you continue.
 returnAmountSummary.section.title.01 = Customs Duty
 returnAmountSummary.section.id.01 = customs-duty-summary-section
 returnAmountSummary.was.paid.01 = Customs Duty that was paid
@@ -305,6 +307,13 @@ check_answers.payment.accountNumber = Account number
 check_answers.payment.bankDetails.accessible = Change the bank account details
 check_answers.submit.heading = Submit your declaration
 check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+
+check_answers.missing.icon = Warning
+check_answers.missing.warning = Some information is missing. This must be completed before sending your application.
+check_answers.missing.subheading = Some information is missing
+check_answers.missing.paragraph = Please review your answers above and complete any missing information. Alternatively, you can use the button below.
+check_answers.missing.resolve.link = Resolve missing answers
+check_answers.missing.resolve = Resolve missing answers
 
 
 confirmation.title = Your application is confirmed

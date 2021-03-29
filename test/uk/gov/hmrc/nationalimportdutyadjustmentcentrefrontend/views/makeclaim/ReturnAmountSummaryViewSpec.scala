@@ -46,11 +46,11 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
     "have customs duty section" which {
 
-      val customsDutySection = view().getElementById("customs_duty_summary_section")
+      val customsDutySection = view().getElementById("duty_summary_section_01")
 
       "contains customs duty paid" in {
 
-        val customsDutyPaidRow = customsDutySection.getElementsByClass("customs_paid_summary_row")
+        val customsDutyPaidRow = customsDutySection.getElementsByClass("01_paid_summary_row")
 
         customsDutyPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.01"))
         customsDutyPaidRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.actuallyPaid}")
@@ -65,7 +65,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
       "contains customs duty should have paid" in {
 
-        val customsDutyExpectedRow = customsDutySection.getElementsByClass("customs_expected_summary_row")
+        val customsDutyExpectedRow = customsDutySection.getElementsByClass("01_expected_summary_row")
 
         customsDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.01"))
         customsDutyExpectedRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.shouldHavePaid}")
@@ -80,7 +80,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
       "contains customs total" in {
 
-        val customsDutyTotalRow = customsDutySection.getElementsByClass("customs_duty_total_row")
+        val customsDutyTotalRow = customsDutySection.getElementsByClass("01_duty_total_row")
 
         customsDutyTotalRow must haveSummaryKey(messages("returnAmountSummary.duty.total.01"))
         customsDutyTotalRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.dueAmount}")
@@ -91,11 +91,11 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
     "have vat section" which {
 
-      val vatSection = view().getElementById("vat_summary_section")
+      val vatSection = view().getElementById("duty_summary_section_02")
 
       "contains vat paid" in {
 
-        val vatPaidRow = vatSection.getElementsByClass("vat_paid_summary_row")
+        val vatPaidRow = vatSection.getElementsByClass("02_paid_summary_row")
 
         vatPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.02"))
         vatPaidRow must haveSummaryValue(s"£${importVatRepaymentAnswer.actuallyPaid}")
@@ -108,7 +108,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
       "contains vat should have paid" in {
 
-        val vatExpectedRow = vatSection.getElementsByClass("vat_expected_summary_row")
+        val vatExpectedRow = vatSection.getElementsByClass("02_expected_summary_row")
 
         vatExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.02"))
         vatExpectedRow must haveSummaryValue(s"£${importVatRepaymentAnswer.shouldHavePaid}")
@@ -121,7 +121,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
       "contains vat total" in {
 
-        val vatTotalRow = vatSection.getElementsByClass("vat_total_row")
+        val vatTotalRow = vatSection.getElementsByClass("02_duty_total_row")
 
         vatTotalRow must haveSummaryKey(messages("returnAmountSummary.duty.total.02"))
         vatTotalRow must haveSummaryValue(s"£${importVatRepaymentAnswer.dueAmount}")
@@ -132,11 +132,11 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
     "have other duties section" which {
 
-      val otherDutySection = view().getElementById("other_duties_summary_section")
+      val otherDutySection = view().getElementById("duty_summary_section_03")
 
       "contains other duty paid" in {
 
-        val otherPaidRow = otherDutySection.getElementsByClass("other_paid_summary_row")
+        val otherPaidRow = otherDutySection.getElementsByClass("03_paid_summary_row")
 
         otherPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.03"))
         otherPaidRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.actuallyPaid}")
@@ -149,7 +149,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
       "contains other duty should have paid" in {
 
-        val otherDutyExpectedRow = otherDutySection.getElementsByClass("other_expected_summary_row")
+        val otherDutyExpectedRow = otherDutySection.getElementsByClass("03_expected_summary_row")
 
         otherDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.03"))
         otherDutyExpectedRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.shouldHavePaid}")
@@ -164,7 +164,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
       "contains other duty total" in {
 
-        val otherTotalRow = otherDutySection.getElementsByClass("other_total_row")
+        val otherTotalRow = otherDutySection.getElementsByClass("03_duty_total_row")
 
         otherTotalRow must haveSummaryKey(messages("returnAmountSummary.duty.total.03"))
         otherTotalRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.dueAmount}")
@@ -192,36 +192,90 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
     "not have total section when only one repayment type" in {
 
-      val vatOnlyAnswers = completeAnswers.copy(reclaimDutyPayments = Map(Vat.toString -> importVatRepaymentAnswer))
+      val vatOnlyAnswers = completeAnswers.copy(
+        reclaimDutyTypes = Set(Vat),
+        reclaimDutyPayments = Map(Vat.toString -> importVatRepaymentAnswer)
+      )
 
       view(vatOnlyAnswers).getElementById("return_amount_total_section") must notBePresent
     }
 
     "not have vat section when vat not reclaimed" in {
 
-      val vatMissingAnswers = completeAnswers.copy(reclaimDutyPayments =
-        Map(Customs.toString -> customsDutyRepaymentAnswer, Other.toString -> otherDutyRepaymentAnswer)
+      val vatMissingAnswers = completeAnswers.copy(
+        reclaimDutyTypes = Set(Customs, Other),
+        reclaimDutyPayments =
+          Map(Customs.toString -> customsDutyRepaymentAnswer, Other.toString -> otherDutyRepaymentAnswer)
       )
 
-      view(vatMissingAnswers).getElementById("vat_summary_section") must notBePresent
+      view(vatMissingAnswers).getElementById("duty_summary_section_02") must notBePresent
     }
 
     "not have customs duty section when customs duty not reclaimed" in {
 
-      val customsMissingAnswers = completeAnswers.copy(reclaimDutyPayments =
-        Map(Vat.toString -> importVatRepaymentAnswer, Other.toString -> otherDutyRepaymentAnswer)
+      val customsMissingAnswers = completeAnswers.copy(
+        reclaimDutyTypes = Set(Vat, Other),
+        reclaimDutyPayments =
+          Map(Vat.toString -> importVatRepaymentAnswer, Other.toString -> otherDutyRepaymentAnswer)
       )
 
-      view(customsMissingAnswers).getElementById("customs_duty_summary_section") must notBePresent
+      view(customsMissingAnswers).getElementById("duty_summary_section_01") must notBePresent
     }
 
     "not have other section when other not reclaimed" in {
 
-      val otherMissingAnswers = completeAnswers.copy(reclaimDutyPayments =
-        Map(Customs.toString -> customsDutyRepaymentAnswer, Vat.toString -> importVatRepaymentAnswer)
+      val otherMissingAnswers = completeAnswers.copy(
+        reclaimDutyTypes = Set(Customs, Vat),
+        reclaimDutyPayments =
+          Map(Customs.toString -> customsDutyRepaymentAnswer, Vat.toString -> importVatRepaymentAnswer)
       )
 
-      view(otherMissingAnswers).getElementById("other_duties_summary_section") must notBePresent
+      view(otherMissingAnswers).getElementById("duty_summary_section_03") must notBePresent
+    }
+
+    "have empty section when customs duty selected but no payment details entered" in {
+      val missingAnswers = completeAnswers.copy(reclaimDutyTypes = Set(Customs), reclaimDutyPayments = Map.empty)
+
+      val section = view(missingAnswers).getElementById("duty_summary_section_01")
+
+      val paidRow = section.getElementsByClass("01_paid_summary_row")
+      paidRow must haveSummaryValue("")
+
+      val expectedRow = section.getElementsByClass("01_expected_summary_row")
+      expectedRow must haveSummaryValue("")
+
+      val totalRow = section.getElementsByClass("01_duty_total_row")
+      totalRow must haveSummaryValue("")
+    }
+
+    "have empty section when VAT selected but no payment details entered" in {
+      val missingAnswers = completeAnswers.copy(reclaimDutyTypes = Set(Vat), reclaimDutyPayments = Map.empty)
+
+      val section = view(missingAnswers).getElementById("duty_summary_section_02")
+
+      val paidRow = section.getElementsByClass("02_paid_summary_row")
+      paidRow must haveSummaryValue("")
+
+      val expectedRow = section.getElementsByClass("02_expected_summary_row")
+      expectedRow must haveSummaryValue("")
+
+      val totalRow = section.getElementsByClass("02_duty_total_row")
+      totalRow must haveSummaryValue("")
+    }
+
+    "have empty section when other duty selected but no payment details entered" in {
+      val missingAnswers = completeAnswers.copy(reclaimDutyTypes = Set(Other), reclaimDutyPayments = Map.empty)
+
+      val section = view(missingAnswers).getElementById("duty_summary_section_03")
+
+      val paidRow = section.getElementsByClass("03_paid_summary_row")
+      paidRow must haveSummaryValue("")
+
+      val expectedRow = section.getElementsByClass("03_expected_summary_row")
+      expectedRow must haveSummaryValue("")
+
+      val totalRow = section.getElementsByClass("03_duty_total_row")
+      totalRow must haveSummaryValue("")
     }
 
     "have 'Continue' button" in {
