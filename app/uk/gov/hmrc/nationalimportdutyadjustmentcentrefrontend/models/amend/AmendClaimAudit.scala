@@ -17,28 +17,35 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.FileTransferResult
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, FileTransferResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 case class AmendClaimAudit(
   success: Boolean,
+  claimantEori: EoriNumber,
   caseReferenceNumber: String,
   uploads: Seq[UploadedFile],
   fileTransferResults: Seq[FileTransferResult],
-  furtherInformation: FurtherInformation
+  furtherInformation: String
 )
 
 object AmendClaimAudit {
 
   implicit val claimWrites: Writes[AmendClaimAudit] = Json.writes[AmendClaimAudit]
 
-  def apply(success: Boolean, claim: AmendClaim, claimResponse: AmendClaimResponse): AmendClaimAudit =
+  def apply(
+    success: Boolean,
+    claimantEori: EoriNumber,
+    claim: AmendClaim,
+    claimResponse: AmendClaimResponse
+  ): AmendClaimAudit =
     AmendClaimAudit(
       success,
+      claimantEori,
       claim.caseReference.number,
       claim.uploads,
       claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
-      claim.furtherInformation
+      claim.furtherInformation.info
     )
 
 }

@@ -62,7 +62,7 @@ class CheckYourAnswersController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getAmendAnswers flatMap { answers =>
       val amendClaim = AmendClaim(answers)
-      service.amendClaim(amendClaim) flatMap {
+      service.amendClaim(request.eoriNumber, amendClaim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>
           data.storeAmendResponse(response) map {
