@@ -64,7 +64,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
     "audit Create Claim when claim is submitted succesfully" in {
 
-      service.submitClaim(claim)
+      service.submitClaim(claim).futureValue.result
 
       val carrierCaptor   = ArgumentCaptor.forClass(classOf[HeaderCarrier])
       val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
@@ -88,7 +88,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
     "audit Amend Claim when claim is amended succesfully" in {
 
-      service.amendClaim(claimantEori, amendClaim)
+      service.amendClaim(claimantEori, amendClaim).futureValue.result
 
       val headerCarrier    = ArgumentCaptor.forClass(classOf[HeaderCarrier])
       val executionCarrier = ArgumentCaptor.forClass(classOf[ExecutionContext])
