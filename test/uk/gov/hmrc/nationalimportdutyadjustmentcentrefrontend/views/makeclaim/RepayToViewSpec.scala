@@ -52,7 +52,7 @@ class RepayToViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
     "have back link" in {
@@ -73,8 +73,7 @@ class RepayToViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("repay_to" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("repay_to.error.required")
-
+      errorView must havePageError("repay_to.error.required")
     }
 
   }

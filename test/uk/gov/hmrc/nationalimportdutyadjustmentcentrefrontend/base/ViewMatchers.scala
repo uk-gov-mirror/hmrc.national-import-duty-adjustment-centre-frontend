@@ -22,12 +22,13 @@ import org.jsoup.select.Elements
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 import play.api.i18n.Messages
-import play.api.mvc.Result
+import play.api.mvc.{Call, Result}
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
+import scala.util.Try
 
 trait ViewMatchers extends Matchers {
 
@@ -45,20 +46,25 @@ trait ViewMatchers extends Matchers {
   def haveSummaryKey(value: String)   = new ElementsHasElementsContainingTextMatcher("govuk-summary-list__key", value)
   def haveSummaryValue(value: String) = new ElementsHasElementsContainingTextMatcher("govuk-summary-list__value", value)
 
+  def haveSummaryChangeLinkText(value: String) =
+    new ElementsHasElementsContainingTextMatcher("govuk-summary-list__actions", value)
+
+  def haveSummaryActionsHref(value: Call) = new ElementsHasSummaryActionMatcher(value)
+
   def haveAttribute(key: String, value: String): Matcher[Element] = new ElementHasAttributeValueMatcher(key, value)
   def haveValue(value: String): Matcher[Element]                  = new ElementHasAttributeValueMatcher("value", value)
 
   def haveNavigatorBackLink(href: String)(implicit messages: Messages): Matcher[Element] =
     new ElementHasNavigatorBacklinkMatcher(href)
 
-  def haveFieldError(fieldName: String, content: String)(implicit messages: Messages): Matcher[Element] =
+  def haveFieldError(fieldName: String, content: String)(implicit messages: Messages): Matcher[Document] =
     new ContainElementWithIDMatcher(s"$fieldName-error") and new ElementContainsGovukFieldError(
       fieldName,
       messages(content)
-    )
+    ) and new ContainErrorTitle
 
-  def haveSummaryError(key: String)(implicit messages: Messages): Matcher[Element] =
-    new ContainErrorSummaryWithMessage(messages(key))
+  def havePageError(key: String)(implicit messages: Messages): Matcher[Document] =
+    new ContainErrorSummaryWithMessage(messages(key)) and new ContainErrorTitle
 
   def beEmpty: Matcher[Elements] = (left: Elements) => {
     MatchResult(left.size() == 0, "Elements was not empty", "Elements was empty")
@@ -104,6 +110,20 @@ trait ViewMatchers extends Matchers {
         s"Elements with class {$elementsClass} had text {${left.first().getElementsByClass(elementsClass).text()}}, expected {$value}",
         s"Element with class {$elementsClass} had text {${left.first().getElementsByClass(elementsClass).text()}}"
       )
+
+  }
+
+  class ElementsHasSummaryActionMatcher(value: Call) extends Matcher[Elements] {
+
+    override def apply(left: Elements): MatchResult = {
+      val actionElement = Try(left.first().getElementsByClass("govuk-link").first()).toOption.orNull
+
+      MatchResult(
+        left != null && actionElement != null && actionElement.attr("href") == value.url,
+        s"Elements had no summary action {$value}\n${actualContentWas(actionElement)}",
+        s"Element had summary action {$value}"
+      )
+    }
 
   }
 
@@ -164,9 +184,20 @@ trait ViewMatchers extends Matchers {
 
     override def apply(left: Element): MatchResult =
       MatchResult(
-        left != null && left.getElementsByClass("govuk-error-summary__list").text().contains(text),
+        left != null && left.getElementsByClass("govuk-error-summary__body").text().contains(text),
         s"Document did not contain error element with message {$text}\n${actualContentWas(left)}",
         s"Document contained an error element with message {$text}"
+      )
+
+  }
+
+  class ContainErrorTitle extends Matcher[Document] {
+
+    override def apply(left: Document): MatchResult =
+      MatchResult(
+        left != null && left.title().startsWith("Error:"),
+        s"Document did not have title starting with 'Error:'\n${actualContentWas(left)}",
+        s"Document contained title with 'Error:'"
       )
 
   }

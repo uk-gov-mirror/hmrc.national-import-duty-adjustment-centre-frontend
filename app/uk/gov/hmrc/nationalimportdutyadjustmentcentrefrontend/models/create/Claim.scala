@@ -22,12 +22,13 @@ import play.api.Logger
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, _}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 import scala.util.Try
 
 case class Claim(
+  claimantEori: EoriNumber,
   contactDetails: ContactDetails,
   claimantAddress: Address,
   representationType: RepresentationType,
@@ -48,10 +49,13 @@ case class Claim(
 
 object Claim {
 
-  def apply(userAnswers: CreateAnswers): Claim = {
+  private val logger: Logger = Logger(this.getClass)
+
+  def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
     if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
+      claimantEori = claimantEori,
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
@@ -60,7 +64,7 @@ object Claim {
       uploads = userAnswers.uploads,
       reclaimDutyPayments = userAnswers.reclaimDutyTypes.map(
         dutyType =>
-          dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
+          dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(pageForDutyType(dutyType)))
       ).toMap,
       importerBeingRepresentedDetails = importerBeingRepresentedDetails(userAnswers),
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
@@ -68,6 +72,12 @@ object Claim {
       itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),
       submissionDate = LocalDate.now()
     )
+  }
+
+  private def pageForDutyType(dutyType: ReclaimDutyType): Page = dutyType match {
+    case ReclaimDutyType.Customs => CustomsDutyRepaymentPage
+    case ReclaimDutyType.Vat     => ImportVatRepaymentPage
+    case _                       => OtherDutyRepaymentPage
   }
 
   private def importerBeingRepresentedDetails(userAnswers: CreateAnswers): Option[ImporterBeingRepresentedDetails] =
@@ -78,7 +88,7 @@ object Claim {
           create.ImporterBeingRepresentedDetails(
             repayTo = userAnswers.repayTo.getOrElse(missing(RepayToPage)),
             eoriNumber =
-              if (userAnswers.importerHasEori.contains(true))
+              if (userAnswers.repayTo.contains(RepayTo.Importer))
                 Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
               else None,
             contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))
@@ -86,10 +96,9 @@ object Claim {
         )
     }
 
-  private def missing(answer: Any) = {
-    val message = s"Missing answer - $answer"
-    Logger(this.getClass).warn(message)
-    throw new MissingAnswersException(message)
+  private def missing(answerPage: Page) = {
+    logger.warn(s"Missing answer - $answerPage")
+    throw MissingAnswersException(answerPage)
   }
 
 }

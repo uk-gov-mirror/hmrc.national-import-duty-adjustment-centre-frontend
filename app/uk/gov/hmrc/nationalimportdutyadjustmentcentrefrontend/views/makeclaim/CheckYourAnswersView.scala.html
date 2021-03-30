@@ -15,28 +15,31 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
-        claimSummary: ClaimSummary,
-        continueButton: components.continueButton
+        claimSummary: CreateClaimSummary,
+        submitButton: components.submitButton
 )
 
-@(claim: Claim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(answers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("check_answers.title")), backLink) {
+@layout(pageTitle = InformationTitle(messages("check_answers.title")), backLink) {
 
     @components.heading(messages("check_answers.title"))
 
-    @claimSummary(claim)
+    @claimSummary(answers)
+
+    @components.subHeading(messages("check_answers.submit.heading"))
+    @components.paragraph(messages("check_answers.submit.declaration"))
 
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @submitButton()
     }
 
-}@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimSummary
+}

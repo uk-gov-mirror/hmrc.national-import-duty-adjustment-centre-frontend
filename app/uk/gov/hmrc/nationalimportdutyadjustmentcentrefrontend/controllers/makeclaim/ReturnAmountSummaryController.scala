@@ -16,52 +16,43 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ImporterHasEoriNumberPage, Page}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, ReturnAmountSummaryPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterHasEoriView
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummaryView
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ImporterHasEoriController @Inject() (
+class ReturnAmountSummaryController @Inject() (
+  mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   data: CacheDataService,
-  formProvider: YesNoFormProvider,
-  val controllerComponents: MessagesControllerComponents,
   val navigator: CreateNavigator,
-  importerHasEoriView: ImporterHasEoriView
+  returnAmountSummaryView: ReturnAmountSummaryView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
+    extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
-  override val page: Page = ImporterHasEoriNumberPage
-
-  private val form = formProvider("importer.has.eori.required")
+  override val page: Page = ReturnAmountSummaryPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
-      val preparedForm = answers.importerHasEori.fold(form)(form.fill)
-      Ok(importerHasEoriView(preparedForm, backLink(answers)))
+      Ok(returnAmountSummaryView(answers, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    form.bindFromRequest().fold(
-      formWithErrors =>
-        data.getCreateAnswers map { answers => BadRequest(importerHasEoriView(formWithErrors, backLink(answers))) },
-      value =>
-        data.updateCreateAnswers(answers => answers.copy(importerHasEori = Some(value))) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
-        }
-    )
+    data.getCreateAnswers map { answers =>
+      Redirect(nextPage(answers))
+    }
+
   }
 
 }

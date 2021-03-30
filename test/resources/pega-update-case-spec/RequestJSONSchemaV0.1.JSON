@@ -1,0 +1,54 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Create Case API",
+	"description": "An API to create specified case in the system automatically",
+	"type": "object",
+	"properties": {
+		"AcknowledgementReference": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 32
+		},
+		"ApplicationType": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 32,
+			"enum": [
+				"NIDAC"
+			]
+		},
+		"OriginatingSystem": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 32,
+			"enum": [
+				"Digital"
+			]
+		},
+		"Content": {
+			"type": "object",
+			"properties": {
+				"CaseID": {
+					"type": "string",
+					"minLength": 2,
+					"maxLength": 64
+				},
+				"Description": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 1024
+				}
+			},
+			"required": [
+				"CaseID",
+				"Description"
+			]
+		}
+	},
+	"required": [
+		"AcknowledgementReference",
+		"ApplicationType",
+		"OriginatingSystem",
+		"Content"
+	]
+}

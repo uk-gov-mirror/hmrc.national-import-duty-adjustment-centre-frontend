@@ -83,13 +83,11 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     val validRequest = postRequest(
-      "name"            -> importerContactDetailsAnswer.name,
-      "addressLine1"    -> importerContactDetailsAnswer.addressLine1,
-      "addressLine2"    -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
-      "city"            -> importerContactDetailsAnswer.city,
-      "postcode"        -> importerContactDetailsAnswer.postCode,
-      "emailAddress"    -> importerContactDetailsAnswer.emailAddress,
-      "telephoneNumber" -> importerContactDetailsAnswer.telephoneNumber
+      "name"         -> importerContactDetailsAnswer.name,
+      "addressLine1" -> importerContactDetailsAnswer.addressLine1,
+      "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
+      "city"         -> importerContactDetailsAnswer.city,
+      "postcode"     -> importerContactDetailsAnswer.postCode
     )
 
     "update cache and redirect when valid answer is submitted" in {

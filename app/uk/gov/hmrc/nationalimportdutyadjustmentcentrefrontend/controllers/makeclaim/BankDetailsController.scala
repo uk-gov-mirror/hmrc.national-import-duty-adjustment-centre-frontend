@@ -66,7 +66,7 @@ class BankDetailsController @Inject() (
       value =>
         bankAccountReputationService.validate(value) flatMap {
           case barsResult if barsResult.isValid =>
-            data.updateCreateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+            data.updateCreateAnswers(answers => answers.updateBankDetails(value)) map {
               updatedAnswers => Redirect(nextPage(updatedAnswers))
             }
           case barsResult => processBarsFailure(value, barsResult)
@@ -80,13 +80,21 @@ class BankDetailsController @Inject() (
 
     val formWithErrors = form.fill(bankDetails).copy(errors = barsResult match {
 
+      case bars if !bars.sortcodeExists =>
+        Seq(FormError("sortCode", "bankDetails.bars.validation.sortcodeNotFound"))
+
       case bars if !bars.validAccountAndSortCode =>
         Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
 
+      case bars if !bars.sortcodeAcceptsDirectCredit =>
+        Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
+
       case bars if !bars.rollNotRequired => Seq(FormError("sortCode", "bankDetails.bars.validation.rollRequired"))
 
-      case bars if !bars.accountSupportsBacs =>
-        Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
+      case bars if !bars.accountValid => Seq(FormError("accountNumber", "bankDetails.bars.validation.accountInvalid"))
+
+      case bars if !bars.companyNameValid =>
+        Seq(FormError("accountName", "bankDetails.bars.validation.companyNameInvalid"))
 
       case _ => Seq(FormError("", "bankDetails.bars.validation.failed"))
     })

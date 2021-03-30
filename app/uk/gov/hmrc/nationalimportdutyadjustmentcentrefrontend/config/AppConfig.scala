@@ -57,14 +57,15 @@ class AppConfig @Inject() (
   val timeoutDialogCountdown: Int = servicesConfig.getInt("timeoutDialog.countdownSeconds")
 
   val mongoTimeToLiveInSeconds: Int = sessionTimeoutSeconds + 60
+  val mongoReplaceIndexes: Boolean  = config.getOptional[Boolean]("mongodb.replaceIndexes").getOrElse(false)
 
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
 
   private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
 
-  val barsValidateBankDetailsUrl: String =
-    s"$barsBaseUrl${servicesConfig("bank-account-reputation.validateBankDetails")}"
+  val barsBusinessAssessUrl: String =
+    s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),
@@ -73,6 +74,13 @@ class AppConfig @Inject() (
     approvedFileExtensions = loadConfig("upscan.approved-file-extensions"),
     approvedFileTypes = loadConfig("upscan.approved-file-types")
   )
+
+  val eoriEnrolments: Seq[String] = config.get[Seq[String]]("eori.enrolments")
+
+  private val allowListEnabled = config.get[Boolean]("eori.allowList.enabled")
+  private val allowedEoris     = config.get[Seq[String]]("eori.allowList.eoris")
+
+  def allowEori(eoriNumber: String): Boolean = !allowListEnabled || allowedEoris.contains(eoriNumber)
 
   private def servicesConfig(key: String): String = servicesConfig.getConfString(key, throwNotFound(key))
 

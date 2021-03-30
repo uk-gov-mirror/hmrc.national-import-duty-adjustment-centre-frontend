@@ -27,9 +27,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   ImporterBeingRepresentedDetails
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 
-case class ImporterDetails(EORI: Option[String], Name: String, Address: Address)
+case class ImporterDetails(EORI: Option[String], Name: String, Address: ImporterAddress)
 
 object ImporterDetails {
   implicit val format: OFormat[ImporterDetails] = Json.format[ImporterDetails]
@@ -37,24 +38,26 @@ object ImporterDetails {
   def forClaim(claim: Claim): ImporterDetails = claim.representationType match {
     case Representative =>
       forRepresentativeApplicant(
-        claim.importerBeingRepresentedDetails.getOrElse(
-          throw new MissingAnswersException("Missing ImporterBeingRepresentedDetails")
-        )
+        claim.importerBeingRepresentedDetails.getOrElse(throw new MissingAnswersException(ImporterContactDetailsPage))
       )
-    case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)
+    case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.claimantAddress)
   }
 
-  private def forImporterApplicant(contactDetails: ContactDetails, address: create.Address): ImporterDetails =
+  private def forImporterApplicant(
+    claimantEori: EoriNumber,
+    contactDetails: ContactDetails,
+    address: create.Address
+  ): ImporterDetails =
     new ImporterDetails(
-      EORI = None, // TODO - capture applicant's EORI
+      EORI = Some(claimantEori.number),
       Name = address.name,
-      Address = Address(
+      Address = ImporterAddress(
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,
         City = address.city,
         PostalCode = address.postCode,
         CountryCode = "GB",
-        EmailAddress = contactDetails.emailAddress,
+        EmailAddress = Some(contactDetails.emailAddress),
         TelephoneNumber = contactDetails.telephoneNumber
       )
     )
@@ -63,14 +66,14 @@ object ImporterDetails {
     new ImporterDetails(
       EORI = importer.eoriNumber.map(_.number),
       Name = importer.contactDetails.name,
-      Address = Address(
+      Address = ImporterAddress(
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,
         City = importer.contactDetails.city,
         PostalCode = importer.contactDetails.postCode,
         CountryCode = "GB",
-        EmailAddress = importer.contactDetails.emailAddress,
-        TelephoneNumber = importer.contactDetails.telephoneNumber
+        EmailAddress = None,
+        TelephoneNumber = None
       )
     )
 

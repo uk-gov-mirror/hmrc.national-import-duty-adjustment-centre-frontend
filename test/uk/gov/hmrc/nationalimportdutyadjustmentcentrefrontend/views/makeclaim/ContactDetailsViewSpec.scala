@@ -53,7 +53,7 @@ class ContactDetailsViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -66,7 +66,7 @@ class ContactDetailsViewSpec extends UnitViewSpec with TestData {
       filledView.getElementById("firstName") must haveValue(contactDetailsAnswer.firstName)
       filledView.getElementById("lastName") must haveValue(contactDetailsAnswer.lastName)
       filledView.getElementById("emailAddress") must haveValue(contactDetailsAnswer.emailAddress)
-      filledView.getElementById("telephoneNumber") must haveValue(contactDetailsAnswer.telephoneNumber)
+      filledView.getElementById("telephoneNumber") must haveValue(contactDetailsAnswer.telephoneNumber.getOrElse(""))
     }
 
     "display error when " when {
@@ -79,31 +79,35 @@ class ContactDetailsViewSpec extends UnitViewSpec with TestData {
       )
 
       "first name missing" in {
-        view(form.bind(answers - "firstName")) must haveFieldError(
-          "firstName",
-          "contactDetails.firstName.error.required"
-        )
+        val errorView = view(form.bind(answers - "firstName"))
+        errorView must haveFieldError("firstName", "contactDetails.firstName.error.required")
+        errorView must havePageError("contactDetails.firstName.error.required")
       }
 
       "last name missing" in {
-        view(form.bind(answers - "lastName")) must haveFieldError("lastName", "contactDetails.lastName.error.required")
+        val errorView = view(form.bind(answers - "lastName"))
+        errorView must haveFieldError("lastName", "contactDetails.lastName.error.required")
+        errorView must havePageError("contactDetails.lastName.error.required")
       }
 
       "email invalid" in {
-        view(form.bind(answers + ("emailAddress" -> "invalid"))) must haveFieldError(
-          "emailAddress",
-          "contactDetails.emailAddress.error.invalid"
-        )
+        val errorView = view(form.bind(answers + ("emailAddress" -> "invalid")))
+        errorView must haveFieldError("emailAddress", "contactDetails.emailAddress.error.invalid")
+        errorView must havePageError("contactDetails.emailAddress.error.invalid")
       }
 
-      "telephone number missing" in {
-        view(form.bind(answers - "telephoneNumber")) must haveFieldError(
-          "telephoneNumber",
-          "contactDetails.telephoneNumber.error.required"
-        )
+      "phone number too short" in {
+        val errorView = view(form.bind(answers + ("telephoneNumber" -> "123")))
+        errorView must haveFieldError("telephoneNumber", "contactDetails.telephoneNumber.error.length")
+        errorView must havePageError("contactDetails.telephoneNumber.error.length")
       }
 
+      "phone number too long" in {
+        val errorView = view(form.bind(answers + ("telephoneNumber" -> "123456789012345678901234567890123")))
+        errorView must haveFieldError("telephoneNumber", "contactDetails.telephoneNumber.error.length")
+        errorView must havePageError("contactDetails.telephoneNumber.error.length")
+      }
     }
-
   }
+
 }

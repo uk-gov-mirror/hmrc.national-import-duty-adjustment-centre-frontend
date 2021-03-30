@@ -29,7 +29,7 @@ class ErrorTemplateViewSpec extends UnitViewSpec {
   "ErrorTemplate" should {
 
     "have correct title" in {
-      view.title() must startWith("some title")
+      view.title() must startWith("Error: some title")
     }
 
     "have correct heading" in {

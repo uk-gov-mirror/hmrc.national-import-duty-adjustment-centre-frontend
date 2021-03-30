@@ -20,4 +20,11 @@
 
 @(messageKey: String = "site.continue", disabled: Boolean = false)(implicit messages: Messages)
 
-@govukButton(Button(content = Text(messages(messageKey)), attributes = Map("id" -> "submit"), disabled = disabled))
+@govukButton(
+ Button(
+  content = Text(messages(messageKey)),
+  attributes = Map("id" -> "nidac-continue"),
+  disabled = disabled,
+  preventDoubleClick = true
+ )
+)

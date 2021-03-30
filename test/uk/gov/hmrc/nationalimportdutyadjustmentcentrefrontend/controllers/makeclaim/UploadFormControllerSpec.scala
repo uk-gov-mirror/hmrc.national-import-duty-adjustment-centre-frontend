@@ -111,7 +111,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
-        theFormViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
       }
 
       "user has uploaded some files" in {
@@ -155,7 +155,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE").url)
 
-      verify(dataRepository, never()).set(any())
+      verify(dataRepository, never()).update(any())
     }
 
     "update UserAnswers and redirect to summary when upload succeeds" in {
@@ -177,7 +177,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK
 
-        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
       }
 
       "user has uploaded some files" in {

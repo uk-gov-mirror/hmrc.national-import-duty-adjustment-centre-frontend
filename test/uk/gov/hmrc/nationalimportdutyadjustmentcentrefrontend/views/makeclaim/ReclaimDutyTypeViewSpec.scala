@@ -18,12 +18,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import play.api.data.Form
-import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ReclaimDutyTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.Customs
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.Customs
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
 
 class ReclaimDutyTypeViewSpec extends UnitViewSpec {
@@ -57,7 +56,7 @@ class ReclaimDutyTypeViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -74,8 +73,7 @@ class ReclaimDutyTypeViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("reclaimDutyType" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("reclaimDutyType.error.required")
-
+      errorView must havePageError("reclaimDutyType.error.required")
     }
 
   }

@@ -1,0 +1,344 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Create Case API",
+	"description": "An API to create specified case in the system automatically",
+	"type": "object",
+	"properties": {
+		"AcknowledgementReference": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 32
+		},
+		"ApplicationType": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 32,
+			"enum": [
+				"NIDAC"
+			]
+		},
+		"OriginatingSystem": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 32,
+			"enum": [
+				"Digital"
+			]
+		},
+		"Content": {
+			"type": "object",
+			"properties": {
+				"RepresentationType": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 32,
+					"enum": [
+						"Importer",
+						"Representative of importer"
+					]
+				},
+				"ClaimType": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 32,
+					"enum": [
+						"Anti-Dumping",
+						"Airworthiness",
+						"Account Sales",
+					    "Preference",
+						"Quota"
+					]
+				},
+				"ImporterDetails": {
+					"type": "object",
+					"properties": {
+						"EORI": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 17,
+							"pattern": "([G]{1}[B]{1}[0-9]{15})|([G]{1}[B]{1}[0-9]{12})"
+						},
+						"Name": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 40
+						},
+						"Address": {
+							"type": "object",
+							"properties": {
+								"AddressLine1": {
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 100
+								},
+								"AddressLine2": {
+									"type": "string",
+									"minLength": 0,
+									"maxLength": 50
+								},
+								"Region": {
+									"type": "string",
+									"minLength": 0,
+									"maxLength": 50
+								},
+								"City": {
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 50
+								},
+								"CountryCode": {
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 32
+								},
+								"PostalCode": {
+									"type": "string",
+									"minLength": 5,
+									"maxLength": 8,
+									"pattern": "([0-9a-zA-Z ]{5,8})"
+								},
+								"EmailAddress": {
+									"type": "string",
+									"minLength": 0,
+									"maxLength": 85,
+									"format":"email"
+								},
+								"TelephoneNumber": {
+									"type": "string",
+									"minLength": 9,
+									"maxLength": 32
+								}
+							},
+							"required": [
+								"AddressLine1",
+								"City",
+								"CountryCode",
+								"PostalCode"
+							]
+						}
+					},
+					"required": [
+						"Name",
+						"Address"
+					]
+				},
+				"AgentDetails": {
+					"type": "object",
+					"properties": {
+						"EORI": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 17,
+							"pattern": "([G]{1}[B]{1}[0-9]{15})|([G]{1}[B]{1}[0-9]{12})"
+						},
+						"Name": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 40
+						},
+						"Address": {
+							"type": "object",
+							"properties": {
+								"AddressLine1": {
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 100
+								},
+								"AddressLine2": {
+									"type": "string",
+									"minLength": 0,
+									"maxLength": 50
+								},
+								"Region": {
+									"type": "string",
+									"minLength": 0,
+									"maxLength": 50
+								},
+								"City": {
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 50
+								},
+								"CountryCode": {
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 32
+								},
+								"PostalCode": {
+									"type": "string",
+									"minLength": 5,
+									"maxLength": 8,
+									"pattern":"([0-9a-zA-Z ]{5,8})"
+								},
+								"EmailAddress": {
+									"type": "string",
+									"minLength": 0,
+									"maxLength": 85,
+									"format":"email"
+								},
+								"TelephoneNumber": {
+									"type": "string",
+									"minLength": 9,
+									"maxLength": 32
+								}
+							},
+							"required": [
+								"AddressLine1",
+								"City",
+								"CountryCode",
+								"PostalCode"
+							]
+						}
+					},
+					"required": [
+						"Name",
+						"Address"
+					]
+				},
+				"EntryProcessingUnit": {
+					"type": "string",
+					"minLength": 3,
+					"maxLength": 3,
+					"pattern": "[0-9]{3}"
+				},
+				"EntryNumber": {
+					"type": "string",
+					"minLength": 7,
+					"maxLength": 7,
+					"pattern": "[0-9]{6}[a-zA-Z]{1}"
+				},
+				"EntryDate": {
+					"type": "string",
+					"minLength": 8,
+					"maxLength": 8,
+					"pattern": "([0-9]{8})"
+				},
+				"MRN": {
+					"type": "string",
+					"minLength": 0,
+					"maxLength": 18
+				},
+				"BoxSeven": {
+					"type": "string",
+					"minLength": 0,
+					"maxLength": 10
+				},
+				"DutyDetails": {
+					"type": "array",
+					"items": [
+					{
+						"type": "object",
+						"properties": {
+							"Category": {
+								"type": "string",
+								"minLength": 1,
+								"maxLength": 32,
+								"enum": [
+									"01",
+									"02",
+									"03"
+								]
+							},
+							"PaidAmount": {
+								"type": "string",
+								"minLength": 1,
+								"maxLength": 12,
+								"pattern": "^-?[0-9]{1,7}$|^-?[0-9]{1,7}[.][0-9]{1,2}$"
+							},
+							"DueAmount": {
+								"type": "string",
+								"minLength": 1,
+								"maxLength": 12,
+								"pattern": "^-?[0-9]{1,7}$|^-?[0-9]{1,7}[.][0-9]{1,2}$"
+							}
+						},
+						"required": [
+							"Category",
+							"PaidAmount",
+							"DueAmount"
+						]
+					}
+					]
+				},
+				"PayTo": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 32,
+					"enum": [
+						"Importer",
+						"Representative of importer"
+					]
+				},
+				"PaymentDetails": {
+					"type": "object",
+					"properties": {
+						"SortCode": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 6,
+							"pattern":"([0-9]{6})"
+						},
+						"AccountNumber": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 8,
+							"pattern":"([0-9]{8})"
+						},
+						"AccountName": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 40
+						}
+					}
+				},
+				"ItemNumber": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 500
+				},
+				"ClaimReason": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 1500
+				},
+				"FirstName": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 40
+				},
+				"LastName": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 40
+				},
+				"SubmissionDate": {
+					"type": "string",
+					"minLength": 8,
+					"maxLength": 8,
+					"pattern": "([0-9]{8})"
+				}
+			},
+			"required": [
+				"RepresentationType",
+				"ClaimType",
+				"ImporterDetails",
+				"EntryProcessingUnit",
+				"EntryNumber",
+				"EntryDate",
+				"DutyDetails",
+				"PayTo",
+				"ItemNumber",
+				"ClaimReason",
+				"FirstName",
+				"LastName",
+				"SubmissionDate"
+			]
+		}
+	},
+	"required": [
+		"AcknowledgementReference",
+		"ApplicationType",
+		"OriginatingSystem",
+		"Content"
+	]
+}

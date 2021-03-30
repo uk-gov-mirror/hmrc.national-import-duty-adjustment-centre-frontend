@@ -25,17 +25,18 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{Amen
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   data: CacheDataService,
+  service: ClaimService,
   val navigator: AmendNavigator,
   checkYourAnswersView: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
@@ -44,17 +45,39 @@ class CheckYourAnswersController @Inject() (
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAmendAnswers map { answers =>
-      Ok(checkYourAnswersView(AmendClaim(answers), backLink(answers)))
+    data.getAmendAnswers flatMap { answers =>
+      try {
+        val amendClaim = AmendClaim(answers)
+        data.updateAmendAnswers(answers => answers.copy(changePage = None)) map { updatedAnswers =>
+          Ok(checkYourAnswersView(amendClaim, backLink(updatedAnswers)))
+        }
+      } catch {
+        case _: MissingAnswersException =>
+          Future(Redirect(navigator.firstMissingAnswer(answers)))
+      }
+    }
+  }
+
+  def onChange(page: String): Action[AnyContent] = identify.async { implicit request =>
+    data.updateAmendAnswers(answers => answers.copy(changePage = Some(page))) map { _ =>
+      Redirect(navigator.gotoPage(page))
+    }
+  }
+
+  def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
+    data.getAmendAnswers flatMap { answers =>
+      val amendClaim = AmendClaim(answers)
+      service.amendClaim(amendClaim) flatMap {
+        case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
+        case response =>
+          data.storeAmendResponse(response) map {
+            _ => Redirect(nextPage(answers))
+          }
+      }
     } recover {
       case _: MissingAnswersException =>
         Redirect(routes.AmendClaimController.start())
     }
-  }
-
-  def onSubmit(): Action[AnyContent] = identify { implicit request =>
-    // TODO submit amend claim request and display confirmation
-    Redirect(routes.CheckYourAnswersController.onPageLoad())
 
   }
 

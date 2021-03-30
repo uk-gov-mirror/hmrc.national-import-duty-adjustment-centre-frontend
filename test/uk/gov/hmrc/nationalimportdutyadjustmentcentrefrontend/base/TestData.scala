@@ -17,27 +17,36 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
-
-import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendAnswers,
+  AmendClaim,
+  AmendClaimAudit,
+  AmendClaimResponse,
+  AmendClaimResult,
   CaseReference,
   FurtherInformation
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, JourneyId, UploadId}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  EoriNumber,
+  FileTransferResult,
+  JourneyId,
+  UploadId
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
 
   val fixedDate: LocalDate         = LocalDate.now()
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
+  val fixedZoneTime: ZonedDateTime = ZonedDateTime.now()
+
+  val claimantEori = EoriNumber("GB434586395327")
 
   // CreateAnswers
   val emptyAnswers: CreateAnswers = CreateAnswers()
@@ -47,10 +56,10 @@ trait TestData {
   val claimTypeAnswer: ClaimType = AntiDumping
 
   val uploadAnswer: UploadedFile =
-    UploadedFile("upscanRef1", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
+    UploadedFile("upscanRef1", "/url", fixedZoneTime, "checksum", "filename", "mime/type")
 
   val uploadAnswer2: UploadedFile =
-    UploadedFile("upscanRef2", "/url2", ZonedDateTime.now(), "checksum2", "filename2", "mime/type2")
+    UploadedFile("upscanRef2", "/url2", fixedZoneTime, "checksum2", "filename2", "mime/type2")
 
   val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat, Other)
 
@@ -64,33 +73,25 @@ trait TestData {
     Other.toString   -> otherDutyRepaymentAnswer
   )
 
-  val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
+  val importerBankDetailsAnswer: BankDetails       = BankDetails("importer account name", "001100", "12345678")
+  val representativeBankDetailsAnswer: BankDetails = BankDetails("representative account name", "001100", "87654321")
 
   val repayToAnswer = RepayTo.Importer
 
   val claimReasonAnswer: ClaimReason = ClaimReason("some valid reason")
 
-  val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
+  val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", Some("01234567890"))
 
-  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "PCode")
+  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "WO0 1KE")
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
   val itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
 
-  val importerHasEoriAnswer = true
-
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
-  val importerContactDetailsAnswer = ImporterContactDetails(
-    "Importer Name",
-    "Importer Line 1",
-    Some("Importer Line 2"),
-    "Importer City",
-    "PCode",
-    "importer@example.com",
-    "01234567890"
-  )
+  val importerContactDetailsAnswer =
+    ImporterContactDetails("Importer Name", "Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
 
   val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),
@@ -99,15 +100,31 @@ trait TestData {
     contactDetails = Some(contactDetailsAnswer),
     claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
+    uploadAnotherFile = Some(uploadAnotherFileAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
     repayTo = Some(repayToAnswer),
-    bankDetails = Some(bankDetailsAnswer),
+    importerBankDetails = Some(importerBankDetailsAnswer),
+    representativeBankDetails = Some(representativeBankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer),
-    importerHasEori = Some(importerHasEoriAnswer),
     importerEori = Some(importerEoriNumberAnswer),
     importerContactDetails = Some(importerContactDetailsAnswer)
+  )
+
+  val importerAnswers: CreateAnswers = CreateAnswers(
+    representationType = Some(RepresentationType.Importer),
+    claimType = Some(claimTypeAnswer),
+    claimReason = Some(claimReasonAnswer),
+    contactDetails = Some(contactDetailsAnswer),
+    claimantAddress = Some(addressAnswer),
+    uploads = Seq(uploadAnswer),
+    uploadAnotherFile = Some(uploadAnotherFileAnswer),
+    reclaimDutyTypes = reclaimDutyTypesAnswer,
+    reclaimDutyPayments = reclaimDutyPayments,
+    importerBankDetails = Some(importerBankDetailsAnswer),
+    entryDetails = Some(entryDetailsAnswer),
+    itemNumbers = Some(itemNumbersAnswer)
   )
 
   // Upscan
@@ -118,7 +135,7 @@ trait TestData {
     UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
 
   def uploadResult(status: UploadStatus): UploadDetails =
-    UploadDetails(BSONObjectID.generate(), uploadId, journeyId, Reference("reference"), status, fixedDateTime)
+    UploadDetails(uploadId, journeyId, Reference("reference"), status, fixedDateTime)
 
   val uploadInProgress: UploadStatus = InProgress
   val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")
@@ -126,16 +143,11 @@ trait TestData {
   val uploadFileSuccess: UploadStatus =
     UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
 
-  // BARS
-  val barsSuccessResult          = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("yes")))
-  val barsInvalidAccountResult   = BARSResult(ValidateBankDetailsResponse("no", "no", None))
-  val barsRollRequiredResult     = BARSResult(ValidateBankDetailsResponse("yes", "yes", None))
-  val barsBacsNotSupportedResult = BARSResult(ValidateBankDetailsResponse("yes", "no", Some("no")))
-
   // AmendAnswers
   val caseReferenceAnswer      = CaseReference("NID21134557697RM8WIB13")
   val furtherInformationAnswer = FurtherInformation("I also have this to tell which is additional information")
-  val hasMoreDocuments         = true
+  val hasMoreDocumentsAnswer   = true
+  val uploadAnotherFileAnswer  = false
 
   val emptyAmendAnswers: AmendAnswers = AmendAnswers()
 
@@ -143,8 +155,78 @@ trait TestData {
     AmendAnswers(
       caseReference = Some(caseReferenceAnswer),
       furtherInformation = Some(furtherInformationAnswer),
-      hasMoreDocuments = Some(hasMoreDocuments),
-      uploads = Seq(uploadAnswer, uploadAnswer2)
+      hasMoreDocuments = Some(hasMoreDocumentsAnswer),
+      uploads = Seq(uploadAnswer, uploadAnswer2),
+      uploadAnotherFile = Some(uploadAnotherFileAnswer)
     )
+
+  val claim: Claim           = Claim(claimantEori, completeAnswers)
+  val amendClaim: AmendClaim = AmendClaim(completeAmendAnswers)
+
+  val validCreateClaimResponse: CreateClaimResponse =
+    CreateClaimResponse(
+      correlationId = "123456",
+      error = None,
+      result = Some(
+        CreateClaimResult(
+          caseReference = "NID21134557697RM8WIB14",
+          fileTransferResults = Seq(
+            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+          )
+        )
+      )
+    )
+
+  val validAmendClaimResponse: AmendClaimResponse =
+    AmendClaimResponse(
+      correlationId = "123456",
+      error = None,
+      result = Some(
+        AmendClaimResult(
+          caseReference = "NID21134557697RM8WIB13",
+          fileTransferResults = Seq(
+            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+          )
+        )
+      )
+    )
+
+  val createClaimAudit: CreateClaimAudit = CreateClaimAudit(
+    success = true,
+    Some("NID21134557697RM8WIB14"),
+    contactDetailsAnswer,
+    addressAnswer,
+    representationTypeAnswer,
+    claimTypeAnswer,
+    claimReasonAnswer,
+    Map("Customs" -> DutyPaid("100", "9.99"), "Vat" -> DutyPaid("100", "9.99"), "Other" -> DutyPaid("100", "9.99")),
+    importerBankDetailsAnswer,
+    Some(importerContactDetailsAnswer),
+    Some(repayToAnswer),
+    entryDetailsAnswer,
+    itemNumbersAnswer,
+    Seq(uploadAnswer),
+    Seq(
+      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+    ),
+    claimantEori,
+    Some(importerEoriNumberAnswer)
+  )
+
+  val amendClaimAudit: AmendClaimAudit = AmendClaimAudit(
+    success = true,
+    "NID21134557697RM8WIB13",
+    Seq(uploadAnswer, uploadAnswer2),
+    Seq(
+      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+    ),
+    furtherInformationAnswer
+  )
 
 }

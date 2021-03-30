@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyAmend
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadProgress
@@ -29,7 +29,7 @@
     <meta http-equiv="refresh" content="1"/>
 }
 
-@layout(pageTitle = Title(messages("amend.upload_documents.title")), headBlock = Some(refreshHeader), backLink = backLink) {
+@layout(pageTitle = InformationTitle(messages("amend.upload_documents.title")), headBlock = Some(refreshHeader), backLink = backLink) {
 
     @components.heading(messages("amend.upload_documents.title"))
 

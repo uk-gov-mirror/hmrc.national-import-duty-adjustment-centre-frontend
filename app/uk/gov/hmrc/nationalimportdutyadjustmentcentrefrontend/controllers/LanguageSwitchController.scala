@@ -18,19 +18,14 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
-import play.api.Configuration
 import play.api.mvc._
 import play.api.i18n.Lang
 import com.google.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LanguageSwitchController @Inject() (
-  configuration: Configuration,
-  appConfig: AppConfig,
-  languageUtils: LanguageUtils,
-  cc: ControllerComponents
-) extends LanguageController(configuration, languageUtils, cc) {
+class LanguageSwitchController @Inject() (appConfig: AppConfig, languageUtils: LanguageUtils, cc: ControllerComponents)
+    extends LanguageController(languageUtils, cc) {
   import appConfig._
 
   override def fallbackURL: String =

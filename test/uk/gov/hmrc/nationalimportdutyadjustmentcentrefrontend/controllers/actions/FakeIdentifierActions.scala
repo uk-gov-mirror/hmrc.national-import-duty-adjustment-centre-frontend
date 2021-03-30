@@ -20,6 +20,7 @@ import javax.inject.Inject
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -34,7 +35,7 @@ trait FakeIdentifierActions extends Injector {
 class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id"))
+    block(IdentifierRequest(request, "id", EoriNumber("GB123456789012")))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

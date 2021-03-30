@@ -21,6 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 final case class AmendAnswers(
+  changePage: Option[String] = None,
   caseReference: Option[CaseReference] = None,
   hasMoreDocuments: Option[Boolean] = None,
   uploads: Seq[UploadedFile] = Seq.empty,

@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.data.Form
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ToDoType
 
-case class Address(
-  AddressLine1: String,
-  AddressLine2: Option[String],
-  City: String,
-  PostalCode: String,
-  CountryCode: String,
-  TelephoneNumber: String,
-  EmailAddress: String
-)
+import javax.inject.Inject
 
-object Address {
-  implicit val format: OFormat[Address] = Json.format[Address]
+class WhatDoYouWantToDoFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[ToDoType] =
+    Form("what_do_you_want_to_do" -> enumerable[ToDoType]("what_do_you_want_to_do.error.required"))
+
 }

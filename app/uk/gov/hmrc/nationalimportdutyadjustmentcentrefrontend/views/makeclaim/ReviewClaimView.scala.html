@@ -16,24 +16,24 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.summaryList
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimSummary
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.SubmittedClaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimReceipt
+@import java.time.format.DateTimeFormatter
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
         summaryList: summaryList,
-        claimSummary: ClaimSummary,
+        claimSummary: CreateClaimSummary,
         continueButton: components.continueButton
 )
 
-@(submittedClaim: SubmittedClaim)(implicit request: Request[_], messages: Messages)
+@(claimReceipt: CreateClaimReceipt)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages(s"Application details - ${submittedClaim.caseReference}")), NavigatorBack(None)) {
+@layout(pageTitle = InformationTitle(messages(s"Application details - ${claimReceipt.caseReference}")), NavigatorBack(None)) {
 
     @components.heading(messages("Application details"))
 
@@ -49,14 +49,34 @@
                     content = Text(messages("Case reference"))
                 ),
                 value = Value(
-                    content = Text(submittedClaim.caseReference)
+                    content = Text(claimReceipt.caseReference)
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "submitted_date",
+                key = Key(
+                    content = Text(messages("Date"))
+                ),
+                value = Value(
+                    content = Text( DateTimeFormatter.ofPattern("d MMMM yyyy").format(claimReceipt.timestamp))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "submitted_time",
+                key = Key(
+                    content = Text(messages("Time"))
+                ),
+                value = Value(
+                    content = Text( DateTimeFormatter.ofPattern("HH:mm:ss").format(claimReceipt.timestamp))
                 ),
                 actions = None
             ))
         )
     )
 
-    @claimSummary(Claim(submittedClaim.createAnswers))
+    @claimSummary(claimReceipt.answers)
 
     @components.printPage()
 

@@ -16,15 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
-import java.time.format.DateTimeFormatter
-
 import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
+
+import java.time.format.DateTimeFormatter
 
 /**
   * Create specified case in the PEGA system.
-  * Based on spec "CSG_NIDAC_AutoCreateCase_API_Spec_V0.2.docx"  (NOTE: PEGA spec)
+  * Based on spec for "CSG_NIDAC_AutoCreateCase_API_Spec" (NOTE: PEGA spec)
+  * * see tests/pega-create-case-spec for latest implemented
   */
 case class EISCreateCaseRequest(
   AcknowledgementReference: String,

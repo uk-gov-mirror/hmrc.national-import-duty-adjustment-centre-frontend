@@ -25,7 +25,7 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{AmendNavigator, CreateNavigator}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
@@ -47,12 +47,13 @@ trait ControllerSpec
 
   val cacheDataService: CacheDataService = new CacheDataService(dataRepository)
 
-  val navigator      = instanceOf[CreateNavigator]
-  val amendNavigator = instanceOf[AmendNavigator]
+  val navigator: CreateNavigator     = instanceOf[CreateNavigator]
+  val amendNavigator: AmendNavigator = instanceOf[AmendNavigator]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(dataRepository.set(any[CacheData])).thenReturn(Future.successful(None))
+    when(dataRepository.insert(any[CacheData])).thenReturn(Future.successful(()))
+    when(dataRepository.update(any[CacheData])).thenReturn(Future.successful(None))
   }
 
   override protected def afterEach(): Unit = {
@@ -77,15 +78,20 @@ trait ControllerSpec
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
+  def withCachedAmendClaimResponse(amendClaimResponse: Option[AmendClaimResponse]): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", amendClaimResponse = amendClaimResponse))
+    when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
+  }
+
   protected def theUpdatedCreateAnswers: CreateAnswers =
-    theUpdatedCacheDate.getCreateAnswers
+    theUpdatedCacheData.getCreateAnswers
 
   protected def theUpdatedAmendAnswers: AmendAnswers =
-    theUpdatedCacheDate.getAmendAnswers
+    theUpdatedCacheData.getAmendAnswers
 
-  private def theUpdatedCacheDate: CacheData = {
+  private def theUpdatedCacheData: CacheData = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
-    verify(dataRepository).set(captor.capture())
+    verify(dataRepository).update(captor.capture())
     captor.getValue
   }
 

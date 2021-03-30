@@ -1,5 +1,3 @@
-window.GOVUKFrontend.initAll();
-window.HMRCFrontend.initAll();
 
 // =====================================================
 // Back link mimics browser back functionality

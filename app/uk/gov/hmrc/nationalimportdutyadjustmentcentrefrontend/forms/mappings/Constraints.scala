@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
-import java.time.LocalDate
-
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
+import java.time.LocalDate
 import scala.util.{Success, Try}
 
 trait Constraints {
@@ -33,20 +33,38 @@ trait Constraints {
           .getOrElse(Valid)
     }
 
-  protected def regexp(regex: String, errorKey: String): Constraint[String] =
+  protected def postcodeLength(errorKey: String): Constraint[String] =
     Constraint {
-      case str if str.matches(regex) =>
+      case str if str.stripExternalAndReduceInternalSpaces().length > 8 =>
+        Invalid(errorKey)
+      case str if str.stripExternalAndReduceInternalSpaces().length < 5 =>
+        Invalid(errorKey)
+      case _ =>
+        Valid
+    }
+
+  protected def regexp(regex: String, errorKey: String, transform: String => String = x => x): Constraint[String] =
+    Constraint {
+      case str if transform(str).matches(regex) =>
         Valid
       case _ =>
         Invalid(errorKey, regex)
     }
 
-  protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
+  protected def maxLength(maximum: Int, errorKey: String, transform: String => String = x => x): Constraint[String] =
     Constraint {
-      case str if str.length <= maximum =>
+      case str if transform(str).length <= maximum =>
         Valid
       case _ =>
         Invalid(errorKey, maximum)
+    }
+
+  protected def minLength(minimum: Int, errorKey: String, transform: String => String = x => x): Constraint[String] =
+    Constraint {
+      case str if transform(str).length >= minimum =>
+        Valid
+      case _ =>
+        Invalid(errorKey, minimum)
     }
 
   protected def nonEmptySet(errorKey: String): Constraint[Set[_]] =

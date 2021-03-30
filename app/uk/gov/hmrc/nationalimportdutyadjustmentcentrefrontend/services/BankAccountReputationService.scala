@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.BARSConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{BARSResult, ValidateBankDetailsRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{AssessBusinessBankDetailsRequest, BARSResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -27,7 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class BankAccountReputationService @Inject() (connector: BARSConnector)(implicit ec: ExecutionContext) {
 
   def validate(bankDetails: BankDetails)(implicit hc: HeaderCarrier): Future[BARSResult] =
-    for (validateResponse <- connector.validateBankDetails(ValidateBankDetailsRequest(bankDetails)))
-      yield BARSResult(validateResponse)
+    connector.assessBusinessBankDetails(AssessBusinessBankDetailsRequest(bankDetails)) map { assessment =>
+      BARSResult(assessment)
+    }
 
 }

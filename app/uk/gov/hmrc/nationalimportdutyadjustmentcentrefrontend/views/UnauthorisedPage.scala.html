@@ -15,14 +15,14 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ErrorTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages)
 
-    @layout(pageTitle = Title(messages("unauthorised.title")), NavigatorBack(None)) {
+    @layout(pageTitle = ErrorTitle(messages("unauthorised.title")), NavigatorBack(None)) {
 
         @components.heading(messages("unauthorised.title"))
     }

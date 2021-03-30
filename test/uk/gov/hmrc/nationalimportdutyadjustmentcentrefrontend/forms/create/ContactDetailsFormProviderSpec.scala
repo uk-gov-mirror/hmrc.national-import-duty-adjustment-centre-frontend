@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 
 class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -67,7 +66,6 @@ class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "emailAddress"
     val requiredKey = "contactDetails.emailAddress.error.required"
-    val invalidKey  = "contactDetails.emailAddress.error.invalid"
     val lengthKey   = "contactDetails.emailAddress.error.length"
     val maxLength   = 85
 
@@ -90,27 +88,28 @@ class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".TelephoneNumber" must {
 
-    val fieldName   = "telephoneNumber"
-    val requiredKey = "contactDetails.telephoneNumber.error.required"
-    val invalidKey  = "contactDetails.telephoneNumber.error.invalid"
-    val minLength   = 11
-    val maxLength   = 11
+    val fieldName  = "telephoneNumber"
+    val invalidKey = "contactDetails.telephoneNumber.error.length"
+    val minLength  = 9
+    val maxLength  = 32
 
-    val validTelephoneNumberGen = for {
-      length <- Gen.choose(minLength, maxLength)
-      digits <- Gen.listOfN(length, Gen.numChar)
-    } yield digits.mkString
-
-    behave like fieldThatBindsValidData(form, fieldName, validTelephoneNumberGen)
-
-    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
     behave like fieldWithMaxLength(
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, invalidKey, Seq(Validation.phoneNumberPattern))
+      lengthError = FormError(fieldName, invalidKey, Seq(maxLength))
     )
 
+    behave like optionalField(form, fieldName)
+
+    behave like fieldWithMinLength(
+      form,
+      fieldName,
+      minLength = minLength,
+      lengthError = FormError(fieldName, invalidKey, Seq(minLength))
+    )
   }
+
 }

@@ -37,11 +37,15 @@ class ContactDetailsFormProvider @Inject() extends Mappings {
             regexp(Validation.emailAddressPattern.toString, "contactDetails.emailAddress.error.invalid")
           )
         ),
-      "telephoneNumber" ->
-        text("contactDetails.telephoneNumber.error.required")
+      "telephoneNumber" -> optional(
+        text()
           .verifying(
-            firstError(regexp(Validation.phoneNumberPattern.toString, "contactDetails.telephoneNumber.error.invalid"))
+            firstError(
+              minLength(9, "contactDetails.telephoneNumber.error.length"),
+              maxLength(32, "contactDetails.telephoneNumber.error.length")
+            )
           )
+      )
     )(ContactDetails.apply)(ContactDetails.unapply)
   )
 

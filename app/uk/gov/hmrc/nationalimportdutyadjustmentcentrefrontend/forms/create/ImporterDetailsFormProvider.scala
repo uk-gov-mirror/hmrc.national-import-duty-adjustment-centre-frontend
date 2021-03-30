@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
-import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ImporterContactDetails
+
+import javax.inject.Inject
 
 class ImporterDetailsFormProvider @Inject() extends Mappings {
 
@@ -39,22 +41,14 @@ class ImporterDetailsFormProvider @Inject() extends Mappings {
       "postcode" -> text("address.postcode.error.required")
         .verifying(
           firstError(
-            maxLength(7, "address.postcode.error.length"),
-            regexp(Validation.postcodePattern, "address.postcode.error.invalid")
+            postcodeLength("address.postcode.error.length"),
+            regexp(
+              Validation.postcodePattern,
+              "address.postcode.error.invalid",
+              _.stripExternalAndReduceInternalSpaces()
+            )
           )
-        ),
-      "emailAddress" -> text("contactDetails.emailAddress.error.required")
-        .verifying(
-          firstError(
-            maxLength(85, "contactDetails.emailAddress.error.length"),
-            regexp(Validation.emailAddressPattern.toString, "contactDetails.emailAddress.error.invalid")
-          )
-        ),
-      "telephoneNumber" ->
-        text("contactDetails.telephoneNumber.error.required")
-          .verifying(
-            firstError(regexp(Validation.phoneNumberPattern.toString, "contactDetails.telephoneNumber.error.invalid"))
-          )
+        )
     )(ImporterContactDetails.apply)(ImporterContactDetails.unapply)
   )
 

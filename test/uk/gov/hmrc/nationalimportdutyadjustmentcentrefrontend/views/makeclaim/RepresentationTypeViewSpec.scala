@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.Form
-import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.RepresentationTypeFormProvider
@@ -30,7 +30,7 @@ class RepresentationTypeViewSpec extends UnitViewSpec {
   private val page = instanceOf[RepresentationTypeView]
   private val form = new RepresentationTypeFormProvider().apply()
 
-  private def view(form: Form[RepresentationType] = form): Html = page(form, navigatorBack)
+  private def view(form: Form[RepresentationType] = form): Document = page(form, navigatorBack)
 
   "RepresentationTypePage on empty form" should {
 
@@ -52,7 +52,7 @@ class RepresentationTypeViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -69,10 +69,7 @@ class RepresentationTypeViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("representation_type" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages(
-        "representation_type.error.required"
-      )
-
+      errorView must havePageError("representation_type.error.required")
     }
 
   }

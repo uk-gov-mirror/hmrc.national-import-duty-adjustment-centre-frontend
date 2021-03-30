@@ -46,18 +46,28 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
       view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
-    "have the uploaded file names" in {
-      val summaryText =
-        view(uploadedDocuments = Seq(uploadAnswer, uploadAnswer2)).getElementsByClass("govuk-summary-list").text()
-      summaryText must include(uploadAnswer.fileName)
-      summaryText must include(uploadAnswer2.fileName)
+    "have the first uploaded file details" in {
+      val docRow1 =
+        view(uploadedDocuments = Seq(uploadAnswer, uploadAnswer2)).getElementsByClass("upload_row_1")
+
+      docRow1 must haveSummaryKey("1.")
+      docRow1 must haveSummaryValue(uploadAnswer.fileName)
+      docRow1 must haveSummaryChangeLinkText(
+        s"${messages("upload_documents_summary.remove.label")} ${messages("upload_documents_summary.remove.label.hidden", uploadAnswer.fileName)}"
+      )
+      docRow1 must haveSummaryActionsHref(routes.UploadFormSummaryController.onRemove(uploadAnswer.upscanReference))
     }
 
-    "have a remove link" in {
-      val link = view(uploadedDocuments = Seq(uploadAnswer)).getElementsByClass("govuk-link").first()
-      link must includeMessage("upload_documents_summary.remove.label")
-      link must includeMessage("upload_documents_summary.remove.label.hidden", uploadAnswer.fileName)
-      link must haveAttribute("href", routes.UploadFormSummaryController.onRemove(uploadAnswer.upscanReference).url)
+    "have the second uploaded file details" in {
+      val docRow2 =
+        view(uploadedDocuments = Seq(uploadAnswer, uploadAnswer2)).getElementsByClass("upload_row_2")
+
+      docRow2 must haveSummaryKey("2.")
+      docRow2 must haveSummaryValue(uploadAnswer2.fileName)
+      docRow2 must haveSummaryChangeLinkText(
+        s"${messages("upload_documents_summary.remove.label")} ${messages("upload_documents_summary.remove.label.hidden", uploadAnswer2.fileName)}"
+      )
+      docRow2 must haveSummaryActionsHref(routes.UploadFormSummaryController.onRemove(uploadAnswer2.upscanReference))
     }
 
   }
@@ -73,9 +83,7 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "answer missing" in {
-        view(form.bind(Map("yesOrNo" -> ""))).getElementsByClass("govuk-error-summary") must containMessage(
-          "upload_documents_summary.add.required"
-        )
+        view(form.bind(Map("yesOrNo" -> ""))) must havePageError("upload_documents_summary.add.required")
       }
 
     }

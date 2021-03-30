@@ -16,4 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions
 
-class MissingAnswersException(message: String) extends RuntimeException(message)
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
+
+case class MissingAnswersException(answerPage: Page) extends RuntimeException(s"$answerPage")

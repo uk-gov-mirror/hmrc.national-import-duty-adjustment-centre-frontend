@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import java.time.LocalDate
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
@@ -37,7 +37,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 
-class EISCreateCaseRequestSpec extends UnitSpec {
+class EISCreateCaseRequestSpec extends UnitSpec with TestData {
 
   "EISCreateCaseRequest" should {
 
@@ -53,7 +53,8 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   }
 
   val claimByRepresentative: Claim = create.Claim(
-    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
+    claimantEori = claimantEori,
+    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     claimantAddress = UkAddress("Representative Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
@@ -71,9 +72,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
             "Importer Address Line 1",
             Some("Importer Address Line 2"),
             "Importer City",
-            "IM12CD",
-            "contact@importer.com",
-            "99999999999"
+            "IM12CD"
           )
       )
     ),
@@ -89,21 +88,29 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     ImporterDetails = ImporterDetails(
       Some("GB098765432123"),
       "Import Co Ltd",
-      Address(
+      ImporterAddress(
         "Importer Address Line 1",
         Some("Importer Address Line 2"),
         "Importer City",
         "IM12CD",
         "GB",
-        "99999999999",
-        "contact@importer.com"
+        None,
+        None
       )
     ),
     AgentDetails = Some(
       AgentDetails(
-        None,
+        Some(claimantEori.number),
         "Representative Co Ltd",
-        Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+        AgentAddress(
+          "Address Line 1",
+          Some("Address Line 2"),
+          "City",
+          "PO12CD",
+          "GB",
+          Some("01234567890"),
+          "adam@smith.com"
+        )
       )
     ),
     EntryProcessingUnit = "012",
@@ -121,7 +128,8 @@ class EISCreateCaseRequestSpec extends UnitSpec {
   )
 
   val claimByImporter: Claim = create.Claim(
-    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", "01234567890"),
+    claimantEori = claimantEori,
+    contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     claimantAddress = UkAddress("Acme Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,
     claimType = AntiDumping,
@@ -140,9 +148,17 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     RepresentationType = "Importer",
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
-      None,
+      Some(claimantEori.number),
       "Acme Import Co Ltd",
-      Address("Address Line 1", Some("Address Line 2"), "City", "PO12CD", "GB", "01234567890", "adam@smith.com")
+      ImporterAddress(
+        "Address Line 1",
+        Some("Address Line 2"),
+        "City",
+        "PO12CD",
+        "GB",
+        Some("01234567890"),
+        Some("adam@smith.com")
+      )
     ),
     AgentDetails = None,
     EntryProcessingUnit = "012",

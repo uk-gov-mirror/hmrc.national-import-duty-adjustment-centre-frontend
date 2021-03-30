@@ -19,27 +19,29 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 import java.time.LocalDateTime
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse, SubmittedClaim}
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 
 final case class CacheData(
   id: String,
   journeyId: JourneyId = JourneyId.generate,
   createAnswers: Option[CreateAnswers] = None,
   amendAnswers: Option[AmendAnswers] = None,
-  createClaimResponse: Option[CreateClaimResponse] = None,
-  submitedClaim: Option[SubmittedClaim] = None,
+  createClaimReceipt: Option[CreateClaimReceipt] = None,
+  amendClaimResponse: Option[AmendClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  def claimReference: Option[String] = createClaimResponse.flatMap(_.result).map(_.caseReference)
-  def getCreateAnswers               = createAnswers.getOrElse(CreateAnswers())
-  def getAmendAnswers                = amendAnswers.getOrElse(AmendAnswers())
+  def claimReference: Option[String]  = createClaimReceipt.map(_.response).flatMap(_.result).map(_.caseReference)
+  def amendReference: Option[String]  = amendClaimResponse.flatMap(_.result).map(_.caseReference)
+  def getCreateAnswers: CreateAnswers = createAnswers.getOrElse(CreateAnswers())
+  def getAmendAnswers: AmendAnswers   = amendAnswers.getOrElse(AmendAnswers())
 }
 
 object CacheData {
 
-  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
-
+  implicit val formatInstant               = MongoJavatimeFormats.localDateTimeFormat
   implicit val formats: OFormat[CacheData] = Json.format[CacheData]
+
 }

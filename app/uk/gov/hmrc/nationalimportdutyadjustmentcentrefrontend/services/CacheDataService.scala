@@ -16,13 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import javax.inject.Inject
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse, SubmittedClaim}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  CreateAnswers,
+  CreateClaimReceipt,
+  CreateClaimResponse
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
+import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,7 +37,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       case Some(data) => Future(data)
       case None =>
         val data = CacheData(request.identifier)
-        repository.set(data) map { _ => data }
+        repository.insert(data) map { _ => data }
     }
 
   def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
@@ -45,9 +49,6 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData map (_.getCreateAnswers)
 
-  def getSubmittedClaim(implicit request: IdentifierRequest[_]): Future[SubmittedClaim] =
-    getCacheData map (_.submitedClaim.getOrElse(throw new MissingAnswersException("No submitted claim")))
-
   def getAmendAnswers(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData map (_.getAmendAnswers)
 
@@ -56,7 +57,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   )(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData flatMap { data =>
       val updatedAnswers: CreateAnswers = update(data.getCreateAnswers)
-      repository.set(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+      repository.update(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
   def updateAmendAnswers(
@@ -64,21 +65,24 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData flatMap { data =>
       val updatedAnswers: AmendAnswers = update(data.getAmendAnswers)
-      repository.set(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+      repository.update(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
-  def storeCreateResponse(
-    claimResponse: CreateClaimResponse
+  def storeCreateReceipt(
+    claimReceipt: CreateClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.set(
-        data.copy(
-          createAnswers = None,
-          createClaimResponse = Some(claimResponse),
-          submitedClaim =
-            claimResponse.result.map(result => SubmittedClaim(result.caseReference, data.createAnswers.get))
-        )
-      )
+      repository.update(data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
+    }
+
+  def getCreateReceipt(implicit request: IdentifierRequest[_]): Future[CreateClaimReceipt] =
+    getCacheData map (_.createClaimReceipt.getOrElse(throw new Exception("No submitted claim"))) //TODO
+
+  def storeAmendResponse(
+    amendClaimResponse: AmendClaimResponse
+  )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
+    getCacheData flatMap { data =>
+      repository.update(data.copy(amendAnswers = None, amendClaimResponse = Some(amendClaimResponse)))
     }
 
 }

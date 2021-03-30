@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ReclaimDutyTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, ReclaimDutyTypePage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -58,10 +58,17 @@ class ReclaimDutyTypeController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(reclaimDutyTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(reclaimDutyTypes = value)) map {
+        data.updateCreateAnswers(answers => updateAnswers(value, answers)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }
+
+  private def updateAnswers(dutyTypes: Set[ReclaimDutyType], answers: CreateAnswers) =
+    answers.copy(
+      reclaimDutyTypes = dutyTypes,
+      reclaimDutyPayments =
+        answers.reclaimDutyPayments.filterKeys(key => dutyTypes.map(_.toString).contains(key))
+    )
 
 }

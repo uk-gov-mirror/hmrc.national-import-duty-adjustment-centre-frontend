@@ -61,6 +61,8 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
     val requiredKey = "bankDetails.sortCode.error.required"
     val invalidKey  = "bankDetails.sortCode.error.invalid"
 
+    val expectedFormatError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
+
     val validSortCodeGen = for {
       firstDigits     <- Gen.listOfN(2, Gen.numChar).map(_.mkString)
       firstSeparator  <- Gen.oneOf(' ', '-').map(_.toString)
@@ -76,39 +78,40 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
     "bind sort codes in nnnnnn format" in {
       val result = form.bind(Map(fieldName -> "123456")).apply(fieldName)
       result.value.value mustBe "123456"
+      result.hasErrors mustBe false
     }
 
     "bind sort codes in nn-nn-nn format" in {
       val result = form.bind(Map(fieldName -> "12-34-56")).apply(fieldName)
       result.value.value mustBe "12-34-56"
+      result.hasErrors mustBe false
     }
 
     "bind sort codes in nn nn nn format" in {
       val result = form.bind(Map(fieldName -> "12 34 56")).apply(fieldName)
       result.value.value mustBe "12 34 56"
+      result.hasErrors mustBe false
     }
 
     "bind sort codes in nn   nn    nn format" in {
       val result = form.bind(Map(fieldName -> "12   34   56")).apply(fieldName)
       result.value.value mustBe "12   34   56"
+      result.hasErrors mustBe false
     }
 
     "not bind sort codes with characters" in {
-      val result        = form.bind(Map(fieldName -> "abcdef")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
-      result.errors mustEqual Seq(expectedError)
+      val result = form.bind(Map(fieldName -> "abcdef")).apply(fieldName)
+      result.errors mustEqual Seq(expectedFormatError)
     }
 
     "not bind sort codes with less than 6 digit" in {
-      val result        = form.bind(Map(fieldName -> "12   34  5")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
-      result.errors mustEqual Seq(expectedError)
+      val result = form.bind(Map(fieldName -> "12   34  5")).apply(fieldName)
+      result.errors mustEqual Seq(expectedFormatError)
     }
 
     "not bind sort codes with more than 6 digit" in {
-      val result        = form.bind(Map(fieldName -> "12   34  5678")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.sortCodePattern))
-      result.errors mustEqual Seq(expectedError)
+      val result = form.bind(Map(fieldName -> "12   34  5678")).apply(fieldName)
+      result.errors mustEqual Seq(expectedFormatError)
     }
   }
 

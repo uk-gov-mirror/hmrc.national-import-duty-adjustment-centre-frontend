@@ -17,10 +17,10 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Representative
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Representative
 
-case class AgentDetails(EORI: Option[String], Name: String, Address: Address)
+case class AgentDetails(EORI: Option[String], Name: String, Address: AgentAddress)
 
 object AgentDetails {
   implicit val format: OFormat[AgentDetails] = Json.format[AgentDetails]
@@ -29,9 +29,9 @@ object AgentDetails {
     case Representative =>
       Some(
         AgentDetails(
-          EORI = None, // TODO - capture applicant's EORI
+          EORI = Some(claim.claimantEori.number),
           Name = claim.claimantAddress.name,
-          Address = Address(
+          Address = AgentAddress(
             AddressLine1 = claim.claimantAddress.addressLine1,
             AddressLine2 = claim.claimantAddress.addressLine2,
             City = claim.claimantAddress.city,

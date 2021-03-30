@@ -17,15 +17,9 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
-case class ValidateBankDetailsRequest(account: AccountDetails)
+case class BusinessDetails(companyName: String)
 
-object ValidateBankDetailsRequest {
-  implicit val format: OFormat[ValidateBankDetailsRequest] = Json.format[ValidateBankDetailsRequest]
-
-  def apply(bankDetails: BankDetails): ValidateBankDetailsRequest = new ValidateBankDetailsRequest(
-    AccountDetails(bankDetails.sortCode, bankDetails.accountNumber)
-  )
-
+object BusinessDetails {
+  implicit val format: OFormat[BusinessDetails] = Json.format[BusinessDetails]
 }

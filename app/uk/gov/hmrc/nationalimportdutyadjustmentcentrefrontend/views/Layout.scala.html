@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language
+@import views.html.helper.CSPNonce
 
 @this(
         govukLayout: GovukLayout,
@@ -32,11 +33,13 @@
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
         govukBackLink: GovukBackLink,
+        hmrcScripts: HmrcScripts,
         appConfig: AppConfig
 )
 @(      pageTitle: Title,
         backLink: NavigatorBack,
-        headBlock: Option[Html] = None
+        headBlock: Option[Html] = None,
+        logout: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @beforeContentBlock = {
@@ -53,10 +56,7 @@
 }
 
 @signOutHref = @{
-    if(request.isInstanceOf[IdentifierRequest[_]])
-        Some(SignOutController.signOut().url)
-    else
-        None
+    if(logout) Some(SignOutController.signOut().url) else None
 }
 @headerBlock = {
     @hmrcHeader(
@@ -65,15 +65,13 @@
             serviceName = Some(messages("service.name")),
             serviceUrl = StartController.start().url,
             language = language.En,
-            containerClasses = "govuk-width-container",
             signOutHref = signOutHref
         )
     )
 }
 
 @scriptsBlock = {
-    <script src='@routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
-    <script src='@routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
+    @hmrcScripts(nonce = CSPNonce.get)
     <script src='@controllers.routes.Assets.versioned("javascripts/nidacfrontend.js")'></script>
 }
 

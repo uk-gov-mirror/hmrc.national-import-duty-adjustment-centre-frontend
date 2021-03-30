@@ -56,7 +56,7 @@ class ClaimTypeViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -73,8 +73,7 @@ class ClaimTypeViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("claim-type" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("claim_type.error.required")
-
+      errorView must havePageError("claim_type.error.required")
     }
 
   }

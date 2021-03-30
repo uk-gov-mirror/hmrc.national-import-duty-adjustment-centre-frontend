@@ -16,19 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
-case class BARSResult(validateResponse: ValidateBankDetailsResponse) {
+case class BARSResult(assessBusinessBankDetailsResponse: AssessBusinessBankDetailsResponse) {
 
-  val validAccountAndSortCode: Boolean = validateResponse.accountNumberWithSortCodeIsValid == "yes"
+  val sortcodeExists: Boolean              = assessBusinessBankDetailsResponse.sortcodeExists
+  val validAccountAndSortCode: Boolean     = assessBusinessBankDetailsResponse.validAccountAndSortCode
+  val rollNotRequired: Boolean             = assessBusinessBankDetailsResponse.rollNotRequired
+  val accountValid: Boolean                = assessBusinessBankDetailsResponse.accountValid
+  val companyNameValid: Boolean            = assessBusinessBankDetailsResponse.companyNameValid
+  val sortcodeAcceptsDirectCredit: Boolean = assessBusinessBankDetailsResponse.sortcodeSupportsDirectCredit
 
-  val rollNotRequired: Boolean = validateResponse.nonStandardAccountDetailsRequiredForBacs == "no"
-
-  val accountSupportsBacs: Boolean = validateResponse.supportsBACS.contains("yes")
-
-  val isValid: Boolean = validAccountAndSortCode && rollNotRequired && accountSupportsBacs
-}
-
-object BARSResult {
-
-  def apply(validateResponse: ValidateBankDetailsResponse): BARSResult = new BARSResult(validateResponse)
+  val isValid: Boolean =
+    sortcodeExists && validAccountAndSortCode && rollNotRequired && accountValid && companyNameValid && sortcodeAcceptsDirectCredit
 
 }

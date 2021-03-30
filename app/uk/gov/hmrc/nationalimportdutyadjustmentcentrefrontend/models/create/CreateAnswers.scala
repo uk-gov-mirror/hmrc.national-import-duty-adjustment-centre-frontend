@@ -17,11 +17,15 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.Representative
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{
+  Importer,
+  Representative
+}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 final case class CreateAnswers(
+  changePage: Option[String] = None,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,
   representationType: Option[RepresentationType] = None,
@@ -29,19 +33,29 @@ final case class CreateAnswers(
   claimReason: Option[ClaimReason] = None,
   reclaimDutyTypes: Set[ReclaimDutyType] = Set.empty,
   reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
-  bankDetails: Option[BankDetails] = None,
+  importerBankDetails: Option[BankDetails] = None,
+  representativeBankDetails: Option[BankDetails] = None,
   importerContactDetails: Option[ImporterContactDetails] = None,
   repayTo: Option[RepayTo] = None,
   entryDetails: Option[EntryDetails] = None,
   itemNumbers: Option[ItemNumbers] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
   uploadAnotherFile: Option[Boolean] = None,
-  importerHasEori: Option[Boolean] = None,
   importerEori: Option[EoriNumber] = None
 ) extends Answers {
 
-  val isRepresentative: Boolean     = representationType.contains(Representative)
-  val doesImporterHaveEori: Boolean = importerHasEori.contains(true)
+  val isRepresentative: Boolean = representationType.contains(Representative)
+
+  val reclaimDutyComplete: Boolean = reclaimDutyTypes.nonEmpty && reclaimDutyTypes.size == reclaimDutyPayments.size
+  val reclaimDutyTotal: BigDecimal = reclaimDutyPayments.values.map(_.dueAmount).sum
+
+  private val useImportersBankDetails  = representationType.contains(Importer) || repayTo.contains(RepayTo.Importer)
+  val bankDetails: Option[BankDetails] = if (useImportersBankDetails) importerBankDetails else representativeBankDetails
+
+  def updateBankDetails(details: BankDetails): CreateAnswers = if (useImportersBankDetails)
+    this.copy(importerBankDetails = Some(details))
+  else this.copy(representativeBankDetails = Some(details))
+
 }
 
 object CreateAnswers {

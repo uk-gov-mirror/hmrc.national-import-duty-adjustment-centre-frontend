@@ -23,6 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Recl
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateAnswers,
   ReclaimDutyType,
+  RepayTo,
   RepresentationType
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
@@ -49,10 +50,10 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
           answers().copy(representationType = Some(RepresentationType.Importer))
         ) mustBe routes.BankDetailsController.onPageLoad()
       }
-      "go to does importer have Eori page if claimant is representative" in {
+      "go to who to repay page if claimant is representative" in {
         nextPage(
           answers().copy(representationType = Some(RepresentationType.Representative))
-        ) mustBe routes.ImporterHasEoriController.onPageLoad()
+        ) mustBe routes.RepayToController.onPageLoad()
       }
     }
     "going back" should {
@@ -82,8 +83,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       }
     }
     "going back" should {
-      "go to item number page" in {
-        previousPage(answers()) mustBe routes.ItemNumbersController.onPageLoad()
+      "go to claim reason page" in {
+        previousPage(answers()) mustBe routes.ClaimReasonController.onPageLoad()
       }
     }
   }
@@ -100,8 +101,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       "go to other duty page when Other duty selected and VAT duty not selected" in {
         nextPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
-      "go to claim reason page when neither VAT or Other duty selected" in {
-        nextPage(answers(Customs)) mustBe routes.ClaimReasonController.onPageLoad()
+      "go to upload page when neither VAT or Other duty selected" in {
+        nextPage(answers(Customs)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
       }
     }
     "going back" should {
@@ -123,9 +124,9 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
         nextPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
-      "go to claim reason page when Other duty not selected" in {
-        nextPage(answers(Customs, Vat)) mustBe routes.ClaimReasonController.onPageLoad()
-        nextPage(answers(Vat)) mustBe routes.ClaimReasonController.onPageLoad()
+      "go to upload page when Other duty not selected" in {
+        nextPage(answers(Customs, Vat)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
+        nextPage(answers(Vat)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
       }
     }
     "going back" should {
@@ -146,11 +147,11 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(OtherDutyRepaymentPage, _)
 
     "going forward" should {
-      "go to claim reason page" in {
-        nextPage(answers(Customs, Other)) mustBe routes.ClaimReasonController.onPageLoad()
-        nextPage(answers(Vat, Other)) mustBe routes.ClaimReasonController.onPageLoad()
-        nextPage(answers(Customs, Vat, Other)) mustBe routes.ClaimReasonController.onPageLoad()
-        nextPage(answers(Other)) mustBe routes.ClaimReasonController.onPageLoad()
+      "go to upload page" in {
+        nextPage(answers(Customs, Other)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
+        nextPage(answers(Vat, Other)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
+        nextPage(answers(Other)) mustBe routes.ReturnAmountSummaryController.onPageLoad()
       }
     }
     "going back" should {
@@ -174,8 +175,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(BankDetailsPage, _)
 
     "going forward" should {
-      "go to check your answers page" in {
-        nextPage(answers()) mustBe routes.CheckYourAnswersController.onPageLoad()
+      "go to enter importer's EORI number page" in {
+        nextPage(answers()) mustBe routes.ImporterEoriNumberController.onPageLoad()
       }
     }
     "going back" should {
@@ -195,7 +196,7 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
     def answers(uploads: Seq[UploadedFile]): CreateAnswers =
       completeAnswers.copy(uploads = uploads)
 
-    val nextPage     = navigator.nextPage(ClaimReasonPage, _)
+    val nextPage     = navigator.nextPage(ReturnAmountSummaryPage, _)
     val previousPage = back(ContactDetailsPage, _)
 
     "going forward (from the question before file uploads)" when {
@@ -221,6 +222,87 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
           previousPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
         }
       }
+    }
+  }
+
+  "Navigating to page" should {
+    "go directly to named page" in {
+
+      navigator.gotoPage(CreatePageNames.representationType) mustBe routes.RepresentationTypeController.onPageLoad
+      navigator.gotoPage(CreatePageNames.claimType) mustBe routes.ClaimTypeController.onPageLoad
+      navigator.gotoPage(CreatePageNames.entryDetails) mustBe routes.EntryDetailsController.onPageLoad
+      navigator.gotoPage(CreatePageNames.itemNumbers) mustBe routes.ItemNumbersController.onPageLoad
+      navigator.gotoPage(CreatePageNames.claimReason) mustBe routes.ClaimReasonController.onPageLoad
+      navigator.gotoPage(CreatePageNames.dutyTypes) mustBe routes.ReclaimDutyTypeController.onPageLoad
+      navigator.gotoPage(CreatePageNames.uploadSummary) mustBe routes.UploadFormSummaryController.onPageLoad
+      navigator.gotoPage(CreatePageNames.contactDetails) mustBe routes.ContactDetailsController.onPageLoad
+      navigator.gotoPage(CreatePageNames.contactAddress) mustBe routes.AddressController.onPageLoad
+      navigator.gotoPage(CreatePageNames.importerEori) mustBe routes.ImporterEoriNumberController.onPageLoad
+      navigator.gotoPage(CreatePageNames.importerDetails) mustBe routes.ImporterDetailsController.onPageLoad
+      navigator.gotoPage(CreatePageNames.repayTo) mustBe routes.RepayToController.onPageLoad
+      navigator.gotoPage(CreatePageNames.bankDetails) mustBe routes.BankDetailsController.onPageLoad
+    }
+  }
+
+  "Navigating to next page when changing answers" should {
+
+    "goto change your answers when no further answers required" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+
+    "goto importer EORI page when changing from repay agent to repay importer" in {
+      val answers = completeAnswers.copy(
+        importerEori = None,
+        changePage = Some(CreatePageNames.repayTo),
+        repayTo = Some(RepayTo.Importer)
+      )
+      navigator.nextPage(RepayToPage, answers) mustBe routes.ImporterEoriNumberController.onPageLoad
+    }
+
+    "goto repay to page when changing from Importer to Representative" in {
+      val answers = importerAnswers.copy(
+        changePage = Some(CreatePageNames.representationType),
+        representationType = Some(RepresentationType.Representative)
+      )
+      navigator.nextPage(RepresentationTypePage, answers) mustBe routes.RepayToController.onPageLoad
+    }
+
+    "goto repayment summary page when changing duty types" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.dutyTypes))
+      navigator.nextPage(ReclaimDutyTypePage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
+    }
+
+    "goto repayment summary page when changing VAT duty amounts" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.dutyVAT))
+      navigator.nextPage(ImportVatRepaymentPage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
+    }
+
+    "skip repayment summary page when changing earlier question" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+  }
+
+  "Previous back (back link) when changing answers" should {
+
+    "use javascript history function" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      navigator.previousPage(ClaimReasonPage, answers).maybeCall.map(_.url) mustBe Some("javascript:history.back()")
+
+    }
+  }
+
+  "Navigating to first missing answer" should {
+
+    "goto check your answers when no further answers required" in {
+      val answers = completeAnswers
+      navigator.firstMissingAnswer(answers) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+
+    "find first missing answers" in {
+      val answers = completeAnswers.copy(claimReason = None)
+      navigator.firstMissingAnswer(answers) mustBe routes.ClaimReasonController.onPageLoad
     }
   }
 }

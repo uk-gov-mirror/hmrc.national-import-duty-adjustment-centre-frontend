@@ -18,7 +18,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
-import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{InProgress, UploadStatus}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
@@ -30,9 +29,7 @@ class MongoBackedUploadProgressTracker @Inject() (repository: UploadRepository)(
     extends UploadProgressTracker {
 
   override def requestUpload(uploadId: UploadId, journeyId: JourneyId, fileReference: Reference): Future[Boolean] =
-    repository.add(UploadDetails(BSONObjectID.generate(), uploadId, journeyId, fileReference, InProgress)).map(
-      _ => true
-    )
+    repository.add(UploadDetails(uploadId, journeyId, fileReference, InProgress)).map(_ => true)
 
   override def registerUploadResult(
     fileReference: Reference,

@@ -22,22 +22,49 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 trait Navigator[T <: Answers] {
-  protected case class P(page: Page, destination: () => Call, canAccessGiven: T => Boolean)
+  protected case class P(page: Page, destination: () => Call, canAccessGiven: T => Boolean, hasAnswer: T => Boolean)
 
   protected val pageOrder: Seq[P]
 
+  protected def checkYourAnswersPage: Call
+
+  protected def pageFor: String => Option[Page]
+
   private lazy val reversePageOrder = pageOrder.reverse
 
-  def nextPage(currentPage: Page, userAnswers: T): Call =
-    viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(pageOrder.head.destination())
+  def gotoPage(pageName: String): Call = viewFor(pageOrder, pageFor(pageName)).getOrElse(pageOrder.head.destination())
+
+  def firstMissingAnswer(userAnswers: T): Call =
+    viewFor(pageOrder, nextPageAfterChangeFor(pageOrder, pageOrder.head.page, userAnswers)).getOrElse(
+      checkYourAnswersPage
+    )
+
+  def nextPage(currentPage: Page, userAnswers: T): Call = userAnswers.changePage match {
+    case None =>
+      viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(pageOrder.head.destination())
+    case Some(_) =>
+      viewFor(pageOrder, nextPageAfterChangeFor(pageOrder, currentPage, userAnswers)).getOrElse(checkYourAnswersPage)
+  }
+
+  private val jsBackLink: Call = Call("GET", "javascript:history.back()")
 
   def previousPage(currentPage: Page, userAnswers: T): NavigatorBack =
-    NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
+    if (userAnswers.changePage.isDefined)
+      NavigatorBack(Some(jsBackLink))
+    else
+      NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
 
   private val nextPageFor: (Seq[P], Page, T) => Option[Page] = (pages, currentPage, userAnswers) =>
     after(pages, currentPage)
       .find(_.canAccessGiven(userAnswers))
       .map(_.page)
+
+  protected val nextPageAfterChangeFor: (Seq[P], Page, T) => Option[Page] =
+    (pages, currentPage, userAnswers) => {
+      after(pages, currentPage)
+        .find(p => p.canAccessGiven(userAnswers) && !p.hasAnswer(userAnswers))
+        .map(_.page)
+    }
 
   private val viewFor: (Seq[P], Option[Page]) => Option[Call] = (pages, page) =>
     page.flatMap(

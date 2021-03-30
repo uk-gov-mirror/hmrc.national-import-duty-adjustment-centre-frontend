@@ -26,27 +26,27 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Cla
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, CreateClaimService}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReviewClaimView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ReviewClaimController @Inject()(
-                                       mcc: MessagesControllerComponents,
-                                       identify: IdentifierAction,
-                                       data: CacheDataService,
-                                       val navigator: CreateNavigator,
-                                       reviewClaimView: ReviewClaimView
+class ReviewClaimController @Inject() (
+  mcc: MessagesControllerComponents,
+  identify: IdentifierAction,
+  data: CacheDataService,
+  val navigator: CreateNavigator,
+  reviewClaimView: ReviewClaimView
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getSubmittedClaim map { submittedClaim =>
-      Ok(reviewClaimView(submittedClaim))
+    data.getCreateReceipt map { receipt =>
+      Ok(reviewClaimView(receipt))
     } recover {
       case _: MissingAnswersException =>
         Redirect(controllers.routes.StartController.start())

@@ -95,6 +95,15 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedCreateAnswers).url)
     }
 
+    "remove existing duty values when type de-selected" in {
+
+      withCacheCreateAnswers(completeAnswers)
+
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.reclaimDutyPayments mustBe Map(Customs.toString -> customsDutyRepaymentAnswer)
+    }
+
     "return 400 (BAD REQUEST) when invalid data posted" in {
 
       val result = controller.onSubmit()(postRequest())

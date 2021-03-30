@@ -27,8 +27,8 @@ import scala.concurrent.Future
 class UnauthorisedController @Inject() (mcc: MessagesControllerComponents, unauthorisedPage: UnauthorisedPage)
     extends FrontendController(mcc) {
 
-  val onPageLoad: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(unauthorisedPage()))
+  val onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Ok(unauthorisedPage())
   }
 
 }

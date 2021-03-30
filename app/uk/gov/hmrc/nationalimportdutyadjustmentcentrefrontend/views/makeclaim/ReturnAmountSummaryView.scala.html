@@ -1,0 +1,147 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        summaryList: summaryList,
+        warning : GovukWarningText,
+        continueButton: components.continueButton
+)
+
+@(createAnswers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+
+@changeText(answer: Option[_]) = @{
+    messages(if(answer.nonEmpty) "site.change" else "site.resolve")
+}
+
+@dutySummary(dutyType: String, pageName: String) = @{
+    summaryList(
+        id = s"duty_summary_section_$dutyType",
+        heading = Some(messages(s"returnAmountSummary.section.title.$dutyType")),
+        summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = s"${dutyType}_paid_summary_row",
+                key = Key(
+                    content = Text(messages(s"returnAmountSummary.was.paid.${dutyType}"))
+                ),
+                value = Value(
+                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.actuallyPaid}"))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
+                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
+                            visuallyHiddenText = Some(messages(s"returnAmountSummary.was.paid.${dutyType}.accessible"))
+                        )
+                    )
+                ))
+            )),
+            Some(SummaryListRow(
+                classes = s"${dutyType}_expected_summary_row",
+                key = Key(
+                    content = Text(messages(s"returnAmountSummary.should.have.paid.${dutyType}"))
+                ),
+                value = Value(
+                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.shouldHavePaid}"))
+                ),
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
+                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
+                            visuallyHiddenText = Some(messages(s"returnAmountSummary.should.have.paid.${dutyType}.accessible"))
+                        )
+                    )
+                ))
+            )),
+            Some(SummaryListRow(
+                classes = s"${dutyType}_duty_total_row",
+                key = Key(
+                    content = Text(messages(s"returnAmountSummary.duty.total.${dutyType}"))
+                ),
+                value = Value(
+                    content = HtmlContent(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"<span class='govuk-!-font-weight-bold'>£${duty.dueAmount}</span>"))
+                ),
+                actions = None
+            ))
+        )
+    )
+}
+
+@layout(pageTitle = InformationTitle(messages("returnAmountSummary.title")), backLink) {
+
+    @components.heading(messages("returnAmountSummary.title"))
+
+    @if(createAnswers.reclaimDutyComplete) {
+        @components.paragraph(messages("returnAmountSummary.subtitle"))
+    }
+    @if(!createAnswers.reclaimDutyComplete) {
+        @warning(WarningText(
+            iconFallbackText = messages("check_answers.missing.icon"),
+            content = Text(messages("returnAmountSummary.warning"))
+        ))
+    }
+
+    @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Customs)) {
+        @dutySummary(ReclaimDutyType.Customs.toString, CreatePageNames.dutyCustoms)
+    }
+
+    @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Vat)) {
+        @dutySummary(ReclaimDutyType.Vat.toString, CreatePageNames.dutyVAT)
+    }
+
+    @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Other)) {
+        @dutySummary(ReclaimDutyType.Other.toString, CreatePageNames.dutyOther)
+    }
+
+    @if(createAnswers.reclaimDutyTypes.size > 1) {
+        @summaryList(
+            id="return_amount_total_section",
+            heading = Some(messages("returnAmountSummary.total.heading")),
+            summaryListRows = Seq(
+                Some(SummaryListRow(
+                    classes = "return_total_summary_row",
+                    key = Key(
+                        content = Text(messages("returnAmountSummary.total.label"))
+                    ),
+                    value = Value(
+                        content = HtmlContent(if(createAnswers.reclaimDutyComplete) s"<span class='govuk-!-font-weight-bold'>£${
+                                                createAnswers.reclaimDutyTotal
+                                                }</span>" else "")
+                    ),
+                    actions = None
+                ))
+            )
+        )
+    }
+
+    @formHelper(action = makeclaim.routes.ReturnAmountSummaryController.onSubmit(), 'autoComplete -> "off") {
+        @continueButton()
+    }
+
+}

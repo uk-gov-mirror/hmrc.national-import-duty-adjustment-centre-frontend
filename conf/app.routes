@@ -7,7 +7,10 @@
 ->          /create                             createClaim.Routes
 
 GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.start
+GET         /what-do-you-want-to-do             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.WhatDoYouWantToDoController.onPageLoad()
+POST        /what-do-you-want-to-do             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.WhatDoYouWantToDoController.onSubmit()
 GET         /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
+GET         /service-unavailable                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.ServiceUnavailableController.onPageLoad
 GET         /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
 GET         /sign-out                           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SignOutController.signOut
 GET         /keep-alive                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.KeepAliveController.keepAlive

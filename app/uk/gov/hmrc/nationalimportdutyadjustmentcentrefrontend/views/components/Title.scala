@@ -20,15 +20,21 @@ import play.api.data.Form
 import play.api.i18n.Messages
 
 case class Title(pageHeader: String, messageKey: String) {
-  def create(implicit messages: Messages): String = messages(messageKey, pageHeader)
+  def create(implicit messages: Messages): String = messages(messageKey, pageHeader, messages("service.name"))
 }
 
 object Title {
-
-  def apply(header: String): Title = new Title(header, "site.title")
 
   def apply(form: Form[_], header: String): Title =
     if (form.hasErrors) new Title(header, "site.title.error")
     else new Title(header, "site.title")
 
+}
+
+object InformationTitle {
+  def apply(header: String): Title = new Title(header, "site.title")
+}
+
+object ErrorTitle {
+  def apply(header: String): Title = new Title(header, "site.title.error")
 }

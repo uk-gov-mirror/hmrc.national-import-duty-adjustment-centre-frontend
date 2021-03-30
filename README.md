@@ -9,7 +9,7 @@
 1. Stop the `service-manager` owned version of the service: `sm --stop NATIONAL_IMPORT_DUTY_ADJUSTMENT_CENTRE_FRONTEND`
 1. Start the service: `sbt run`
 
-Open the app in your browser at `http://localhost:8490/national-import-duty-adjustment-centre`
+Open the app in your browser at `http://localhost:8490/apply-for-return-import-duty-paid-on-deposit-or-guarantee`
 
 ## Tampermonkey
 
