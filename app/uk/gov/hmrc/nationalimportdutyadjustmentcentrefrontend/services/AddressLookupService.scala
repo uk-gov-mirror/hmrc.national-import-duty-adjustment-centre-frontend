@@ -15,27 +15,30 @@
  */
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
-import javax.inject.Inject
+
 import play.api.i18n.MessagesApi
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.AddressLookupConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{AddressLookupConfirmation, AddressLookupJsonBuilder, AddressLookupOnRampModel}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Address
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{
+  AddressLookupConfirmation,
+  AddressLookupOnRamp,
+  AddressLookupRequest
+}
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AddressLookupService @Inject()(addressLookupConnector: AddressLookupConnector,
-                                     implicit val messagesApi: MessagesApi,
-                                     implicit val appConfig: AppConfig) {
+class AddressLookupService @Inject() (
+  addressLookupConnector: AddressLookupConnector,
+  implicit val messagesApi: MessagesApi,
+  implicit val appConfig: AppConfig
+) {
 
-  def retrieveAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] = {
+  def retrieveAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] =
     addressLookupConnector.getAddress(id)
-  }
 
-  def initialiseJourney(implicit hc: HeaderCarrier, ec: ExecutionContext):
-    Future[AddressLookupOnRampModel] = {
-      val addressLookupJsonBuilder: AddressLookupJsonBuilder = AddressLookupJsonBuilder(appConfig.addressLookupCallbackUrl)
-      addressLookupConnector.initialiseJourney(addressLookupJsonBuilder)
-  }
+  def initialiseJourney(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupOnRamp] =
+    addressLookupConnector.initialiseJourney(AddressLookupRequest(appConfig.addressLookupCallbackUrl))
+
 }

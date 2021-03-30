@@ -18,12 +18,12 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addressloo
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AddressLookupAddress(lines: Seq[String], postcode: String, country: AddressLookupCountry)
+case class AddressLookupAddress(lines: List[String], postcode: String, country: AddressLookupCountry)
 
 object AddressLookupAddress {
   implicit val format: OFormat[AddressLookupAddress] = Json.format[AddressLookupAddress]
 
-  def apply(lines: Seq[String], postcode: String, country: AddressLookupCountry): AddressLookupAddress =
+  def apply(lines: List[String], postcode: String, country: AddressLookupCountry): AddressLookupAddress =
     new AddressLookupAddress(lines, postcode, country)
 
 }

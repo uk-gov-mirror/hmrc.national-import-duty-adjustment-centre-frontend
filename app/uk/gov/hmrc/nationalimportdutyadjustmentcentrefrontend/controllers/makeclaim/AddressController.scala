@@ -20,6 +20,7 @@ import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.AddressLookupConnector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
@@ -51,37 +52,34 @@ class AddressController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    Logger.info(s"[AddressController][onPageLoad]")
     data.getCreateAnswers map { answers =>
-      val preparedForm = answers.claimantAddress.fold(form)(form.fill)
-      Ok(addressView(preparedForm, answers, backLink(answers)))
+      answers.claimantAddress match {
+        case address if address.nonEmpty =>
+          val preparedForm = answers.claimantAddress.fold(form)(form.fill)
+          Ok(addressView(preparedForm, answers, backLink(answers)))
+        case _ =>
+          Redirect(controllers.makeclaim.routes.AddressController.onChange())
+      }
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    form.bindFromRequest().fold(
-      formWithErrors =>
-        data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, answers, backLink(answers))) },
-      value =>
-        data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(value))) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
-        }
-    )
+    data.getCreateAnswers map { answers =>
+      Redirect(nextPage(answers))
+    }
   }
 
   def onChange(): Action[AnyContent] = identify.async { implicit request =>
-    // POST TO API
     addressLookupService.initialiseJourney map {
       response => Redirect(response.redirectUrl)
     }
   }
 
   def onUpdate(id: String): Action[AnyContent] = identify.async { implicit request =>
-    Logger.info(s"[AddressController][onUpdate]: Calling retrieveAddress with URL - $id")
     data.getCreateAnswers flatMap { answers =>
-       addressLookupService.retrieveAddress(id) flatMap {confirmedAddress =>
-       val lines = confirmedAddress.address.lines
-       val updatedAddress = Address(ev(lines,0), ev(lines,1), Some(ev(lines,2)), ev(lines, 3) , confirmedAddress.address.postcode)
+      addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
+        val el             = extractLines(confirmedAddress.address.lines)
+        val updatedAddress = Address("Contact Name Here", el._1, el._2, el._3, confirmedAddress.address.postcode)
         data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(updatedAddress))) map {
           _ => Redirect(nextPage(answers))
         }
@@ -89,7 +87,15 @@ class AddressController @Inject() (
     }
   }
 
-  def ev(input: Seq[String], index: Int): String = {
-    if(input.size > index) input(index) else ""
+  // modified from the address-lookup-frontend, when it wants to split the address for manual edit
+  def extractLines(lines: List[String]): (String, Option[String], String) = {
+    val l1: String         = lines.lift(0).getOrElse("")
+    val l2: Option[String] = if (lines.length > 2) lines.lift(1) else None
+    val l3: Option[String] = if (lines.length > 3) lines.lift(2) else None
+    val l4: String         = if (lines.length > 1) lines.lastOption.getOrElse("") else ""
+
+    val combo = (l2 ++ l3).reduceOption(_ + " " + _) // Dunno if a combo is going to work here
+    (l1, combo, l4)
   }
+
 }
