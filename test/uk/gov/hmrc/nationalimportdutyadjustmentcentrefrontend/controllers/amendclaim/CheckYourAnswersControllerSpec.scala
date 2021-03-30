@@ -39,7 +39,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(service.amendClaim(any())(any(), any())).thenReturn(
+    when(service.amendClaim(any(), any())(any(), any())).thenReturn(
       Future.successful(AmendClaimResponse("id", None, Some(AmendClaimResult(claimRef, Seq.empty))))
     )
   }

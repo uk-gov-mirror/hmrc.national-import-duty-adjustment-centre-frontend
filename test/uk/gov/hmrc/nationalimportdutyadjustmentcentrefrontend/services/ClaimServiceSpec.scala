@@ -16,16 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import org.apache.http.conn.HttpHostConnectException
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, verify, verifyNoInteractions, verifyZeroInteractions, when}
+import org.mockito.Mockito.{reset, verify, verifyNoInteractions, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar.mock
 import uk.gov.hmrc.http.{HeaderCarrier, RequestId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimAudit
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimAudit
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -64,7 +64,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
     "audit Create Claim when claim is submitted succesfully" in {
 
-      service.submitClaim(claim)
+      service.submitClaim(claim).futureValue.result
 
       val carrierCaptor   = ArgumentCaptor.forClass(classOf[HeaderCarrier])
       val executionCaptor = ArgumentCaptor.forClass(classOf[ExecutionContext])
@@ -83,12 +83,12 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
     }
 
     "return valid response when claim is amended succesfully" in {
-      service.amendClaim(amendClaim).futureValue.correlationId mustBe "123456"
+      service.amendClaim(EoriNumber(""), amendClaim).futureValue.correlationId mustBe "123456"
     }
 
     "audit Amend Claim when claim is amended succesfully" in {
 
-      service.amendClaim(amendClaim)
+      service.amendClaim(claimantEori, amendClaim).futureValue.result
 
       val headerCarrier    = ArgumentCaptor.forClass(classOf[HeaderCarrier])
       val executionCarrier = ArgumentCaptor.forClass(classOf[ExecutionContext])
@@ -110,7 +110,7 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
       when(nidacConnector.amendClaim(any(), any())(any())).thenReturn(Future.failed(new Exception("mock")))
 
-      service.amendClaim(amendClaim)
+      service.amendClaim(claimantEori, amendClaim)
 
       verifyNoInteractions(auditConnector)
 
