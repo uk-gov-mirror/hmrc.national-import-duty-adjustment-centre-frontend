@@ -214,13 +214,13 @@ trait TestData {
       new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
       new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
     ),
-    claimantEori,
+    claimantEori.number,
     Some(importerEoriNumberAnswer)
   )
 
   val amendClaimAudit: AmendClaimAudit = AmendClaimAudit(
     success = true,
-    claimantEori,
+    claimantEori.number,
     "NID21134557697RM8WIB13",
     Seq(uploadAnswer, uploadAnswer2),
     Seq(

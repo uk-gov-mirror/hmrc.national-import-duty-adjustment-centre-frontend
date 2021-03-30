@@ -22,7 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 
 case class AmendClaimAudit(
   success: Boolean,
-  claimantEori: EoriNumber,
+  claimantEori: String,
   caseReferenceNumber: String,
   uploads: Seq[UploadedFile],
   fileTransferResults: Seq[FileTransferResult],
@@ -41,7 +41,7 @@ object AmendClaimAudit {
   ): AmendClaimAudit =
     AmendClaimAudit(
       success,
-      claimantEori,
+      claimantEori.number,
       claim.caseReference.number,
       claim.uploads,
       claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
