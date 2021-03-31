@@ -308,7 +308,7 @@ check_answers.payment.accountNumber = Account number
 check_answers.payment.bankDetails.accessible = Change the bank account details
 check_answers.submit.heading = Submit your declaration
 check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
-check_answers.submit.print = You can print a summary of your application on the next page.
+check_answers.submit.about.summary = You can print a summary of your application on the next page.
 
 check_answers.missing.icon = Warning
 check_answers.missing.warning = Some information is missing. This must be completed before sending your application.
@@ -322,8 +322,8 @@ confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>
 confirmation.paragraph1 = We have received your application.
 confirmation.paragraph2 = You will be sent a decision letter by post. You will not received an email confirmation of this claim.
-confirmation.summary.print = Print a summary of your application
-confirmation.summary.view = View a summary of your application
+confirmation.summary.print = Print a summary of your claim and reference number
+confirmation.summary.view = View a summary of your claim and reference number
 
 create.claim.summary.title = Your application details
 create.claim.summary.section.heading = Application

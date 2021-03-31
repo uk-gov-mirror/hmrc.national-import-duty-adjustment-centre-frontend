@@ -24,7 +24,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormPro
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 
 import scala.collection.JavaConverters._

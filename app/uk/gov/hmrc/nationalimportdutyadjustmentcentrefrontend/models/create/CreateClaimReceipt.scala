@@ -25,7 +25,7 @@ case class CreateClaimReceipt(
   answers: CreateAnswers,
   timestamp: LocalDateTime = LocalDateTime.now
 ) {
-  val caseReference = response.result.map(_.caseReference).getOrElse("") // TODO
+  val caseReference = response.result.map(_.caseReference).getOrElse("")
 }
 
 object CreateClaimReceipt {

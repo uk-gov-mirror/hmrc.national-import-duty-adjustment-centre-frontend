@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
-import play.twirl.api.Html
+import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateAnswers,
@@ -24,13 +24,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateClaimResponse,
   CreateClaimResult
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReviewClaimView
 
 import scala.util.Random
 
-class ConfirmationViewSpec extends UnitViewSpec {
+class ReviewClaimViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ConfirmationView]
+  private val page = instanceOf[ReviewClaimView]
 
   private val claimReference = Random.alphanumeric.take(16).mkString
 
@@ -39,27 +39,20 @@ class ConfirmationViewSpec extends UnitViewSpec {
     CreateAnswers()
   )
 
-  private val view: Html = page(receipt)
+  private val view: Document = page(receipt)
 
-  "ConfirmationPage" should {
+  "ReviewClaimView" should {
 
     "have correct title" in {
-      view.title() must startWith(messages("confirmation.title"))
+      view.title() must startWith(messages("create.claim.summary.title"))
     }
 
     "have correct heading" in {
-      view.getElementsByTag("h1") must containMessage("confirmation.title")
+      view.getElementsByTag("h1") must containMessage("create.claim.summary.title")
     }
 
-    "have correct reference" in {
-      view.getElementsByClass("govuk-panel__body").text() must include(claimReference)
+    "not have back link" in {
+      view.getElementsByClass("govuk-back-link") must beEmpty
     }
-
-    "have link to print summary" in {
-      view.getElementsByClass("nidac-print-link") must containMessage("confirmation.summary.print")
-
-      view.getElementsByClass("nidac-print-link").first().attr("href") must include("window.print")
-    }
-
   }
 }

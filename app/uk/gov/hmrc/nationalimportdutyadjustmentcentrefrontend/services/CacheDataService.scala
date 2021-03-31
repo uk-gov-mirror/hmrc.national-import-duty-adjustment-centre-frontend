@@ -75,9 +75,6 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       repository.update(data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
     }
 
-  def getCreateReceipt(implicit request: IdentifierRequest[_]): Future[CreateClaimReceipt] =
-    getCacheData map (_.createClaimReceipt.getOrElse(throw new Exception("No submitted claim"))) //TODO
-
   def storeAmendResponse(
     amendClaimResponse: AmendClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
