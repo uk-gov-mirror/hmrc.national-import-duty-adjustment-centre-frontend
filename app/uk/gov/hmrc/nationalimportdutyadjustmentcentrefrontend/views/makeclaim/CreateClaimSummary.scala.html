@@ -33,7 +33,7 @@
         summaryList: summaryList,
         submitButton: components.submitButton )
 
-@(answers: CreateAnswers)(implicit request: Request[_], messages: Messages)
+@(answers: CreateAnswers, withActions: Boolean = true)(implicit request: Request[_], messages: Messages)
 
 @changeText(answer: Option[_]) = @{
   messages(if(answer.nonEmpty) "site.change" else "site.resolve")
@@ -52,7 +52,7 @@
                 value = Value(
                     content = Text(answers.representationType.map(rep => MessageKey.apply("check_answers.information.representation", rep.toString)).getOrElse(""))
                 ),
-                actions = Some(Actions(
+                actions = if(!withActions) None else Some(Actions(
                     items = Seq(
                         actionItem(
                             href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.representationType).url,
@@ -78,7 +78,7 @@
             value = Value(
                 content = Text(answers.claimType.map(claimType => MessageKey.apply("claim_type", claimType.toString)).getOrElse(""))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimType).url,
@@ -101,7 +101,7 @@
                     messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(entryDetails.entryDate))
                 ).mkString("<br>")).getOrElse(""))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.entryDetails).url,
@@ -120,7 +120,7 @@
             value = Value(
                 content = Text(answers.itemNumbers.map(itemNumbers => itemNumbers.numbers).getOrElse(""))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.itemNumbers).url,
@@ -139,7 +139,7 @@
             value = Value(
                 content = Text(answers.claimReason.map(_.reason).getOrElse(""))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimReason).url,
@@ -157,7 +157,7 @@
             value = Value(
                 content = HtmlContent(answers.reclaimDutyTypes.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType)).mkString(", "))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyTypes).url,
@@ -175,7 +175,7 @@
             value = Value(
                 content = Text(if(answers.reclaimDutyComplete) s"£${answers.reclaimDutyTotal}" else "")
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutySummary).url,
@@ -193,7 +193,7 @@
             value = Value(
                 content = HtmlContent(answers.uploads.map(_.fileName).mkString("<br>"))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.uploadSummary).url,
@@ -223,7 +223,7 @@
                     contactDetails.telephoneNumber
                 ).flatten.mkString("<br>")).getOrElse(""))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactDetails).url,
@@ -248,7 +248,7 @@
                     Some(claimantAddress.postCode)
                 ).flatten.mkString("<br>")).getOrElse(""))
             ),
-            actions = Some(Actions(
+            actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactAddress).url,
@@ -275,7 +275,7 @@
                 value = Value(
                     content = Text(answers.repayTo.map(payTo => MessageKey.apply("check_answers.payment.payTo", payTo.toString)).getOrElse(""))
                 ),
-                actions = Some(Actions(
+                actions = if(!withActions) None else  Some(Actions(
                     items = Seq(
                         actionItem(
                             href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo).url,
@@ -295,7 +295,7 @@
                 value = Value(
                     content = Text(answers.bankDetails.map(_.accountName).getOrElse(""))
                 ),
-                actions = Some(Actions(
+                actions = if(!withActions) None else  Some(Actions(
                     items = Seq(
                         actionItem(
                             href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
@@ -348,7 +348,7 @@
                     value = Value(
                         content = Text(answers.importerEori.map(_.number).getOrElse(""))
                     ),
-                    actions = Some(Actions(
+                    actions = if(!withActions) None else  Some(Actions(
                         items = Seq(
                             actionItem(
                                 href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerEori).url,
@@ -374,7 +374,7 @@
                             Some(contactDetails.postCode)
                         ).flatten.mkString("<br>")).getOrElse(""))
                     ),
-                    actions = Some(Actions(
+                    actions = if(!withActions) None else  Some(Actions(
                         items = Seq(
                             actionItem(
                                 href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerDetails).url,

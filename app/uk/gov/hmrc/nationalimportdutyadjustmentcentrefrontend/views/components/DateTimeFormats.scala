@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(message: String = "")(implicit messages: Messages)
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
 
-<p class="govuk-body">
-    <a class="nidac-print-link govuk-link govuk-link--no-visited-state govuk-link--visually-hidden govuk-!-display-none-print" href="javascript:if(window.print)window.print()">
-        @{
-            if(message.nonEmpty) message else messages("site.print")
-        }</a>
-</p>
+import java.time.format.DateTimeFormatter
+
+object DateTimeFormats {
+
+  val claimSubmissionDate = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  val claimSubmissionTime = DateTimeFormatter.ofPattern("HH:mm:ss")
+}

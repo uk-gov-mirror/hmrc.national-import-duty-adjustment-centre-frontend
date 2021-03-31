@@ -38,8 +38,8 @@ class ConfirmationController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     repository.get(request.identifier) map { maybeData =>
-      maybeData.flatMap(_.claimReference) match {
-        case Some(reference) => Ok(confirmationView(reference))
+      maybeData.flatMap(_.createClaimReceipt) match {
+        case Some(receipt) => Ok(confirmationView(receipt))
         case _               => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }
     }

@@ -1,0 +1,70 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimReceipt
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.DateTimeFormats
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+
+@this(
+        layout: Layout,
+        summaryList: summaryList,
+        submitButton: components.submitButton )
+
+@(claimReceipt: CreateClaimReceipt)(implicit request: Request[_], messages: Messages)
+
+@summaryList(
+    id = "case_reference",
+    heading = Some(messages("create.claim.summary.section.heading")),
+    summaryListRows = Seq(
+        Some(SummaryListRow(
+            classes = "case_reference_row",
+            key = Key(
+                content = Text(messages("create.claim.summary.reference"))
+            ),
+            value = Value(
+                content = Text(claimReceipt.caseReference)
+            ),
+            actions = None
+        )),
+        Some(SummaryListRow(
+            classes = "submitted_date",
+            key = Key(
+                content = Text(messages("create.claim.summary.date"))
+            ),
+            value = Value(
+                content = Text(DateTimeFormats.claimSubmissionDate.format(claimReceipt.timestamp))
+            ),
+            actions = None
+        )),
+        Some(SummaryListRow(
+            classes = "submitted_time",
+            key = Key(
+                content = Text(messages("create.claim.summary.time"))
+            ),
+            value = Value(
+                content = Text(DateTimeFormats.claimSubmissionTime.format(claimReceipt.timestamp))
+            ),
+            actions = None
+        ))
+    )
+)
+
+
+
+

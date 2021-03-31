@@ -14,70 +14,30 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.summaryList
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimReceipt
-@import java.time.format.DateTimeFormatter
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
         summaryList: summaryList,
+        claimSummaryHeading: CreateClaimSummaryHeading,
         claimSummary: CreateClaimSummary,
         continueButton: components.continueButton
 )
 
 @(claimReceipt: CreateClaimReceipt)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = InformationTitle(messages(s"Application details - ${claimReceipt.caseReference}")), NavigatorBack(None)) {
+@layout(pageTitle = InformationTitle(messages("create.claim.summary.title")), NavigatorBack(None)) {
 
-    @components.heading(messages("Application details"))
+    @components.heading(messages("create.claim.summary.title"))
 
-    @components.printPage()
+    @claimSummaryHeading(claimReceipt)
 
-    @summaryList(
-        id = "case_reference",
-        heading = Some(messages("Application")),
-        summaryListRows = Seq(
-            Some(SummaryListRow(
-                classes = "case_reference_row",
-                key = Key(
-                    content = Text(messages("Case reference"))
-                ),
-                value = Value(
-                    content = Text(claimReceipt.caseReference)
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "submitted_date",
-                key = Key(
-                    content = Text(messages("Date"))
-                ),
-                value = Value(
-                    content = Text( DateTimeFormatter.ofPattern("d MMMM yyyy").format(claimReceipt.timestamp))
-                ),
-                actions = None
-            )),
-            Some(SummaryListRow(
-                classes = "submitted_time",
-                key = Key(
-                    content = Text(messages("Time"))
-                ),
-                value = Value(
-                    content = Text( DateTimeFormatter.ofPattern("HH:mm:ss").format(claimReceipt.timestamp))
-                ),
-                actions = None
-            ))
-        )
-    )
+    @claimSummary(claimReceipt.answers, withActions = false)
 
-    @claimSummary(claimReceipt.answers)
-
-    @components.printPage()
 
 }

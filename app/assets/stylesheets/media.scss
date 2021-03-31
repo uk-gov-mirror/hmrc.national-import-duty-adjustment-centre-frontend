@@ -4,10 +4,15 @@ CSS to support print media.  Hides all links (including sign-out link on the hea
 from the view and the page (url/page number, etc.)
 ====================================
 */
+@media all {
+  .nidac-print-content { display: none}
+}
 @media print {
   @page { margin: 10px }
   .govuk-section-break { page-break-inside : avoid }
   .govuk-link { display: none; }
+  .nidac-print-content{ display: contents}
+  .nidac-print-hidden{ display: none}
   footer { display: none; }
   @-moz-document url-prefix() {
     .govuk-summary-list__key { width: 40%; }

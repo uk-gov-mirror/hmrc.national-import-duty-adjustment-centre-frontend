@@ -38,6 +38,8 @@
     @components.subHeading(messages("check_answers.submit.heading"))
     @components.paragraph(messages("check_answers.submit.declaration"))
 
+    @components.paragraph("check_answers.submit.print")
+
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
         @submitButton()
     }
