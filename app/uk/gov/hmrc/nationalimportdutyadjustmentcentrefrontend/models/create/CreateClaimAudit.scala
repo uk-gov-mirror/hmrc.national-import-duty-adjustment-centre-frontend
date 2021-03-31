@@ -36,7 +36,7 @@ case class CreateClaimAudit(
   itemNumbers: ItemNumbers,
   uploads: Seq[UploadedFile],
   fileTransferResults: Seq[FileTransferResult],
-  claimantEori: EoriNumber,
+  claimantEori: String,
   importerEori: Option[EoriNumber]
 )
 
@@ -61,7 +61,7 @@ object CreateClaimAudit {
       claim.itemNumbers,
       claim.uploads,
       claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
-      claim.claimantEori,
+      claim.claimantEori.number,
       claim.importerBeingRepresentedDetails.flatMap(details => details.eoriNumber)
     )
 
