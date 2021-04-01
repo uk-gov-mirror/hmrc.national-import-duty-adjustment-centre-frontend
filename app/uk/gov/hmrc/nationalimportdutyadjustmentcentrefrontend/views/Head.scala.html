@@ -28,7 +28,8 @@
 
 <noscript>
     <style type="text/css">
-            a[href^="javascript:"].govuk-back-link { visibility: hidden; }
+            a[href="javascript:history.back()"].govuk-back-link { visibility: hidden; }
+            a[href="javascript:if(window.print)window.print()"].nidac-print-link { display: none; }
     </style>
 </noscript>
 
