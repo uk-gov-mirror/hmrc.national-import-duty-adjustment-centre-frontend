@@ -21,19 +21,19 @@ import java.time.LocalDateTime
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 
 final case class CacheData(
   id: String,
   journeyId: JourneyId = JourneyId.generate,
   createAnswers: Option[CreateAnswers] = None,
   amendAnswers: Option[AmendAnswers] = None,
-  createClaimResponse: Option[CreateClaimResponse] = None,
+  createClaimReceipt: Option[CreateClaimReceipt] = None,
   amendClaimResponse: Option[AmendClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
 ) {
 
-  def claimReference: Option[String]  = createClaimResponse.flatMap(_.result).map(_.caseReference)
+  def claimReference: Option[String]  = createClaimReceipt.map(_.response).flatMap(_.result).map(_.caseReference)
   def amendReference: Option[String]  = amendClaimResponse.flatMap(_.result).map(_.caseReference)
   def getCreateAnswers: CreateAnswers = createAnswers.getOrElse(CreateAnswers())
   def getAmendAnswers: AmendAnswers   = amendAnswers.getOrElse(AmendAnswers())

@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
+import java.time.LocalDateTime
 
-object ActionItemBuilder {
+import play.api.libs.json.{Json, OFormat}
 
-  def actionItem(href: String, content: Content, visuallyHiddenText: Option[String]) =
-    ActionItem(
-      href = href,
-      content = content,
-      visuallyHiddenText = visuallyHiddenText,
-      classes = "govuk-link--no-visited-state govuk-!-display-none-print"
-    )
+case class CreateClaimReceipt(
+  response: CreateClaimResponse,
+  answers: CreateAnswers,
+  timestamp: LocalDateTime = LocalDateTime.now
+) {
+  val caseReference = response.result.map(_.caseReference).getOrElse("")
+}
 
+object CreateClaimReceipt {
+  implicit val format: OFormat[CreateClaimReceipt] = Json.format[CreateClaimReceipt]
 }

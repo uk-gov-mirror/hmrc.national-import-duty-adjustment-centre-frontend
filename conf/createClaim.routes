@@ -63,3 +63,4 @@ POST        /check-answers/resolve              uk.gov.hmrc.nationalimportdutyad
 GET         /check-answers/change/:page         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CheckYourAnswersController.onChange(page)
 
 GET         /confirmation                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ConfirmationController.onPageLoad()
+GET         /review-claim                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReviewClaimController.onPageLoad()

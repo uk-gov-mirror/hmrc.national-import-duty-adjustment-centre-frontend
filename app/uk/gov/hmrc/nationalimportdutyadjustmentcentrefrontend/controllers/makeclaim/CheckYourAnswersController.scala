@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers, CreateClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{CreateNavigator, CreatePageNames}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
@@ -82,7 +82,7 @@ class CheckYourAnswersController @Inject() (
           service.submitClaim(claim) flatMap {
             case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
             case response =>
-              data.storeCreateResponse(response) map {
+              data.storeCreateReceipt(CreateClaimReceipt(response, answers)) map {
                 _ => Redirect(nextPage(answers))
               }
           }

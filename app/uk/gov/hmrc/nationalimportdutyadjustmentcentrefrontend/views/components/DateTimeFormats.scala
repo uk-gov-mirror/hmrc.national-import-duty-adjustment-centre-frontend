@@ -16,17 +16,17 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAccessor
 
-object ActionItemBuilder {
+object DateTimeFormats {
 
-  def actionItem(href: String, content: Content, visuallyHiddenText: Option[String]) =
-    ActionItem(
-      href = href,
-      content = content,
-      visuallyHiddenText = visuallyHiddenText,
-      classes = "govuk-link--no-visited-state govuk-!-display-none-print"
-    )
+  val claimSubmissionDateTime = DateTimeFormatter.ofPattern("d MMMM uuu 'at' h:mma")
+
+  def formatSubmissionDateAtTime(temporal: TemporalAccessor): String =
+    claimSubmissionDateTime
+      .format(temporal)
+      .replace("AM", "am")
+      .replace("PM", "pm")
 
 }

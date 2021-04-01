@@ -15,22 +15,49 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimReceipt
 
 @this(
         layout: Layout,
-        formHelper: FormWithCSRF,
+        claimSummaryHeading: CreateClaimSummaryHeading,
+        claimSummary: CreateClaimSummary,
         govukPanel: GovukPanel
 )
 
-@(reference: String)(implicit request: Request[_], messages: Messages)
+@(receipt: CreateClaimReceipt)(implicit request: Request[_], messages: Messages)
+
+@summaryContent = {
+    @claimSummaryHeading(receipt)
+    @claimSummary(receipt.answers, withActions = false)
+}
 
 @layout(pageTitle = InformationTitle(messages("confirmation.title")), NavigatorBack(None)) {
 
+  <div class="govuk-!-display-none-print">
     @govukPanel(Panel(
         title = Text(messages("confirmation.title")),
-        content = HtmlContent(messages("confirmation.reference",reference))
+        content = HtmlContent(messages("confirmation.reference", receipt.caseReference))
     ))
+
+    @components.paragraph(messages("confirmation.paragraph1"))
+    @components.paragraph(messages("confirmation.paragraph2"))
+
+    @components.printPage(messages("confirmation.summary.print"))
+
+    <noscript>
+        @components.paragraphHtml(
+          components.externalLink(messages("confirmation.summary.view"), makeclaim.routes.ReviewClaimController.onPageLoad().url)
+        )
+    </noscript>
+
+  </div>
+
+
+  <div class="nidac-!-display-only-print">
+      @summaryContent
+  </div>
 
 }

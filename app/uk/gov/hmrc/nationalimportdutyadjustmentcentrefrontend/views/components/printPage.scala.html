@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
+@(message: String = "")(implicit messages: Messages)
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
-
-object ActionItemBuilder {
-
-  def actionItem(href: String, content: Content, visuallyHiddenText: Option[String]) =
-    ActionItem(
-      href = href,
-      content = content,
-      visuallyHiddenText = visuallyHiddenText,
-      classes = "govuk-link--no-visited-state govuk-!-display-none-print"
-    )
-
-}
+<p class="govuk-body">
+    <a class="nidac-print-link govuk-link govuk-link--no-visited-state govuk-link--visually-hidden govuk-!-display-none-print" href="javascript:if(window.print)window.print()">
+        @{
+            if(message.nonEmpty) message else messages("site.print")
+        }
+    </a>
+</p>

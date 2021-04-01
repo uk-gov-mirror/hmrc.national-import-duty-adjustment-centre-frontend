@@ -17,12 +17,17 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  CreateAnswers,
+  CreateClaimReceipt,
+  CreateClaimResponse
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
-
 import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: ExecutionContext) {
@@ -63,11 +68,11 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       repository.update(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
-  def storeCreateResponse(
-    claimResponse: CreateClaimResponse
+  def storeCreateReceipt(
+    claimReceipt: CreateClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.update(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
+      repository.update(data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
     }
 
   def storeAmendResponse(

@@ -14,34 +14,30 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.summaryList
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimReceipt
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
+        summaryList: summaryList,
+        claimSummaryHeading: CreateClaimSummaryHeading,
         claimSummary: CreateClaimSummary,
-        submitButton: components.submitButton
+        continueButton: components.continueButton
 )
 
-@(answers: CreateAnswers, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(claimReceipt: CreateClaimReceipt)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = InformationTitle(messages("check_answers.title")), backLink) {
+@layout(pageTitle = InformationTitle(messages("create.claim.summary.title")), NavigatorBack(None)) {
 
-    @components.heading(messages("check_answers.title"))
+    @components.heading(messages("create.claim.summary.title"))
 
-    @claimSummary(answers)
+    @claimSummaryHeading(claimReceipt)
 
-    @components.subHeading(messages("check_answers.submit.heading"))
-    @components.paragraph(messages("check_answers.submit.declaration"))
+    @claimSummary(claimReceipt.answers, withActions = false)
 
-    @components.paragraph(messages("check_answers.submit.about.summary"))
-
-    @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @submitButton()
-    }
 
 }

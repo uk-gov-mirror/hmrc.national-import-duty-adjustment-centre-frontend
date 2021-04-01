@@ -20,26 +20,33 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ConfirmationView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReviewClaimView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ConfirmationController @Inject() (
+class ReviewClaimController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   repository: CacheDataRepository,
-  confirmationView: ConfirmationView
+  val navigator: CreateNavigator,
+  reviewClaimView: ReviewClaimView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport {
+    extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
+
+  override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     repository.get(request.identifier) map { maybeData =>
       maybeData.flatMap(_.createClaimReceipt) match {
-        case Some(receipt) => Ok(confirmationView(receipt))
+        case Some(receipt) => Ok(reviewClaimView(receipt))
         case _             => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }
     }
