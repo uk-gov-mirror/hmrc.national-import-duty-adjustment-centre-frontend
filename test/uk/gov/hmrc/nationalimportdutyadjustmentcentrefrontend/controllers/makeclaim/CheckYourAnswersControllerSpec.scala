@@ -46,7 +46,9 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     when(cyaView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(errorView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(service.submitClaim(any())(any(), any())).thenReturn(
-      Future.successful(CreateClaimResponse("id", None, Some(CreateClaimResult(claimRef, Seq.empty))))
+      Future.successful(
+        CreateClaimResponse("id", Some(fixedDateTime), None, Some(CreateClaimResult(claimRef, Seq.empty)))
+      )
     )
   }
 

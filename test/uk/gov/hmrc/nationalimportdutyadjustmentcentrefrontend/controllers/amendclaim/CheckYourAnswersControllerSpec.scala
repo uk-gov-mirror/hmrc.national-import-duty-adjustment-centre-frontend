@@ -40,7 +40,9 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     super.beforeEach()
     when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(service.amendClaim(any(), any())(any(), any())).thenReturn(
-      Future.successful(AmendClaimResponse("id", None, Some(AmendClaimResult(claimRef, Seq.empty))))
+      Future.successful(
+        AmendClaimResponse("id", Some(fixedDateTime), None, Some(AmendClaimResult(claimRef, Seq.empty)))
+      )
     )
   }
 
