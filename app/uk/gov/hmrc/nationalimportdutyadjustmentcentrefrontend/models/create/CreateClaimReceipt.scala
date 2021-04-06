@@ -20,12 +20,9 @@ import java.time.LocalDateTime
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CreateClaimReceipt(
-  response: CreateClaimResponse,
-  answers: CreateAnswers,
-  timestamp: LocalDateTime = LocalDateTime.now
-) {
+case class CreateClaimReceipt(response: CreateClaimResponse, answers: CreateAnswers) {
   val caseReference = response.result.map(_.caseReference).getOrElse("")
+  val timestamp     = response.processingDate.getOrElse(LocalDateTime.now)
 }
 
 object CreateClaimReceipt {
