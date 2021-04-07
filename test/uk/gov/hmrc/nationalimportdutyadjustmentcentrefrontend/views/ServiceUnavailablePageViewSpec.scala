@@ -18,12 +18,14 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ServiceUnavailablePage
 
 class ServiceUnavailablePageViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ServiceUnavailablePage]
+  private val page      = instanceOf[ServiceUnavailablePage]
+  private val appConfig = instanceOf[AppConfig]
 
   private val view: Html = page()
 
@@ -38,7 +40,7 @@ class ServiceUnavailablePageViewSpec extends UnitViewSpec {
     }
 
     "have sign out link" in {
-      view.getElementsByClass("hmrc-sign-out-nav__link").attr("href") mustBe routes.SignOutController.signOut().url
+      view.getElementsByClass("hmrc-sign-out-nav__link").attr("href") mustBe appConfig.signOutUrl
     }
 
   }

@@ -21,14 +21,11 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language
 @import views.html.helper.CSPNonce
 
 @this(
         govukLayout: GovukLayout,
-        hmrcHeader: HmrcHeader,
+        hmrcStandardHeader: HmrcStandardHeader,
         head: Head,
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
@@ -56,17 +53,21 @@
 }
 
 @signOutHref = @{
-    if(logout) Some(SignOutController.signOut().url) else None
+    (logout, request.isInstanceOf[IdentifierRequest[_]]) match {
+        case (true, true) => Some(SignOutController.signOut().url)
+        case (true, false) => Some(appConfig.signOutUrl)
+        case (false,_) => None
+    }
 }
+
 @headerBlock = {
-    @hmrcHeader(
-        Header(
-            homepageUrl = "https://www.gov.uk",
-            serviceName = Some(messages("service.name")),
-            serviceUrl = StartController.start().url,
-            language = language.En,
-            signOutHref = signOutHref
-        )
+    @hmrcStandardHeader(
+        serviceName = Some(messages("service.name")),
+        serviceUrl = Some(StartController.start().url),
+        signOutUrl = signOutHref,
+        userResearchBanner = None,
+        phaseBanner = None,
+        displayHmrcBanner = false
     )
 }
 
