@@ -25,6 +25,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
+@import play.twirl.api.{HtmlFormat}
 
 @this(
         layout: Layout,
@@ -99,7 +100,7 @@
                     messages("check_answers.claim.entryDetails.epu", entryDetails.entryProcessingUnit),
                     messages("check_answers.claim.entryDetails.entryNumber", entryDetails.entryNumber),
                     messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(entryDetails.entryDate))
-                ).mkString("<br>")).getOrElse(""))
+                ).map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
@@ -191,7 +192,7 @@
                 content = Text(messages("check_answers.claim.uploaded"))
             ),
             value = Value(
-                content = HtmlContent(answers.uploads.map(_.fileName).mkString("<br>"))
+                content = HtmlContent(answers.uploads.map(_.fileName).map(HtmlFormat.escape(_)).mkString("<br>"))
             ),
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
@@ -221,7 +222,7 @@
                     Some(s"${contactDetails.firstName} ${contactDetails.lastName}"),
                     Some(contactDetails.emailAddress),
                     contactDetails.telephoneNumber
-                ).flatten.mkString("<br>")).getOrElse(""))
+                ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
@@ -246,7 +247,7 @@
                     claimantAddress.addressLine2,
                     Some(claimantAddress.city),
                     Some(claimantAddress.postCode)
-                ).flatten.mkString("<br>")).getOrElse(""))
+                ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
@@ -372,7 +373,7 @@
                             contactDetails.addressLine2,
                             Some(contactDetails.city),
                             Some(contactDetails.postCode)
-                        ).flatten.mkString("<br>")).getOrElse(""))
+                        ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
                     ),
                     actions = if(!withActions) None else  Some(Actions(
                         items = Seq(
