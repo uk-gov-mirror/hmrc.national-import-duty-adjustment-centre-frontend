@@ -117,7 +117,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     EntryNumber = "123456Q",
     EntryDate = "20201231",
     DutyDetails =
-      Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
+      Seq(DutyDetail("01", "100.00", "80.00"), DutyDetail("02", "200.10", "175.00"), DutyDetail("03", "10.00", "5.50")),
     PayTo = "Representative of importer",
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
     ItemNumber = "1, 2, 5-10",
@@ -165,7 +165,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     EntryNumber = "123456Q",
     EntryDate = "20201231",
     DutyDetails =
-      Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
+      Seq(DutyDetail("01", "100.00", "80.00"), DutyDetail("02", "200.10", "175.00"), DutyDetail("03", "10.00", "5.50")),
     PayTo = "Importer",
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
     ItemNumber = "1, 2, 5-10",
