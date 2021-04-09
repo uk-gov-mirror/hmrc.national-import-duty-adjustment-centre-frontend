@@ -30,7 +30,7 @@ object DutyDetail {
     new DutyDetail(
       reclaiming,
       BigDecimal.apply(paid.actuallyPaid).setScale(decimalPlaces).toString(),
-      paid.dueAmount.setScale(decimalPlaces).toString
+      BigDecimal.apply(paid.shouldHavePaid).setScale(decimalPlaces).toString
     )
 
 }
