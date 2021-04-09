@@ -14,40 +14,53 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{UploadedFile, UpscanInitiateResponse}
 
 @this(
-        govukFileUpload : GovukFileUpload,
-        continueButton: components.continueButton,
+        formHelper: FormWithCSRF,
+        govukFileUpload: GovukFileUpload,
+        uploadSummary: uploadSummary,
+        continueButton: continueButton,
         appConfig: AppConfig
 )
 
 @(
-        upscanInitiateResponse : UpscanInitiateResponse,
-        isFirstUpload: Boolean,
+        upscanInitiateResponse: UpscanInitiateResponse,
+        uploads: Seq[UploadedFile],
+        continueAction: Call,
+        removeUrl: String => String,
         error: Option[FormError] = None
 )(implicit request: Request[_], messages: Messages)
 
+@uploadSummary(uploads, removeUrl)
 
 <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
 
-  @for(field <- upscanInitiateResponse.formFields) {
-   <input type="hidden" name="@field._1" value="@field._2"/>
-  }
+    @for(field <- upscanInitiateResponse.formFields) {
+        <input type="hidden" name="@field._1" value="@field._2"/>
+    }
 
-  @govukFileUpload(FileUpload(
-   name = "file",
-   id = "upload-file",
-   attributes = Map(
-    "accept" -> appConfig.upscan.approvedFileExtensions
-   ),
-   label = Label(
-    content = Text(messages(if(isFirstUpload) "upload_documents.first.label" else "upload_documents.next.label"))
-   ),
-   errorMessage = error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
-  ))
+    @govukFileUpload(FileUpload(
+        name = "file",
+        id = "upload-file",
+        attributes = Map(
+            "accept" -> appConfig.upscan.approvedFileExtensions,
+            "onchange" -> "this.form.submit()"
+        ),
+        label = Label(
+            content = Text(messages(if(uploads.isEmpty) "upload_documents.first.label" else "upload_documents.next.label"))
+        ),
+        errorMessage = error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+    ))
 
-  @continueButton()
+    <div class="nidac-display-only-non-javascript">
+        @continueButton(id = "nidac-continue-non-js")
+    </div>
 
 </form>
+
+<div class="nidac-display-none-non-javascript">
+@formHelper(action = continueAction, 'autoComplete -> "off") {
+    @continueButton()
+}
+</div>

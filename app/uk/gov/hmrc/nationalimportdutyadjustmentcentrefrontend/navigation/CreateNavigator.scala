@@ -65,13 +65,7 @@ class CreateNavigator @Inject() ()
       always,
       returnSummaryAnswered
     ),
-    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads, uploadPageAnswered),
-    P(
-      UploadSummaryPage,
-      makeclaim.routes.UploadFormSummaryController.onPageLoad,
-      hasUploads,
-      uploadSummaryPageAnswered
-    ),
+    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),
     P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative, repayToAnswered),
@@ -106,7 +100,7 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.dutyVAT            => Some(ImportVatRepaymentPage)
       case CreatePageNames.dutyOther          => Some(OtherDutyRepaymentPage)
       case CreatePageNames.dutySummary        => Some(ReturnAmountSummaryPage)
-      case CreatePageNames.uploadSummary      => Some(UploadSummaryPage)
+      case CreatePageNames.uploadSummary      => Some(UploadPage)
       case CreatePageNames.contactDetails     => Some(ContactDetailsPage)
       case CreatePageNames.contactAddress     => Some(AddressPage)
       case CreatePageNames.importerEori       => Some(ImporterEoriNumberPage)
@@ -174,9 +168,6 @@ protected trait CreateHasAnsweredConditions {
     _.reclaimDutyPayments.contains(dutyType)
 
   protected val uploadPageAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) => answers.uploads.nonEmpty
-
-  protected val uploadSummaryPageAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.uploads.nonEmpty && answers.uploadAnotherFile.contains(false)
 
   protected val contactDetailsAnswered: CreateAnswers => Boolean = _.contactDetails.nonEmpty
   protected val claimantAnswered: CreateAnswers => Boolean       = _.claimantAddress.nonEmpty

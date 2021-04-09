@@ -39,8 +39,8 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(completeAmendAnswers.copy(uploads = Seq.empty)) mustBe routes.UploadFormController.onPageLoad()
       }
 
-      "go to the upload summary page when answer is yes but has documents uploaded" in {
-        nextPage(completeAmendAnswers) mustBe routes.UploadFormSummaryController.onPageLoad()
+      "go to the upload page when answer is yes but has documents uploaded" in {
+        nextPage(completeAmendAnswers) mustBe routes.UploadFormController.onPageLoad()
       }
 
       "go to the further information page when answer is no" in {
@@ -77,28 +77,11 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
     }
     "has more documents is true" when {
       "going back" should {
-        "go to the file summary page" in {
+        "go to the file upload page" in {
           previousPage(
             completeAmendAnswers.copy(hasMoreDocuments = Some(true))
-          ) mustBe routes.UploadFormSummaryController.onPageLoad()
+          ) mustBe routes.UploadFormController.onPageLoad()
         }
-      }
-    }
-  }
-
-  "Navigating from file summary page" when {
-    val nextPage     = amendNavigator.nextPage(UploadSummaryPage, _)
-    val previousPage = back(UploadSummaryPage, _)
-    "going forward" should {
-      "go to the further information page" in {
-        nextPage(completeAmendAnswers) mustBe
-          routes.FurtherInformationController.onPageLoad()
-      }
-    }
-    "going back" should {
-      "go to the has more documents page" in {
-        previousPage(completeAmendAnswers) mustBe
-          routes.AttachMoreDocumentsController.onPageLoad()
       }
     }
   }
@@ -109,7 +92,7 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
     "going forward" should {
       "go to the further information page" in {
         nextPage(completeAmendAnswers) mustBe
-          routes.UploadFormSummaryController.onPageLoad()
+          routes.FurtherInformationController.onPageLoad()
       }
     }
     "going back" should {
@@ -125,7 +108,7 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
 
       amendNavigator.gotoPage(AmendPageNames.claimReference) mustBe routes.CaseReferenceController.onPageLoad
       amendNavigator.gotoPage(AmendPageNames.attachMoreDocuments) mustBe routes.AttachMoreDocumentsController.onPageLoad
-      amendNavigator.gotoPage(AmendPageNames.uploadSummary) mustBe routes.UploadFormSummaryController.onPageLoad
+      amendNavigator.gotoPage(AmendPageNames.uploadSummary) mustBe routes.UploadFormController.onPageLoad
       amendNavigator.gotoPage(AmendPageNames.furtherInformation) mustBe routes.FurtherInformationController.onPageLoad
     }
   }

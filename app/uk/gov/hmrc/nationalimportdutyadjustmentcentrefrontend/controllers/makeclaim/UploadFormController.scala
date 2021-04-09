@@ -21,8 +21,8 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.{FileUploading, Navigation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UploadId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
@@ -35,7 +35,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormView, UploadProgressView}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -57,12 +56,6 @@ class UploadFormController @Inject() (
 
   override val page: Page = UploadPage
 
-  override def backLink: CreateAnswers => NavigatorBack = (answers: CreateAnswers) =>
-    answers.uploads match {
-      case files if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
-      case _                       => super.backLink(answers)
-    }
-
   override protected def successRedirectUrl(uploadId: UploadId): Call = routes.UploadFormController.onProgress(uploadId)
 
   override protected def errorRedirectUrl(errorCode: String): Call = routes.UploadFormController.onError(errorCode)
@@ -83,19 +76,51 @@ class UploadFormController @Inject() (
         case Some(failed: Failed) =>
           Future(Redirect(routes.UploadFormController.onError(failed.errorCode)))
         case Some(_) =>
-          Future(Ok(uploadProgressView(answersWithJourneyID._1.claimType, backLink(answersWithJourneyID._1))))
+          Future(
+            Ok(
+              uploadProgressView(
+                answersWithJourneyID._1.uploads,
+                answersWithJourneyID._1.claimType,
+                backLink(answersWithJourneyID._1)
+              )
+            )
+          )
         case None => Future(Redirect(routes.UploadFormController.onError(UNKNOWN)))
       }
     }
   }
 
-  def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
-      initiateForm(answersWithJourneyID._2) map { upscanInitiateResponse =>
-        uploadInitialView(upscanInitiateResponse, answersWithJourneyID._1, Some(errorCode))
-      }
+  def onContinue(): Action[AnyContent] = identify.async { implicit request =>
+    data.getCreateAnswers map { answers =>
+      if (answers.uploads.isEmpty)
+        Redirect(routes.UploadFormController.onError(MISSING_FILE))
+      else
+        Redirect(nextPage(answers))
     }
   }
+
+  def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      if (errorCode == MISSING_FILE && answersWithJourneyID._1.uploads.nonEmpty)
+        Future(Redirect(routes.UploadFormController.onContinue()))
+      else
+        initiateForm(answersWithJourneyID._2) map { upscanInitiateResponse =>
+          uploadInitialView(upscanInitiateResponse, answersWithJourneyID._1, Some(errorCode))
+        }
+    }
+  }
+
+  def onRemove(documentReference: String): Action[AnyContent] = identify.async { implicit request =>
+    data.updateCreateAnswers(removeDocument(documentReference)) map { _ =>
+      Redirect(summaryAnchorUrl(routes.UploadFormController.onPageLoad()))
+    }
+  }
+
+  def removeDocument: String => CreateAnswers => CreateAnswers = (ref: String) =>
+    (userAnswers: CreateAnswers) => {
+      val remainingFiles = userAnswers.uploads.filterNot(_.upscanReference == ref)
+      userAnswers.copy(uploads = remainingFiles)
+    }
 
   private def uploadInitialView(
     upscanInitiateResponse: UpscanInitiateResponse,
@@ -105,7 +130,7 @@ class UploadFormController @Inject() (
     uploadFormView(
       upscanInitiateResponse,
       answers.claimType,
-      answers.uploads.isEmpty,
+      answers.uploads,
       errorCode.map(code => mapError(code)),
       backLink(answers)
     )
@@ -118,7 +143,7 @@ class UploadFormController @Inject() (
         Future(Redirect(routes.UploadFormController.onError(DUPLICATE)))
       else
         data.updateCreateAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
+          _ => Redirect(summaryAnchorUrl(routes.UploadFormController.onPageLoad()))
         }
     }
 

@@ -206,8 +206,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
         }
       }
       "files have been uploaded" should {
-        "goto upload summary page" in {
-          nextPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
+        "goto upload page" in {
+          nextPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormController.onPageLoad()
         }
       }
     }
@@ -218,8 +218,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
         }
       }
       "files have been uploaded" should {
-        "goto upload summary page" in {
-          previousPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
+        "goto upload page" in {
+          previousPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormController.onPageLoad()
         }
       }
     }
@@ -234,7 +234,7 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       navigator.gotoPage(CreatePageNames.itemNumbers) mustBe routes.ItemNumbersController.onPageLoad
       navigator.gotoPage(CreatePageNames.claimReason) mustBe routes.ClaimReasonController.onPageLoad
       navigator.gotoPage(CreatePageNames.dutyTypes) mustBe routes.ReclaimDutyTypeController.onPageLoad
-      navigator.gotoPage(CreatePageNames.uploadSummary) mustBe routes.UploadFormSummaryController.onPageLoad
+      navigator.gotoPage(CreatePageNames.uploadSummary) mustBe routes.UploadFormController.onPageLoad
       navigator.gotoPage(CreatePageNames.contactDetails) mustBe routes.ContactDetailsController.onPageLoad
       navigator.gotoPage(CreatePageNames.contactAddress) mustBe routes.AddressController.onPageLoad
       navigator.gotoPage(CreatePageNames.importerEori) mustBe routes.ImporterEoriNumberController.onPageLoad

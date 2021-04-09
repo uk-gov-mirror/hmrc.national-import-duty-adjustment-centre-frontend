@@ -23,6 +23,8 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyCreate
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadForm
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
 
 @this(
         layout: Layout,
@@ -36,7 +38,7 @@
 @(
         upscanInitiateResponse : UpscanInitiateResponse,
         claimType: Option[ClaimType],
-        isFirstUpload: Boolean,
+        uploads: Seq[UploadedFile],
         error: Option[FormError] = None,
         backLink: NavigatorBack
 )(implicit request: Request[_], messages: Messages)
@@ -50,6 +52,6 @@
 
     @components.heading(messages("upload_documents.title"))
 
-    @uploadBody(uploadForm(upscanInitiateResponse, isFirstUpload, error), claimType)
+    @uploadBody(uploadForm(upscanInitiateResponse, uploads, UploadFormController.onContinue(), ref => UploadFormController.onRemove(ref).url, error), claimType)
 
 }

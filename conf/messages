@@ -50,9 +50,10 @@ claim_reason.error.length = Claim reason must be 500 characters or fewer
 upload_documents.title = Upload your supporting documentation
 upload_documents.intro.1 = You can upload as many files as you need to support your application.
 upload_documents.intro.2 = You can only upload one file at a time.
-upload_documents.first.label = Select your first file
-upload_documents.next.label = Select your next file
+upload_documents.first.label = Upload your first file
+upload_documents.next.label = Upload your next file if necessary
 upload_documents.status.in_progress = Waiting for the file to be scanned
+upload_documents.non-javascript.continue = Continue
 
 upload_documents.body.document.required.heading = Required supporting documents
 upload_documents.body.document.required.para = These are the documents we must have to process your claim. You may also include additional documents if you think they are relevant.

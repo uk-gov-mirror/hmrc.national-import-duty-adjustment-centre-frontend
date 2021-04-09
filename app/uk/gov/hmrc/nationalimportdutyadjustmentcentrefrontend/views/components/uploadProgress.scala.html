@@ -14,13 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.continueButton
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
-@this(continueButton: continueButton)
+@this(continueButton: continueButton, uploadSummary: uploadSummary)
 
-@()(implicit messages: Messages)
+@(uploads: Seq[UploadedFile], removeUrl: String => String)(implicit request: Request[_], messages: Messages)
 
-<p class="govuk-body govuk-!-font-weight-bold">@messages("upload_documents.status.in_progress")</p>
-<p class="govuk-body ccms-loader"></p>
+@spinner = {
+    <p class="govuk-body ccms-loader"></p>
+}
+
+@uploadSummary(uploads, removeUrl, Some(
+    SummaryListRow(
+        key = Key(content = Text(messages("upload_documents.status.in_progress"))),
+        value = Value(content = HtmlContent(spinner)),
+        actions = None
+    )
+))
 
 <div>@continueButton(disabled = true)</div>

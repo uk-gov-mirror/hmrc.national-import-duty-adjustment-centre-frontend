@@ -20,10 +20,12 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyCreate
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadProgress
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
 
 @this(layout: Layout, continueButton: components.continueButton,uploadBody: uploadBodyCreate, uploadProgress: uploadProgress)
 
-@(claimType: Option[ClaimType], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(uploads: Seq[UploadedFile], claimType: Option[ClaimType], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="1"/>
@@ -33,6 +35,6 @@
 
     @components.heading(messages("upload_documents.title"))
 
-    @uploadBody(uploadProgress(), claimType)
+    @uploadBody(uploadProgress(uploads, ref => UploadFormController.onRemove(ref).url), claimType)
 
 }

@@ -28,6 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Clai
   Preference,
   Quota
 }
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormView
 
 import scala.collection.JavaConverters._
@@ -39,10 +40,10 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
 
   private def view(
     claimType: Option[ClaimType] = None,
-    isFirst: Boolean = true,
+    uploads: Seq[UploadedFile] = Seq.empty,
     error: Option[FormError] = None
   ): Document =
-    page(upscanInitiateResponse, claimType, isFirst, error, navigatorBack)
+    page(upscanInitiateResponse, claimType, uploads, error, navigatorBack)
 
   "UploadFormPage" should {
 
@@ -74,12 +75,12 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
 
     "have label for file selector" when {
       "this is the first upload" in {
-        view(isFirst = true).getElementsByAttributeValue("for", "upload-file") must containMessage(
+        view(uploads = Seq.empty).getElementsByAttributeValue("for", "upload-file") must containMessage(
           "upload_documents.first.label"
         )
       }
       "this is not the first upload" in {
-        view(isFirst = false).getElementsByAttributeValue("for", "upload-file") must containMessage(
+        view(uploads = Seq(uploadAnswer)).getElementsByAttributeValue("for", "upload-file") must containMessage(
           "upload_documents.next.label"
         )
       }

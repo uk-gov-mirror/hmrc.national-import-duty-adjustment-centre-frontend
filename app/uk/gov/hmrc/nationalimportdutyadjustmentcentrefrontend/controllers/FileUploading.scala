@@ -30,8 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait FileUploading {
 
-  protected val DUPLICATE = "DUPLICATE"
-  protected val UNKNOWN   = "UNKNOWN"
+  protected val DUPLICATE    = "DUPLICATE"
+  protected val UNKNOWN      = "UNKNOWN"
+  protected val MISSING_FILE = "InvalidArgument"
 
   val upscanInitiateConnector: UpscanInitiateConnector
   val uploadProgressTracker: UploadProgressTracker
@@ -43,6 +44,8 @@ trait FileUploading {
   private val errorQuery        = "?errorCode="
   private lazy val errorBaseUrl = errorRedirectUrl("").url.dropRight(errorQuery.length)
 
+  protected def summaryAnchorUrl(call: Call) = call.url + "#summary"
+
   protected def initiateForm(
     journeyId: JourneyId
   )(implicit request: IdentifierRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Future[UpscanInitiateResponse] = {
@@ -50,7 +53,7 @@ trait FileUploading {
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
         journeyId,
-        Some(appConfig.upscan.redirectBase + successRedirectUrl(uploadId).url),
+        Some(appConfig.upscan.redirectBase + summaryAnchorUrl(successRedirectUrl(uploadId))),
         Some(appConfig.upscan.redirectBase + errorBaseUrl)
       )
       _ <- uploadProgressTracker.requestUpload(
@@ -64,14 +67,14 @@ trait FileUploading {
   protected def mapError(code: String): FormError = {
     def error(message: String) = FormError("upload-file", message)
     code match {
-      case "400" | "InvalidArgument" => error("error.file-upload.required")
-      case "InternalError"           => error("error.file-upload.try-again")
-      case "EntityTooLarge"          => error("error.file-upload.invalid-size-large")
-      case "EntityTooSmall"          => error("error.file-upload.invalid-size-small")
-      case "QUARANTINE"              => error("error.file-upload.quarantine")
-      case "REJECTED"                => error("error.file-upload.invalid-type")
-      case DUPLICATE                 => error("error.file-upload.duplicate")
-      case _                         => error("error.file-upload.unknown")
+      case "400" | MISSING_FILE => error("error.file-upload.required")
+      case "InternalError"      => error("error.file-upload.try-again")
+      case "EntityTooLarge"     => error("error.file-upload.invalid-size-large")
+      case "EntityTooSmall"     => error("error.file-upload.invalid-size-small")
+      case "QUARANTINE"         => error("error.file-upload.quarantine")
+      case "REJECTED"           => error("error.file-upload.invalid-type")
+      case DUPLICATE            => error("error.file-upload.duplicate")
+      case _                    => error("error.file-upload.unknown")
     }
   }
 

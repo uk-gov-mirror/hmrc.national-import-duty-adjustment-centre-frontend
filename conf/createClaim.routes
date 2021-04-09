@@ -14,11 +14,9 @@ POST        /your-address                       uk.gov.hmrc.nationalimportdutyad
 
 GET         /upload-supporting-documents        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onPageLoad()
 GET         /upload-supporting-documents/progress uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onProgress(uploadId: UploadId)
+GET         /upload-supporting-documents/continue uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onContinue()
 GET         /upload-supporting-documents/error  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onError(errorCode: String)
-
-GET         /uploaded-files                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onPageLoad()
-POST        /uploaded-files                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onSubmit()
-GET         /uploaded-files/remove              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onRemove(documentReference: String)
+GET         /upload-supporting-documents/remove uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormController.onRemove(documentReference: String)
 
 GET         /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onPageLoad()
 POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onSubmit()

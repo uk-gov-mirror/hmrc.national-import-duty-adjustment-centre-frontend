@@ -25,7 +25,7 @@ class UploadProgressViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[UploadProgressView]
 
-  private val view: Document = page(Some(Quota), navigatorBack)
+  private val view: Document = page(Seq.empty, Some(Quota), navigatorBack)
 
   "UploadProgressPage" should {
 
@@ -38,7 +38,7 @@ class UploadProgressViewSpec extends UnitViewSpec with TestData {
     }
 
     "have correct message " in {
-      view.getElementsByClass("govuk-body") must containMessage("upload_documents.status.in_progress")
+      view.getElementsByClass("govuk-summary-list") must containMessage("upload_documents.status.in_progress")
     }
 
     "have auto refresh " in {

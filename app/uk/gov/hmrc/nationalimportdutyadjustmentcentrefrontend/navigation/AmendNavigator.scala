@@ -32,7 +32,6 @@ class AmendNavigator @Inject() ()
     P(CaseReferencePage, routes.CaseReferenceController.onPageLoad, always, caseReferenceAnswered),
     P(AttachMoreDocumentsPage, routes.AttachMoreDocumentsController.onPageLoad, always, attachMoreDocumentsAnswered),
     P(UploadPage, routes.UploadFormController.onPageLoad, showUploadDocuments, uploadPageAnswered),
-    P(UploadSummaryPage, routes.UploadFormSummaryController.onPageLoad, showUploadSummary, uploadSummaryPageAnswered),
     P(FurtherInformationPage, routes.FurtherInformationController.onPageLoad, always, furtherInformationAnswered),
     P(CheckYourAnswersPage, routes.CheckYourAnswersController.onPageLoad, always, never),
     P(ConfirmationPage, routes.ConfirmationController.onPageLoad, always, never)
@@ -44,7 +43,7 @@ class AmendNavigator @Inject() ()
     pageName match {
       case AmendPageNames.claimReference      => Some(CaseReferencePage)
       case AmendPageNames.attachMoreDocuments => Some(AttachMoreDocumentsPage)
-      case AmendPageNames.uploadSummary       => Some(UploadSummaryPage)
+      case AmendPageNames.uploadSummary       => Some(UploadPage)
       case AmendPageNames.furtherInformation  => Some(FurtherInformationPage)
       case _                                  => None
     }
@@ -56,10 +55,7 @@ protected trait AmendAnswerConditions {
   protected val always: Answers => Boolean = (_: Answers) => true
 
   protected val showUploadDocuments: AmendAnswers => Boolean = (answers: AmendAnswers) =>
-    answers.hasMoreDocuments.contains(true) && answers.uploads.isEmpty
-
-  protected val showUploadSummary: AmendAnswers => Boolean = (answers: AmendAnswers) =>
-    answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty
+    answers.hasMoreDocuments.contains(true)
 
 }
 
