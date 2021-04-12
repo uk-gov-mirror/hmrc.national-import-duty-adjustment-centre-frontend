@@ -16,8 +16,8 @@
 
 @this()
 
-@(messageKey: String, call: Call)(implicit messages: Messages)
+@(call: Call, messageKey: String = "site.continue")(implicit messages: Messages)
 
-<a href="@call.url" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+<a id="nidac-continue" href="@call.url" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
  @messages(messageKey)
 </a>

@@ -18,11 +18,11 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.{heading, linkButton, paragraph, uploadDocumentTypes}
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.{heading, continueLinkButton, paragraph, uploadDocumentTypes}
 
 @this(
         layout: Layout,
-        linkButton: linkButton,
+        continueLinkButton: continueLinkButton,
         appConfig: AppConfig
 )
 
@@ -41,6 +41,6 @@
 
  @uploadDocumentTypes(claimType)
 
- @linkButton("site.continue", nextPage)
+ @continueLinkButton(nextPage)
 
 }
