@@ -54,7 +54,7 @@ upload_documents.required-docs.additional = You may also include additional docu
 upload_documents.title = Upload your supporting documentation
 upload_documents.intro = You can upload as many files as you need to support your application.
 upload_documents.first.label = Upload your first file
-upload_documents.next.label = Upload your next file if necessary
+upload_documents.next.label = Upload another file (optional)
 upload_documents.status.in_progress = Waiting for the file to be scanned
 upload_documents.non-javascript.continue = Continue
 
