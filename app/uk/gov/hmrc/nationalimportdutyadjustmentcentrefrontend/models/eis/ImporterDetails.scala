@@ -50,7 +50,7 @@ object ImporterDetails {
   ): ImporterDetails =
     new ImporterDetails(
       EORI = Some(claimantEori.number),
-      Name = address.name,
+      Name = "Dave",
       Address = ImporterAddress(
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,

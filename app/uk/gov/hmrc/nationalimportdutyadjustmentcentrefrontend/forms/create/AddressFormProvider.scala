@@ -28,8 +28,6 @@ class AddressFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Address] = Form(
     mapping(
-      "name" -> text("address.name.error.required")
-        .verifying(firstError(maxLength(40, "address.name.error.length"))),
       "addressLine1" -> text("address.line1.error.required")
         .verifying(firstError(maxLength(100, "address.line1.error.length"))),
       "addressLine2" -> optional(

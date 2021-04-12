@@ -30,7 +30,7 @@ object AgentDetails {
       Some(
         AgentDetails(
           EORI = Some(claim.claimantEori.number),
-          Name = claim.claimantAddress.name,
+          Name = "Dave",
           Address = AgentAddress(
             AddressLine1 = claim.claimantAddress.addressLine1,
             AddressLine2 = claim.claimantAddress.addressLine2,
