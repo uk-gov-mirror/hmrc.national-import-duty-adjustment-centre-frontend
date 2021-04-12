@@ -70,7 +70,7 @@ upload_documents.body.document.type.CertificateOfOrigin = certificate of origin
 upload_documents.body.files.size = Each file must be 6MB or smaller.
 upload_documents.body.files.details.heading = What you must upload
 upload_documents.body.files.details.filetypes = Types of file you can upload
-upload_documents.body.files.details.image = image (.jpeg, .jpg or .png)
+upload_documents.body.files.details.image = Image (.jpeg, .jpg or .png)
 upload_documents.body.files.details.pdf = PDF (.pdf)
 
 upload_documents_summary.title.single = You have uploaded 1 file

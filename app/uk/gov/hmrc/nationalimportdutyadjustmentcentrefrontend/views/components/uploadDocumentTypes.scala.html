@@ -33,11 +33,6 @@
  }
 }
 
-<ul class="govuk-list govuk-list--bullet" id="document-type-list">
- @Html(
-  documentTypes
- .map(docType => messages(s"upload_documents.body.document.type.$docType")).sortBy(_.toLowerCase)
- .map(msg => s"<li>$msg</li>").mkString
- )
-</ul>
+@unorderedList("document-type-list", documentTypes.map(docType => messages(s"upload_documents.body.document.type.$docType")).sortBy(_.toLowerCase))
+
 @paragraph(messages("upload_documents.required-docs.additional"))

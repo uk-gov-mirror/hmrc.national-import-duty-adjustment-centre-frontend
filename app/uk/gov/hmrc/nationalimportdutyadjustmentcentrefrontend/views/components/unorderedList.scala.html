@@ -14,10 +14,8 @@
  * limitations under the License.
  *@
 
-@()(implicit messages: Messages)
+@(id: String, items: List[String])(implicit messages: Messages)
 
-@unorderedList("file-type-list", List(
-  messages("upload_documents.body.files.details.image"),
-  messages("upload_documents.body.files.details.pdf")
- )
-)
+<ul id="@id" class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+  @Html(items.map(item => s"<li>$item</li>").mkString)
+</ul>
