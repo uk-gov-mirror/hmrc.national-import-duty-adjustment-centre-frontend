@@ -14,16 +14,10 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@this()
 
-@this(govukDetails : GovukDetails, uploadFileDetails: uploadFileDetails)
+@(messageKey: String, call: Call)(implicit messages: Messages)
 
-@(content: Html, claimType: Option[ClaimType])(implicit messages: Messages)
-
-<p class="govuk-body">@messages("upload_documents.intro")</p>
-<p class="govuk-body">@messages("upload_documents.body.files.size")</p>
-
-@uploadFileDetails(claimType)
-
-@content
+<a href="@call.url" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+ @messages(messageKey)
+</a>

@@ -14,12 +14,19 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadFileTypes
-
-@this(govukDetails : GovukDetails, uploadFileTypes: uploadFileTypes)
+@this(govukDetails : GovukDetails)
 
 @(content: Html)(implicit messages: Messages)
 
-@uploadFileTypes()
+@paragraph(messages("upload_documents.body.files.size"))
+
+@fileTypeContent = {
+  @uploadFileTypes()
+}
+
+@govukDetails(Details(
+ summary = Text(messages("upload_documents.body.files.details.filetypes")),
+ content = HtmlContent(fileTypeContent)
+))
 
 @content

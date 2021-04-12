@@ -33,10 +33,6 @@
  }
 }
 
-@subHeading(messages("upload_documents.body.document.required.heading"))
-
-<p class="govuk-body">@messages("upload_documents.body.document.required.para")</p>
-
 <ul class="govuk-list govuk-list--bullet" id="document-type-list">
  @Html(
   documentTypes
@@ -44,3 +40,4 @@
  .map(msg => s"<li>$msg</li>").mkString
  )
 </ul>
+@paragraph(messages("upload_documents.required-docs.additional"))

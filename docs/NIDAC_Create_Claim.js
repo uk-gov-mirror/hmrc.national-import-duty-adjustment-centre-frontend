@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.17
+// @version      0.18
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -118,13 +118,14 @@ function completePage() {
         submit();
     }
 
-    if (currentPageIs("/create/upload-supporting-documents")) {
-    }
-
-    if (currentPageIs("/create/uploaded-files")) {
-        document.getElementById("yesOrNo-2").checked = true;
+    if (currentPageIs("/create/required-supporting-documents")) {
         submit();
     }
+
+    if (currentPageIs("/create/upload-supporting-documents")) {
+        submit();
+    }
+
     if (currentPageIs("/create/contact-details")) {
         document.getElementById("firstName").value = "Tim";
         document.getElementById("lastName").value = "Tester";
