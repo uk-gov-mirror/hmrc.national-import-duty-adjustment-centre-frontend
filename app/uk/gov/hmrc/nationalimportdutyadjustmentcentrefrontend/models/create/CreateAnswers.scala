@@ -26,6 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 
 final case class CreateAnswers(
   changePage: Option[String] = None,
+  correspondenceName: Option[CorrespondenceName] = None,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,
   representationType: Option[RepresentationType] = None,
