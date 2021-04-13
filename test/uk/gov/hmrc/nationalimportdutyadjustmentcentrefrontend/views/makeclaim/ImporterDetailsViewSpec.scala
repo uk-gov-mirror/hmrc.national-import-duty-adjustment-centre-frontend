@@ -77,7 +77,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
     "have populated fields" in {
       val filledView = view(form.fill(importerContactDetailsAnswer))
 
-      filledView.getElementById("name") must haveValue(importerContactDetailsAnswer.name)
       filledView.getElementById("addressLine1") must haveValue(importerContactDetailsAnswer.addressLine1)
       filledView.getElementById("addressLine2") must haveValue(importerContactDetailsAnswer.addressLine2.getOrElse(""))
       filledView.getElementById("city") must haveValue(importerContactDetailsAnswer.city)

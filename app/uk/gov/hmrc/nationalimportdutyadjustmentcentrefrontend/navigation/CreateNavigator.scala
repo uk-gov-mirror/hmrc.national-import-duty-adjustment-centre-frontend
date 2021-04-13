@@ -65,7 +65,7 @@ class CreateNavigator @Inject() ()
       always,
       returnSummaryAnswered
     ),
-    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
+//    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
     P(BusinessNamePage, makeclaim.routes.BusinessNameController.onPageLoad, always, businessNameAnswered),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),
@@ -77,6 +77,7 @@ class CreateNavigator @Inject() ()
       enterImporterEori,
       importerEoriNumberAnswered
     ),
+    P(ImporterBusinessNamePage, makeclaim.routes.ImporterBusinessNameController.onPageLoad, always, importerBusinessNameAnswered),
     P(
       ImporterContactDetailsPage,
       makeclaim.routes.ImporterDetailsController.onPageLoad,
@@ -175,9 +176,11 @@ protected trait CreateHasAnsweredConditions {
   protected val contactDetailsAnswered: CreateAnswers => Boolean = _.contactDetails.nonEmpty
   protected val businessNameAnswered: CreateAnswers => Boolean = _.businessName.nonEmpty
   protected val claimantAnswered: CreateAnswers => Boolean       = _.claimantAddress.nonEmpty
-
   protected val importerEoriNumberAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
     answers.isRepresentative && answers.repayTo.contains(RepayTo.Importer) && answers.importerEori.nonEmpty
+
+  protected val importerBusinessNameAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
+    answers.isRepresentative && answers.importerBusinessName.nonEmpty
 
   protected val importerContactDetailsAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
     answers.isRepresentative && answers.importerContactDetails.nonEmpty

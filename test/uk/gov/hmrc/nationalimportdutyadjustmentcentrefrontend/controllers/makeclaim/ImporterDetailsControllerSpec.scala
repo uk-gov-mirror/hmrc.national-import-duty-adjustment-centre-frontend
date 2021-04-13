@@ -83,7 +83,6 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     val validRequest = postRequest(
-      "name"         -> importerContactDetailsAnswer.name,
       "addressLine1" -> importerContactDetailsAnswer.addressLine1,
       "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
       "city"         -> importerContactDetailsAnswer.city,

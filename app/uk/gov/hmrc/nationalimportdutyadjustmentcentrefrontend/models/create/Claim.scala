@@ -53,7 +53,7 @@ object Claim {
   private val logger: Logger = Logger(this.getClass)
 
   def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
-    if (userAnswers.uploads.isEmpty) missing(UploadPage)
+//    if (userAnswers.uploads.isEmpty) missing(UploadPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       claimantEori = claimantEori,

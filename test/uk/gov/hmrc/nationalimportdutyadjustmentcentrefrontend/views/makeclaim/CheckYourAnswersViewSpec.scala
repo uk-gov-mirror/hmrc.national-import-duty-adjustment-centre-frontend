@@ -269,7 +269,6 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         importerDetailsRow must haveSummaryKey(messages("check_answers.importer.contactDetails"))
         importerDetailsRow must haveSummaryValue(
           Seq(
-            importerContactDetailsAnswer.name,
             importerContactDetailsAnswer.addressLine1,
             importerContactDetailsAnswer.addressLine2.getOrElse(""),
             importerContactDetailsAnswer.city,
