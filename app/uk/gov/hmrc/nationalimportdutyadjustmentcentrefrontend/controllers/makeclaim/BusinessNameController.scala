@@ -25,7 +25,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Crea
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BusinessNamePage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CorrespondenceNameView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BusinessNameView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.{Inject, Singleton}
@@ -38,7 +38,7 @@ class BusinessNameController @Inject()(
                                         formProvider: BusinessNameFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         val navigator: CreateNavigator,
-                                        businessNameView: CorrespondenceNameView
+                                        businessNameView: BusinessNameView
                                          )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
