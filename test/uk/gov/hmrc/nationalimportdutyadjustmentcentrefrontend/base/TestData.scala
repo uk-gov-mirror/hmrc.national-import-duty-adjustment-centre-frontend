@@ -92,6 +92,8 @@ trait TestData {
 
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
+  val importerBusinessNameAnswer: ImporterBusinessName = ImporterBusinessName("Unused Imports UK");
+
   val importerContactDetailsAnswer =
     ImporterContactDetails("Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
 
@@ -112,6 +114,7 @@ trait TestData {
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer),
     importerEori = Some(importerEoriNumberAnswer),
+    importerBusinessName = Some(importerBusinessNameAnswer),
     importerContactDetails = Some(importerContactDetailsAnswer)
   )
 

@@ -161,9 +161,6 @@ businessName.name.error.length = Business name must be 40 characters or fewer
 
 address.title = What is your UK correspondence address?
 address.hint = We will use this to send letters about this claim.
-address.name.heading = Full name or business name
-address.name.error.required = Enter a name
-address.name.error.length = Name must be 40 characters or fewer
 address.line1.heading = Building and street
 address.line1.hidden = line 1 of 2
 address.line1.error.required = Enter an address

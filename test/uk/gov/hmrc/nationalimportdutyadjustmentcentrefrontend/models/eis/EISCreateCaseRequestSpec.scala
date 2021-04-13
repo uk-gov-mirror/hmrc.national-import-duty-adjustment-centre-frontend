@@ -20,7 +20,7 @@ import java.time.LocalDate
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, BusinessName, Claim, ClaimReason, ContactDetails, DutyPaid, EntryDetails, ImporterBeingRepresentedDetails, ImporterContactDetails, ItemNumbers, RepayTo, RepresentationType, Address => UkAddress}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, BusinessName, Claim, ClaimReason, ContactDetails, DutyPaid, EntryDetails, ImporterBeingRepresentedDetails, ImporterBusinessName, ImporterContactDetails, ItemNumbers, RepayTo, RepresentationType, Address => UkAddress}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, create}
 
 class EISCreateCaseRequestSpec extends UnitSpec with TestData {
@@ -41,7 +41,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
   val claimByRepresentative: Claim = create.Claim(
     claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
-    businessName = BusinessName("TODO"),
+    businessName = BusinessName("Import Network Inc"),
     claimantAddress = UkAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
@@ -53,6 +53,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
       ImporterBeingRepresentedDetails(
         repayTo = RepayTo.Representative,
         eoriNumber = Some(EoriNumber("GB098765432123")),
+        businessName = ImporterBusinessName("Acme Import Co Ltd"),
         contactDetails =
           ImporterContactDetails(
             "Importer Address Line 1",
@@ -73,7 +74,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     ClaimType = "Anti-Dumping",
     ImporterDetails = ImporterDetails(
       Some("GB098765432123"),
-      "TODO",
+      "Acme Import Co Ltd",
       ImporterAddress(
         "Importer Address Line 1",
         Some("Importer Address Line 2"),
@@ -87,7 +88,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     AgentDetails = Some(
       AgentDetails(
         Some(claimantEori.number),
-        "TODO",
+        "Import Network Inc",
         AgentAddress(
           "Address Line 1",
           Some("Address Line 2"),
