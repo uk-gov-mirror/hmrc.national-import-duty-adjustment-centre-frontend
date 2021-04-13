@@ -28,9 +28,15 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
+import uk.gov.hmrc.play.http.logging.Mdc
 
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+  * Note that mongo calls are wrapped in Mdc.preservingMdc
+  * This is to ensure that logging context (e.g. x-request-id, x-session-id, etc) remains
+  * intact in any code that executes after the asynchronous completion of the Mongo queries
+  */
 class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: AppConfig)(implicit ec: ExecutionContext)
     extends PlayMongoRepository[CacheData](
       collectionName = "cache-data",
@@ -46,16 +52,21 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
       replaceIndexes = config.mongoReplaceIndexes
     ) {
 
-  def get(id: String): Future[Option[CacheData]] =
+  def get(id: String): Future[Option[CacheData]] = Mdc.preservingMdc {
     collection.findOneAndUpdate(filter(id), set("lastUpdated", Instant.now())).toFutureOption()
+  }
 
-  def insert(data: CacheData): Future[Unit] =
+  def insert(data: CacheData): Future[Unit] = Mdc.preservingMdc {
     collection.insertOne(data).toFuture().map(_ => Unit)
+  }
 
-  def update(data: CacheData): Future[Option[CacheData]] =
+  def update(data: CacheData): Future[Option[CacheData]] = Mdc.preservingMdc {
     collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = Instant.now())).toFutureOption()
+  }
 
-  def delete(id: String): Future[Unit] = collection.deleteOne(filter(id)).toFuture().map(_ => Unit)
+  def delete(id: String): Future[Unit] = Mdc.preservingMdc {
+    collection.deleteOne(filter(id)).toFuture().map(_ => Unit)
+  }
 
   private def filter(id: String) =
     equal("id", Codecs.toBson(id))
