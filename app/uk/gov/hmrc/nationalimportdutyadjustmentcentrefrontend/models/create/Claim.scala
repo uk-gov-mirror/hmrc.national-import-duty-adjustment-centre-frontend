@@ -30,6 +30,7 @@ import scala.util.Try
 case class Claim(
   claimantEori: EoriNumber,
   contactDetails: ContactDetails,
+  businessName: BusinessName,
   claimantAddress: Address,
   representationType: RepresentationType,
   claimType: ClaimType,
@@ -52,11 +53,12 @@ object Claim {
   private val logger: Logger = Logger(this.getClass)
 
   def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
-//    if (userAnswers.uploads.isEmpty) missing(UploadPage)
+    if (userAnswers.uploads.isEmpty) missing(UploadPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       claimantEori = claimantEori,
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
+      businessName = userAnswers.businessName.getOrElse(missing(BusinessNamePage)),
       claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),

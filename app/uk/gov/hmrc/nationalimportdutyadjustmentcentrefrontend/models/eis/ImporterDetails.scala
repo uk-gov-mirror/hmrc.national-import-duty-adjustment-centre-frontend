@@ -17,17 +17,10 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{
-  Importer,
-  Representative
-}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
-  Claim,
-  ContactDetails,
-  ImporterBeingRepresentedDetails
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{Importer, Representative}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BusinessName, Claim, ContactDetails, ImporterBeingRepresentedDetails}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, create}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 
 case class ImporterDetails(EORI: Option[String], Name: String, Address: ImporterAddress)
@@ -40,17 +33,18 @@ object ImporterDetails {
       forRepresentativeApplicant(
         claim.importerBeingRepresentedDetails.getOrElse(throw new MissingAnswersException(ImporterContactDetailsPage))
       )
-    case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.claimantAddress)
+    case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.businessName, claim.claimantAddress)
   }
 
   private def forImporterApplicant(
     claimantEori: EoriNumber,
     contactDetails: ContactDetails,
+    businessName: BusinessName,
     address: create.Address
   ): ImporterDetails =
     new ImporterDetails(
       EORI = Some(claimantEori.number),
-      Name = "Dave",
+      Name = businessName.name,
       Address = ImporterAddress(
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,
@@ -65,7 +59,7 @@ object ImporterDetails {
   def forRepresentativeApplicant(importer: ImporterBeingRepresentedDetails): ImporterDetails =
     new ImporterDetails(
       EORI = importer.eoriNumber.map(_.number),
-      Name = "Dave",
+      Name = "TODO",
       Address = ImporterAddress(
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,

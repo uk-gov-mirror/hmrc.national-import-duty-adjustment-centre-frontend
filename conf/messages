@@ -153,10 +153,10 @@ contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
-businessName.title = Enter a business name
+businessName.title = What is your business name
 businessName.hint =
 businessName.name.heading =
-businessName.name.error.required = Enter a business name
+businessName.name.error.required = What is your business name
 businessName.name.error.length = Business name must be 40 characters or fewer
 
 address.title = What is your UK correspondence address?
