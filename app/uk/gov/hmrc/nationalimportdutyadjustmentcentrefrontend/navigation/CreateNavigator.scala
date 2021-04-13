@@ -67,7 +67,7 @@ class CreateNavigator @Inject() ()
     ),
 //    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
-    P(BusinessNamePage, makeclaim.routes.CorrespondenceNameController.onPageLoad, always, correspondencenameAnswered),
+    P(BusinessNamePage, makeclaim.routes.BusinessNameController.onPageLoad, always, businessNameAnswered),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),
     P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative, repayToAnswered),
     P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always, bankDetailsAnswered),
@@ -173,7 +173,7 @@ protected trait CreateHasAnsweredConditions {
   protected val uploadPageAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) => answers.uploads.nonEmpty
 
   protected val contactDetailsAnswered: CreateAnswers => Boolean = _.contactDetails.nonEmpty
-  protected val correspondencenameAnswered: CreateAnswers => Boolean = _.businessName.nonEmpty
+  protected val businessNameAnswered: CreateAnswers => Boolean = _.businessName.nonEmpty
   protected val claimantAnswered: CreateAnswers => Boolean       = _.claimantAddress.nonEmpty
 
   protected val importerEoriNumberAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>

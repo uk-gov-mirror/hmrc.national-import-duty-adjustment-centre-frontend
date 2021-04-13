@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CorrespondenceName
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BusinessName
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
@@ -31,23 +31,23 @@
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[CorrespondenceName], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
+@(form: Form[BusinessName], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("correspondenceName.title")), backLink) {
+@layout(pageTitle = Title(form, messages("businessName.title")), backLink) {
 
-    @formHelper(action = CorrespondenceNameController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = BusinessNameController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
         @fieldSet(
-            legend = "correspondenceName.title",
-            hint = Some(Html(messages("correspondenceName.hint")))
+            legend = "businessName.title",
+            hint = Some(Html(messages("businessName.hint")))
         ) {
 
             @inputText(
                 form = form,
                 id = "name",
                 name = "name",
-                label = "correspondenceName.name.heading",
+                label = "businessName.name.heading",
                 autocomplete = Some("name")
             )
         }

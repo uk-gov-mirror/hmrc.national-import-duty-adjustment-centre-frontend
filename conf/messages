@@ -153,11 +153,11 @@ contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
-correspondenceName.title = Enter a business name
-correspondenceName.hint =
-correspondenceName.name.heading =
-correspondenceName.name.error.required = Enter a business name
-correspondenceName.name.error.length = Business name must be 40 characters or fewer
+businessName.title = Enter a business name
+businessName.hint =
+businessName.name.heading =
+businessName.name.error.required = Enter a business name
+businessName.name.error.length = Business name must be 40 characters or fewer
 
 address.title = What is your UK correspondence address?
 address.hint = We will use this to send letters about this claim.

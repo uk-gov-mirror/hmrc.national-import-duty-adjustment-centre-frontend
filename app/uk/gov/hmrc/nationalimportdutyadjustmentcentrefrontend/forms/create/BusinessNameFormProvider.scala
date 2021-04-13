@@ -23,12 +23,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Busi
 
 import javax.inject.Inject
 
-class CorrespondenceNameFormProvider @Inject() extends Mappings {
+class BusinessNameFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BusinessName] = Form(
     mapping(
-      "name" -> text("correspondenceName.name.error.required")
-        .verifying(firstError(maxLength(40, "correspondenceName.name.error.length")))
+      "name" -> text("businessName.name.error.required")
+        .verifying(firstError(maxLength(40, "businessName.name.error.length")))
     )(BusinessName.apply)(BusinessName.unapply)
   )
 

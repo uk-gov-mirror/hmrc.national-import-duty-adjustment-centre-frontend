@@ -20,7 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.{CorrespondenceNameFormProvider}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BusinessNameFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BusinessNamePage, Page}
@@ -32,13 +32,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CorrespondenceNameController @Inject() (
-                                           identify: IdentifierAction,
-                                           data: CacheDataService,
-                                           formProvider: CorrespondenceNameFormProvider,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           val navigator: CreateNavigator,
-                                           correspondenceNameView: CorrespondenceNameView
+class BusinessNameController @Inject()(
+                                        identify: IdentifierAction,
+                                        data: CacheDataService,
+                                        formProvider: BusinessNameFormProvider,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        val navigator: CreateNavigator,
+                                        businessNameView: CorrespondenceNameView
                                          )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
@@ -49,14 +49,14 @@ class CorrespondenceNameController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
       val preparedForm = answers.businessName.fold(form)(form.fill)
-      Ok(correspondenceNameView(preparedForm, backLink(answers)))
+      Ok(businessNameView(preparedForm, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getCreateAnswers map { answers => BadRequest(correspondenceNameView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(businessNameView(formWithErrors, backLink(answers))) },
       value =>
         data.updateCreateAnswers(answers => answers.copy(businessName = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
