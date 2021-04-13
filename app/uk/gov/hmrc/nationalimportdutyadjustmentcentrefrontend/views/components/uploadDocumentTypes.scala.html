@@ -33,14 +33,6 @@
  }
 }
 
-@subHeading(messages("upload_documents.body.document.required.heading"))
+@unorderedList("document-type-list", documentTypes.map(docType => messages(s"upload_documents.body.document.type.$docType")).sortBy(_.toLowerCase))
 
-<p class="govuk-body">@messages("upload_documents.body.document.required.para")</p>
-
-<ul class="govuk-list govuk-list--bullet" id="document-type-list">
- @Html(
-  documentTypes
- .map(docType => messages(s"upload_documents.body.document.type.$docType")).sortBy(_.toLowerCase)
- .map(msg => s"<li>$msg</li>").mkString
- )
-</ul>
+@paragraph(messages("upload_documents.required-docs.additional"))

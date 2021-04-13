@@ -196,10 +196,10 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
     def answers(uploads: Seq[UploadedFile]): CreateAnswers =
       completeAnswers.copy(uploads = uploads)
 
-    val nextPage     = navigator.nextPage(ReturnAmountSummaryPage, _)
+    val nextPage     = navigator.nextPage(RequiredDocumentsPage, _)
     val previousPage = back(ContactDetailsPage, _)
 
-    "going forward (from the question before file uploads)" when {
+    "going forward (from the page before file uploads)" when {
       "no files have been uploaded" should {
         "goto upload page" in {
           nextPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()

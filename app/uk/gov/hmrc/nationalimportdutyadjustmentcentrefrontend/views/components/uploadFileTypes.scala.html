@@ -14,20 +14,10 @@
  * limitations under the License.
  *@
 
-@this(govukDetails : GovukDetails)
-
 @()(implicit messages: Messages)
 
-@fileTypes ={
-  <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
-   <li>@messages("upload_documents.body.files.bullet.image")</li>
-   <li>@messages("upload_documents.body.files.bullet.pdf")</li>
-  </ul>
-}
-
-<p class="govuk-body">@messages("upload_documents.body.files.size")</p>
-
-@govukDetails(Details(
- summary = Text(messages("upload_documents.body.files.bullet.heading")),
- content = HtmlContent(fileTypes)
-))
+@unorderedList("file-type-list", List(
+  messages("upload_documents.body.files.details.image"),
+  messages("upload_documents.body.files.details.pdf")
+ )
+)

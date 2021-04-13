@@ -14,19 +14,10 @@
  * limitations under the License.
  *@
 
-@this(govukDetails : GovukDetails)
+@this()
 
-@(content: Html)(implicit messages: Messages)
+@(call: Call, messageKey: String = "site.continue")(implicit messages: Messages)
 
-@paragraph(messages("upload_documents.body.files.size"))
-
-@fileTypeContent = {
-  @uploadFileTypes()
-}
-
-@govukDetails(Details(
- summary = Text(messages("upload_documents.body.files.details.filetypes")),
- content = HtmlContent(fileTypeContent)
-))
-
-@content
+<a id="nidac-continue" href="@call.url" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+ @messages(messageKey)
+</a>

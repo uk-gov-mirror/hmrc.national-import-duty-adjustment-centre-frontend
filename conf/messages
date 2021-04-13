@@ -47,9 +47,12 @@ claim_reason.hint = Use this space to tell us about your claim. Do not include a
 claim_reason.error.required = Enter a claim reason
 claim_reason.error.length = Claim reason must be 500 characters or fewer
 
+upload_documents.required-docs.title = Required supporting documents
+upload_documents.required-docs.paragraph1 = These are the documents we must have to support your claim.
+upload_documents.required-docs.additional = You may also include additional documents if you think they are relevant.
+
 upload_documents.title = Upload your supporting documentation
-upload_documents.intro.1 = You can upload as many files as you need to support your application.
-upload_documents.intro.2 = You can only upload one file at a time.
+upload_documents.intro = You can upload as many files as you need to support your application.
 upload_documents.first.label = Upload your first file
 upload_documents.next.label = Upload another file (optional)
 upload_documents.status.in_progress = Waiting for the file to be scanned
@@ -65,9 +68,10 @@ upload_documents.body.document.type.PreferenceCertificate = preference certifica
 upload_documents.body.document.type.AirWorthinessCertificate = air worthiness certificate
 upload_documents.body.document.type.CertificateOfOrigin = certificate of origin
 upload_documents.body.files.size = Each file must be 6MB or smaller.
-upload_documents.body.files.bullet.heading = Types of file you can upload
-upload_documents.body.files.bullet.image = image (.jpeg, .jpg or .png)
-upload_documents.body.files.bullet.pdf = PDF (.pdf)
+upload_documents.body.files.details.heading = What you must upload
+upload_documents.body.files.details.filetypes = Types of file you can upload
+upload_documents.body.files.details.image = Image (.jpeg, .jpg or .png)
+upload_documents.body.files.details.pdf = PDF (.pdf)
 
 upload_documents_summary.title.single = You have uploaded 1 file
 upload_documents_summary.title.multiple = You have uploaded {0} files

@@ -15,18 +15,14 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 
-@this(govukDetails : GovukDetails, uploadFileTypes: uploadFileTypes)
+@this(govukDetails : GovukDetails, uploadFileDetails: uploadFileDetails)
 
 @(content: Html, claimType: Option[ClaimType])(implicit messages: Messages)
 
-<p class="govuk-body">@messages("upload_documents.intro.1")</p>
+@paragraph(messages("upload_documents.intro"))
+@paragraph(messages("upload_documents.body.files.size"))
 
-<p class="govuk-body">@messages("upload_documents.intro.2")</p>
-
-@components.uploadDocumentTypes(claimType)
-
-@uploadFileTypes()
+@uploadFileDetails(claimType)
 
 @content
