@@ -30,9 +30,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait FileUploading {
 
-  protected val DUPLICATE    = "DUPLICATE"
-  protected val UNKNOWN      = "UNKNOWN"
-  protected val MISSING_FILE = "InvalidArgument"
+  protected val ERROR_DUPLICATE      = "DUPLICATE"
+  protected val UNKNOWN              = "UNKNOWN"
+  protected val ERROR_MISSING_FILE   = "InvalidArgument"
+  protected val ERROR_FILE_TOO_SMALL = "EntityTooSmall"
+
+  private val missingFileCodes = Set(ERROR_MISSING_FILE, ERROR_FILE_TOO_SMALL)
 
   val upscanInitiateConnector: UpscanInitiateConnector
   val uploadProgressTracker: UploadProgressTracker
@@ -64,17 +67,19 @@ trait FileUploading {
     } yield upscanInitiateResponse
   }
 
+  protected def isFileMissingError(code: String): Boolean = missingFileCodes.contains(code)
+
   protected def mapError(code: String): FormError = {
     def error(message: String) = FormError("upload-file", message)
     code match {
-      case "400" | MISSING_FILE => error("error.file-upload.required")
-      case "InternalError"      => error("error.file-upload.try-again")
-      case "EntityTooLarge"     => error("error.file-upload.invalid-size-large")
-      case "EntityTooSmall"     => error("error.file-upload.invalid-size-small")
-      case "QUARANTINE"         => error("error.file-upload.quarantine")
-      case "REJECTED"           => error("error.file-upload.invalid-type")
-      case DUPLICATE            => error("error.file-upload.duplicate")
-      case _                    => error("error.file-upload.unknown")
+      case "400" | ERROR_MISSING_FILE => error("error.file-upload.required")
+      case "InternalError"            => error("error.file-upload.try-again")
+      case "EntityTooLarge"           => error("error.file-upload.invalid-size-large")
+      case ERROR_FILE_TOO_SMALL       => error("error.file-upload.invalid-size-small")
+      case "QUARANTINE"               => error("error.file-upload.quarantine")
+      case "REJECTED"                 => error("error.file-upload.invalid-type")
+      case ERROR_DUPLICATE            => error("error.file-upload.duplicate")
+      case _                          => error("error.file-upload.unknown")
     }
   }
 

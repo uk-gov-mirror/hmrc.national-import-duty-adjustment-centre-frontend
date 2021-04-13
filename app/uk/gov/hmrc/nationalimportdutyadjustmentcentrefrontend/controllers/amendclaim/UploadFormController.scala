@@ -84,7 +84,7 @@ class UploadFormController @Inject() (
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
     data.getAmendAnswersWithJourneyId flatMap { answersWithJourneyID =>
-      if (errorCode == MISSING_FILE && answersWithJourneyID._1.uploads.nonEmpty)
+      if (isFileMissingError(errorCode) && answersWithJourneyID._1.uploads.nonEmpty)
         Future(Redirect(routes.UploadFormController.onContinue()))
       else
         initiateForm(answersWithJourneyID._2) map { upscanInitiateResponse =>
@@ -96,7 +96,7 @@ class UploadFormController @Inject() (
   def onContinue(): Action[AnyContent] = identify.async { implicit request =>
     data.getAmendAnswers map { answers =>
       if (answers.uploads.isEmpty)
-        Redirect(routes.UploadFormController.onError(MISSING_FILE))
+        Redirect(routes.UploadFormController.onError(ERROR_MISSING_FILE))
       else
         Redirect(nextPage(answers))
     }
@@ -126,7 +126,7 @@ class UploadFormController @Inject() (
     data.getAmendAnswers flatMap { answers =>
       val uploads = answers.uploads
       if (uploads.exists(_.checksum == successUpload.checksum))
-        Future(Redirect(routes.UploadFormController.onError(DUPLICATE)))
+        Future(Redirect(routes.UploadFormController.onError(ERROR_DUPLICATE)))
       else
         data.updateAmendAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
           _ => Redirect(summaryAnchorUrl(routes.UploadFormController.onPageLoad()))

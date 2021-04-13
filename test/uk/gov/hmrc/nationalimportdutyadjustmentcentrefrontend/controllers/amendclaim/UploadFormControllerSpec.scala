@@ -24,7 +24,6 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadStatus
@@ -187,9 +186,16 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       verify(mockUploadRepository).add(any())
     }
 
-    "redirect to 'continue' if error is missing file and a file has been uploaded" in {
+    "redirect to 'continue' if error is InvalidArgumemt and a file has been uploaded" in {
       withCacheAmendAnswers(completeAmendAnswers)
       val result = controller.onError("InvalidArgument")(fakeGetRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.UploadFormController.onContinue().url)
+    }
+
+    "redirect to 'continue' if error is FileTooSmall and a file has been uploaded" in {
+      withCacheAmendAnswers(completeAmendAnswers)
+      val result = controller.onError("EntityTooSmall")(fakeGetRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(routes.UploadFormController.onContinue().url)
     }

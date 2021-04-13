@@ -201,9 +201,16 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       verify(mockUploadRepository).add(any())
     }
 
-    "redirect to 'continue' if error is missing file and a file has been uploaded" in {
+    "redirect to 'continue' if error is InvalidArgumemt and a file has been uploaded" in {
       withCacheCreateAnswers(completeAnswers)
       val result = controller.onError("InvalidArgument")(fakeGetRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.UploadFormController.onContinue().url)
+    }
+
+    "redirect to 'continue' if error is FileTooSmall and a file has been uploaded" in {
+      withCacheCreateAnswers(completeAnswers)
+      val result = controller.onError("EntityTooSmall")(fakeGetRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(routes.UploadFormController.onContinue().url)
     }
