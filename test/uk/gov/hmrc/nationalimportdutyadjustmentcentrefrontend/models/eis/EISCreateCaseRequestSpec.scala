@@ -55,7 +55,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
   val claimByRepresentative: Claim = create.Claim(
     claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
-    claimantAddress = UkAddress("Representative Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    claimantAddress = UkAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
@@ -130,7 +130,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
   val claimByImporter: Claim = create.Claim(
     claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
-    claimantAddress = UkAddress("Acme Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    claimantAddress = UkAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),

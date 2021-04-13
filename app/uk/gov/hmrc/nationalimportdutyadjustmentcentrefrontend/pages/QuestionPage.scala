@@ -24,7 +24,7 @@ trait QuestionPage[A] extends Page
 case object RepresentationTypePage     extends QuestionPage[RepresentationType]
 case object ClaimTypePage              extends QuestionPage[ClaimType]
 case object ContactDetailsPage         extends QuestionPage[ContactDetails]
-case object CorrespondenceNamePage     extends QuestionPage[CorrespondenceName]
+case object BusinessNamePage     extends QuestionPage[BusinessName]
 case object AddressPage                extends QuestionPage[Address]
 case object ImporterEoriNumberPage     extends QuestionPage[ItemNumbers]
 case object ImporterContactDetailsPage extends QuestionPage[ImporterContactDetails]

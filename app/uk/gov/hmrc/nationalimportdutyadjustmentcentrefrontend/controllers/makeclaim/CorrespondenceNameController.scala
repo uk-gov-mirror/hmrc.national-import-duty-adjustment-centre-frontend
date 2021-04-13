@@ -23,7 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.{CorrespondenceNameFormProvider}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CorrespondenceNamePage, Page}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BusinessNamePage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CorrespondenceNameView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -42,13 +42,13 @@ class CorrespondenceNameController @Inject() (
                                          )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
-  override val page: Page = CorrespondenceNamePage
+  override val page: Page = BusinessNamePage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
-      val preparedForm = answers.correspondenceName.fold(form)(form.fill)
+      val preparedForm = answers.businessName.fold(form)(form.fill)
       Ok(correspondenceNameView(preparedForm, backLink(answers)))
     }
   }
@@ -58,7 +58,7 @@ class CorrespondenceNameController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(correspondenceNameView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(correspondenceName = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(businessName = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

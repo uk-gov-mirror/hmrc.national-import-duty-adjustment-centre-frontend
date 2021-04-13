@@ -65,7 +65,7 @@ object ImporterDetails {
   def forRepresentativeApplicant(importer: ImporterBeingRepresentedDetails): ImporterDetails =
     new ImporterDetails(
       EORI = importer.eoriNumber.map(_.number),
-      Name = importer.contactDetails.name,
+      Name = "Dave",
       Address = ImporterAddress(
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,

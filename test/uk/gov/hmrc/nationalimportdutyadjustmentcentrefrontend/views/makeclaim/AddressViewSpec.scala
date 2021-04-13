@@ -77,7 +77,6 @@ class AddressViewSpec extends UnitViewSpec with TestData {
     "have populated fields" in {
       val filledView = view(form.fill(addressAnswer))
 
-      filledView.getElementById("name") must haveValue(addressAnswer.name)
       filledView.getElementById("addressLine1") must haveValue(addressAnswer.addressLine1)
       filledView.getElementById("addressLine2") must haveValue(addressAnswer.addressLine2.getOrElse(""))
       filledView.getElementById("city") must haveValue(addressAnswer.city)

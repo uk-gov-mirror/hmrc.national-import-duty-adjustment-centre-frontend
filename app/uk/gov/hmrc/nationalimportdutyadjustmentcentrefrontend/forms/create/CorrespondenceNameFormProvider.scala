@@ -19,17 +19,17 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CorrespondenceName
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BusinessName
 
 import javax.inject.Inject
 
 class CorrespondenceNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[CorrespondenceName] = Form(
+  def apply(): Form[BusinessName] = Form(
     mapping(
       "name" -> text("correspondenceName.name.error.required")
         .verifying(firstError(maxLength(40, "correspondenceName.name.error.length")))
-    )(CorrespondenceName.apply)(CorrespondenceName.unapply)
+    )(BusinessName.apply)(BusinessName.unapply)
   )
 
 }

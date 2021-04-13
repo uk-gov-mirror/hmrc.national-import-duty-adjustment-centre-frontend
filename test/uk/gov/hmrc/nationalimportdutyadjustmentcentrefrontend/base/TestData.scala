@@ -82,7 +82,7 @@ trait TestData {
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", Some("01234567890"))
 
-  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "WO0 1KE")
+  val addressAnswer: Address = Address("Line 1", Some("Line 2"), "City", "WO0 1KE")
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 

@@ -236,6 +236,25 @@
         )),
       Some(
         SummaryListRow(
+            classes = "contact_details_row",
+            key = Key(
+                content = Text(messages("check_answers.yourDetails.businessName"))
+            ),
+            value = Value(
+                content = Text(answers.businessName.map(businessName => businessName.name).getOrElse(""))
+            ),
+            actions = if(!withActions) None else  Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.businessName).url,
+                        content = HtmlContent(linkContent(changeText(answers.businessName))),
+                        visuallyHiddenText = Some(messages("check_answers.yourDetails.contactDetails.accessible"))
+                    )
+                )
+            ))
+        )),
+      Some(
+        SummaryListRow(
             classes = "your_address_row",
             key = Key(
                 content = Text(messages("check_answers.yourDetails.yourAddress"))
@@ -367,7 +386,6 @@
                     ),
                     value = Value(
                         content = HtmlContent(answers.importerContactDetails.map( contactDetails => Seq(
-                            Some(contactDetails.name),
                             Some(contactDetails.addressLine1),
                             contactDetails.addressLine2,
                             Some(contactDetails.city),

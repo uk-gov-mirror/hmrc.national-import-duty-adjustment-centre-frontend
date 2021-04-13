@@ -33,7 +33,7 @@
 
 @(form: Form[CorrespondenceName], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("contactDetails.title")), backLink) {
+@layout(pageTitle = Title(form, messages("correspondenceName.title")), backLink) {
 
     @formHelper(action = CorrespondenceNameController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)

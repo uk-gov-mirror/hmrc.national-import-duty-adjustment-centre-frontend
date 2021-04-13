@@ -153,11 +153,11 @@ contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
-correspondenceName.title = What is your correspondence name?
-correspondenceName.hint = We may need to contact you to discuss this claim.
-correspondenceName.name.heading = Correspondence Name
-correspondenceName.name.error.required = Enter a correspondence name
-correspondenceName.name.error.length = Correspondence Name must be 40 characters or fewer
+correspondenceName.title = Enter a business name
+correspondenceName.hint =
+correspondenceName.name.heading =
+correspondenceName.name.error.required = Enter a business name
+correspondenceName.name.error.length = Business name must be 40 characters or fewer
 
 address.title = What is your UK correspondence address?
 address.hint = We will use this to send letters about this claim.
@@ -269,6 +269,8 @@ check_answers.information.representation.Representative_of_importer = Representa
 check_answers.yourDetails.title = Your details
 check_answers.yourDetails.contactDetails = Contact details
 check_answers.yourDetails.contactDetails.accessible = Change your contact details
+check_answers.yourDetails.businessName = Business name
+check_answers.yourDetails.businessName.accessible = Change your business name
 check_answers.yourDetails.yourAddress = Your address
 check_answers.yourDetails.yourAddress.accessible = Change your address
 check_answers.claim.title = About your claim

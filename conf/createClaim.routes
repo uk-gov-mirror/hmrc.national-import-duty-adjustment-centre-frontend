@@ -9,8 +9,8 @@ POST        /claim-type                         uk.gov.hmrc.nationalimportdutyad
 GET         /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onPageLoad()
 POST        /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onSubmit()
 
-GET         /correspondence-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CorrespondenceNameController.onPageLoad()
-POST        /correspondence-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CorrespondenceNameController.onSubmit()
+GET         /enter-business-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CorrespondenceNameController.onPageLoad()
+POST        /enter-business-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.CorrespondenceNameController.onSubmit()
 
 GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
 POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()

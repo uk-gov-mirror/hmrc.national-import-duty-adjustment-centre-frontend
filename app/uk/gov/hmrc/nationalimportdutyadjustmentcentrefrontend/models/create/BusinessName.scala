@@ -18,10 +18,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CorrespondenceName(name: String)
+case class BusinessName(name: String)
 
-object CorrespondenceName {
-  implicit val format: OFormat[CorrespondenceName] = Json.format[CorrespondenceName]
+object BusinessName {
+  implicit val format: OFormat[BusinessName] = Json.format[BusinessName]
 }
 
 

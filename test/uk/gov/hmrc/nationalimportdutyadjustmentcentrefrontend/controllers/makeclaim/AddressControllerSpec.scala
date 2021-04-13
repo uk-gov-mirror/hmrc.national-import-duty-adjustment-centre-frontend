@@ -83,7 +83,6 @@ class AddressControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     val validRequest = postRequest(
-      "name"         -> addressAnswer.name,
       "addressLine1" -> addressAnswer.addressLine1,
       "addressLine2" -> addressAnswer.addressLine2.getOrElse(""),
       "city"         -> addressAnswer.city,
