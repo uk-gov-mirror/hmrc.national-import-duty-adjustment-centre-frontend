@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
+import java.time.Instant
+
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 
-import java.time.LocalDateTime
-
 case class CreateClaimResponse(
   correlationId: String,
-  processingDate: Option[LocalDateTime] = None,
+  processingDate: Option[Instant] = None,
   error: Option[ApiError] = None,
   result: Option[CreateClaimResult] = None
 )

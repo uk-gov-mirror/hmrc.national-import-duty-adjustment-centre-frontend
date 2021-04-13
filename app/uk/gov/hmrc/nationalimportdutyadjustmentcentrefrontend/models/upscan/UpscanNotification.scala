@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
 
-import java.time.ZonedDateTime
+import java.time.Instant
 
 import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility
 import play.api.libs.functional.syntax._
@@ -96,7 +96,7 @@ object UpscanNotification {
     * @param fileMimeType Detected MIME type of the file. Please note that this refers to actual contents
     * of the file, not to the name (if user uploads PDF document named data.png, it will be detected as a application/pdf)
     */
-  case class UploadDetails(uploadTimestamp: ZonedDateTime, checksum: String, fileName: String, fileMimeType: String)
+  case class UploadDetails(uploadTimestamp: Instant, checksum: String, fileName: String, fileMimeType: String)
 
   case class FailureDetails(failureReason: FailureReason, message: String)
 
@@ -118,11 +118,11 @@ object UpscanNotification {
   object UploadDetails {
 
     implicit val formats: Format[UploadDetails] = Format(
-      ((__ \ "uploadTimestamp").read[ZonedDateTime] and
+      ((__ \ "uploadTimestamp").read[Instant] and
         (__ \ "checksum").read[String] and
         (__ \ "fileName").read[String].map(decodeMimeEncodedWord) and
         (__ \ "fileMimeType").read[String])(UploadDetails.apply _),
-      ((__ \ "uploadTimestamp").write[ZonedDateTime] and
+      ((__ \ "uploadTimestamp").write[Instant] and
         (__ \ "checksum").write[String] and
         (__ \ "fileName").write[String] and
         (__ \ "fileMimeType").write[String])(unlift(UploadDetails.unapply))

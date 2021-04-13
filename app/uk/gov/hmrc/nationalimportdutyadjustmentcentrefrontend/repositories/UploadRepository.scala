@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 import com.mongodb.client.model.Indexes.ascending
@@ -41,7 +41,7 @@ case class UploadDetails(
   journeyId: JourneyId,
   reference: Reference,
   status: UploadStatus,
-  created: LocalDateTime = LocalDateTime.now
+  created: Instant = Instant.now()
 )
 
 object UploadDetails {
@@ -49,7 +49,7 @@ object UploadDetails {
   val uploadedSuccessfullyFormat: OFormat[UploadedFile] = Json.format[UploadedFile]
   val uploadedFailedFormat: OFormat[Failed]             = Json.format[Failed]
 
-  implicit private val formatCreated = MongoJavatimeFormats.localDateTimeFormat
+  implicit private val formatCreated = MongoJavatimeFormats.instantFormat
 
   val read: Reads[UploadStatus] = (json: JsValue) => {
     val jsObject = json.asInstanceOf[JsObject]

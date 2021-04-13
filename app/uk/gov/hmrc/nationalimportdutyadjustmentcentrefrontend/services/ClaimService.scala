@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import java.util.UUID
+
+import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
@@ -27,8 +30,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   Claim,
   CreateClaimAudit,
-  CreateClaimResponse,
-  ReclaimDutyType
+  CreateClaimResponse
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
@@ -37,8 +39,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.
 }
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-import java.util.UUID
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACConnector) {

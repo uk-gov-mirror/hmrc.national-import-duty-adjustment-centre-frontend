@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
-import java.time.LocalDateTime
+import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 
 case class CreateClaimReceipt(response: CreateClaimResponse, answers: CreateAnswers) {
   val caseReference = response.result.map(_.caseReference).getOrElse("")
-  val timestamp     = response.processingDate.getOrElse(LocalDateTime.now)
+  val timestamp     = response.processingDate.getOrElse(Instant.now)
 }
 
 object CreateClaimReceipt {

@@ -16,17 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
-import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
+import java.time.{Instant, LocalDate}
+
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
-  AmendAnswers,
-  AmendClaim,
-  AmendClaimAudit,
-  AmendClaimResponse,
-  AmendClaimResult,
-  CaseReference,
-  FurtherInformation
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
@@ -42,9 +35,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.Uploa
 
 trait TestData {
 
-  val fixedDate: LocalDate         = LocalDate.now()
-  val fixedDateTime: LocalDateTime = LocalDateTime.now()
-  val fixedZoneTime: ZonedDateTime = ZonedDateTime.now()
+  val fixedDate: LocalDate  = LocalDate.now()
+  val fixedInstant: Instant = Instant.now()
 
   val claimantEori = EoriNumber("GB434586395327")
 
@@ -56,10 +48,10 @@ trait TestData {
   val claimTypeAnswer: ClaimType = AntiDumping
 
   val uploadAnswer: UploadedFile =
-    UploadedFile("upscanRef1", "/url", fixedZoneTime, "checksum", "filename", "mime/type")
+    UploadedFile("upscanRef1", "/url", fixedInstant, "checksum", "filename", "mime/type")
 
   val uploadAnswer2: UploadedFile =
-    UploadedFile("upscanRef2", "/url2", fixedZoneTime, "checksum2", "filename2", "mime/type2")
+    UploadedFile("upscanRef2", "/url2", fixedInstant, "checksum2", "filename2", "mime/type2")
 
   val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat, Other)
 
@@ -135,13 +127,13 @@ trait TestData {
     UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
 
   def uploadResult(status: UploadStatus): UploadDetails =
-    UploadDetails(uploadId, journeyId, Reference("reference"), status, fixedDateTime)
+    UploadDetails(uploadId, journeyId, Reference("reference"), status, fixedInstant)
 
   val uploadInProgress: UploadStatus = InProgress
   val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")
 
   val uploadFileSuccess: UploadStatus =
-    UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
+    UploadedFile("upscanRef1", "downloadUrl", Instant.now(), "checksum", "fileName", "fileMimeType")
 
   // AmendAnswers
   val caseReferenceAnswer      = CaseReference("NID21134557697RM8WIB13")
@@ -171,9 +163,9 @@ trait TestData {
         CreateClaimResult(
           caseReference = "NID21134557697RM8WIB14",
           fileTransferResults = Seq(
-            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
-            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
-            new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+            new FileTransferResult("up-ref-1", true, 201, fixedInstant, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedInstant, None),
+            new FileTransferResult("up-ref-3", true, 201, fixedInstant, None)
           )
         )
       )
@@ -187,8 +179,8 @@ trait TestData {
         AmendClaimResult(
           caseReference = "NID21134557697RM8WIB13",
           fileTransferResults = Seq(
-            new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
-            new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+            new FileTransferResult("up-ref-1", true, 201, fixedInstant, None),
+            new FileTransferResult("up-ref-2", true, 201, fixedInstant, None)
           )
         )
       )
@@ -210,9 +202,9 @@ trait TestData {
     itemNumbersAnswer,
     Seq(uploadAnswer),
     Seq(
-      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
-      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None),
-      new FileTransferResult("up-ref-3", true, 201, fixedDateTime, None)
+      new FileTransferResult("up-ref-1", true, 201, fixedInstant, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedInstant, None),
+      new FileTransferResult("up-ref-3", true, 201, fixedInstant, None)
     ),
     claimantEori.number,
     Some(importerEoriNumberAnswer)
@@ -224,8 +216,8 @@ trait TestData {
     "NID21134557697RM8WIB13",
     Seq(uploadAnswer, uploadAnswer2),
     Seq(
-      new FileTransferResult("up-ref-1", true, 201, fixedDateTime, None),
-      new FileTransferResult("up-ref-2", true, 201, fixedDateTime, None)
+      new FileTransferResult("up-ref-1", true, 201, fixedInstant, None),
+      new FileTransferResult("up-ref-2", true, 201, fixedInstant, None)
     ),
     furtherInformationAnswer.info
   )

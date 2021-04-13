@@ -17,15 +17,17 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
 
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAccessor
+import java.time.{Instant, ZoneId, ZoneOffset}
 
 object DateTimeFormats {
 
-  val claimSubmissionDateTime = DateTimeFormatter.ofPattern("d MMMM uuu 'at' h:mma")
+  val ukZone: ZoneId = ZoneId.of("Europe/London")
 
-  def formatSubmissionDateAtTime(temporal: TemporalAccessor): String =
+  val claimSubmissionDateTime = DateTimeFormatter.ofPattern("d MMMM uuu 'at' h:mma").withZone(ukZone)
+
+  def formatSubmissionDateAtTime(instant: Instant): String =
     claimSubmissionDateTime
-      .format(temporal)
+      .format(instant)
       .replace("AM", "am")
       .replace("PM", "pm")
 

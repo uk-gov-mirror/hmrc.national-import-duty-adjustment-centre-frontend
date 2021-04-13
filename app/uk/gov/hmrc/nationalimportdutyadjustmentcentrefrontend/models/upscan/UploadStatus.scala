@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
 
-import java.time.ZonedDateTime
+import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.FailureReason
@@ -32,7 +32,7 @@ case class Failed(failureReason: FailureReason, message: String) extends UploadS
 case class UploadedFile(
   upscanReference: String,
   downloadUrl: String,
-  uploadTimestamp: ZonedDateTime,
+  uploadTimestamp: Instant,
   checksum: String,
   fileName: String,
   fileMimeType: String

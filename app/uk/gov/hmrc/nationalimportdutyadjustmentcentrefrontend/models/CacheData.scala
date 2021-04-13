@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import java.time.LocalDateTime
+import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
@@ -30,7 +30,7 @@ final case class CacheData(
   amendAnswers: Option[AmendAnswers] = None,
   createClaimReceipt: Option[CreateClaimReceipt] = None,
   amendClaimResponse: Option[AmendClaimResponse] = None,
-  lastUpdated: LocalDateTime = LocalDateTime.now
+  lastUpdated: Instant = Instant.now()
 ) {
 
   def claimReference: Option[String]  = createClaimReceipt.map(_.response).flatMap(_.result).map(_.caseReference)
@@ -41,7 +41,7 @@ final case class CacheData(
 
 object CacheData {
 
-  implicit val formatInstant               = MongoJavatimeFormats.localDateTimeFormat
+  implicit val formatInstant               = MongoJavatimeFormats.instantFormat
   implicit val formats: OFormat[CacheData] = Json.format[CacheData]
 
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import java.time.LocalDateTime
+import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 
@@ -24,7 +24,7 @@ case class FileTransferResult(
   upscanReference: String,
   success: Boolean,
   httpStatus: Int,
-  transferredAt: LocalDateTime,
+  transferredAt: Instant,
   error: Option[String] = None
 )
 
