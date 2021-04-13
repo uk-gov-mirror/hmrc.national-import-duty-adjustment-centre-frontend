@@ -47,10 +47,10 @@ case class UploadDetails(
 
 object UploadDetails {
 
+  implicit private val formatCreated: Format[Instant] = MongoJavatimeFormats.instantFormat
+
   val uploadedSuccessfullyFormat: OFormat[UploadedFile] = Json.format[UploadedFile]
   val uploadedFailedFormat: OFormat[Failed]             = Json.format[Failed]
-
-  implicit private val formatCreated: Format[Instant] = MongoJavatimeFormats.instantFormat
 
   val read: Reads[UploadStatus] = (json: JsValue) => {
     val jsObject = json.asInstanceOf[JsObject]
