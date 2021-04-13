@@ -107,6 +107,7 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.businessName       => Some(BusinessNamePage)
       case CreatePageNames.contactAddress     => Some(AddressPage)
       case CreatePageNames.importerEori       => Some(ImporterEoriNumberPage)
+      case CreatePageNames.importerBusinessName       => Some(ImporterBusinessNamePage)
       case CreatePageNames.importerDetails    => Some(ImporterContactDetailsPage)
       case CreatePageNames.repayTo            => Some(RepayToPage)
       case CreatePageNames.bankDetails        => Some(BankDetailsPage)
@@ -133,6 +134,7 @@ object CreatePageNames {
   val businessName       = "enter-business-name"
   val contactAddress     = "contact-address"
   val importerEori       = "importer-eori"
+  val importerBusinessName       = "enter-importers-name"
   val importerDetails    = "importer-details"
   val repayTo            = "repay-to"
   val bankDetails        = "bank-details"

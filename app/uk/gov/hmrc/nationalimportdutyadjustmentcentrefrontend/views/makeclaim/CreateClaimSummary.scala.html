@@ -380,6 +380,26 @@
             ) else None,
             Some(
                 SummaryListRow(
+                    classes = "contact_details_row",
+                    key = Key(
+                        content = Text(messages("check_answers.importer.businessName"))
+                    ),
+                    value = Value(
+                        content = Text(answers.importerBusinessName.map(importerBusinessName => importerBusinessName.name).getOrElse(""))
+                    ),
+                    actions = if(!withActions) None else  Some(Actions(
+                        items = Seq(
+                            actionItem(
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerBusinessName).url,
+                                content = HtmlContent(linkContent(changeText(answers.importerBusinessName))),
+                                visuallyHiddenText = Some(messages("check_answers.importer.contactDetails.accessible"))
+                            )
+                        )
+                    ))
+                )
+            ),
+            Some(
+                SummaryListRow(
                     classes = "importer_contact_details_row",
                     key = Key(
                         content = Text(messages("check_answers.importer.contactDetails"))
