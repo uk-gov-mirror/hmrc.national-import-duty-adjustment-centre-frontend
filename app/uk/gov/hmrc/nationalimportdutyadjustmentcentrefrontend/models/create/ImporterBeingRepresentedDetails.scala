@@ -22,6 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 case class ImporterBeingRepresentedDetails(
   repayTo: RepayTo,
   eoriNumber: Option[EoriNumber],
+  businessName: ImporterBusinessName,
   contactDetails: ImporterContactDetails
 )
 

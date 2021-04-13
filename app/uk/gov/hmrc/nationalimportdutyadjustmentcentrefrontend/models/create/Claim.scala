@@ -53,7 +53,7 @@ object Claim {
   private val logger: Logger = Logger(this.getClass)
 
   def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
-//    if (userAnswers.uploads.isEmpty) missing(UploadPage)
+    if (userAnswers.uploads.isEmpty) missing(UploadPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       claimantEori = claimantEori,
@@ -93,6 +93,7 @@ object Claim {
               if (userAnswers.repayTo.contains(RepayTo.Importer))
                 Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
               else None,
+            businessName = userAnswers.importerBusinessName.getOrElse(missing(ImporterBusinessNamePage)),
             contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))
           )
         )
