@@ -27,8 +27,8 @@ class ImporterBusinessNameFormProvider @Inject() extends Mappings {
 
   def apply(): Form[ImporterBusinessName] = Form(
     mapping(
-      "name" -> text("businessName.name.error.required")
-        .verifying(firstError(maxLength(40, "businessName.name.error.length")))
+      "name" -> text("importer.businessName.name.error.required")
+        .verifying(firstError(maxLength(40, "importer.businessName.name.error.length")))
     )(ImporterBusinessName.apply)(ImporterBusinessName.unapply)
   )
 
