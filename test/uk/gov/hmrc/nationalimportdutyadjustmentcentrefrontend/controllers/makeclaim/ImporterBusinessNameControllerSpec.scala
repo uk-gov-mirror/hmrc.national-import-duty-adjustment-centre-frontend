@@ -24,19 +24,19 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BusinessNameFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BusinessName, CreateAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, BusinessNamePage}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BusinessNameView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterBusinessNameFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterBusinessName}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterBusinessNamePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterBusinessNameView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class BusinessNameControllerSpec extends ControllerSpec with TestData {
+class ImporterBusinessNameControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[BusinessNameView]
-  private val formProvider = new BusinessNameFormProvider
+  private val page         = mock[ImporterBusinessNameView]
+  private val formProvider = new ImporterBusinessNameFormProvider
 
   private def controller =
-    new BusinessNameController(
+    new ImporterBusinessNameController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       formProvider,
@@ -56,8 +56,8 @@ class BusinessNameControllerSpec extends ControllerSpec with TestData {
     super.afterEach()
   }
 
-  def theResponseForm: Form[BusinessName] = {
-    val captor = ArgumentCaptor.forClass(classOf[Form[BusinessName]])
+  def theResponseForm: Form[ImporterBusinessName] = {
+    val captor = ArgumentCaptor.forClass(classOf[Form[ImporterBusinessName]])
     verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
@@ -72,17 +72,17 @@ class BusinessNameControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheCreateAnswers(CreateAnswers(businessName = Some(businessNameAnswer)))
+      withCacheCreateAnswers(CreateAnswers(importerBusinessName = Some(importerBusinessNameAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe Some(businessNameAnswer)
+      theResponseForm.value mustBe Some(importerBusinessNameAnswer)
     }
   }
 
   "POST" should {
 
-    val validRequest = postRequest("name" -> businessNameAnswer.name)
+    val validRequest = postRequest("name" -> importerBusinessNameAnswer.name)
 
     "update cache and redirect when valid answer is submitted" in {
 
@@ -90,8 +90,8 @@ class BusinessNameControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.businessName mustBe Some(businessNameAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(BusinessNamePage, emptyAnswers).url)
+      theUpdatedCreateAnswers.importerBusinessName mustBe Some(importerBusinessNameAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterBusinessNamePage, emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

@@ -19,7 +19,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.{AddressFormProvider, BusinessNameFormProvider}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.{
+  AddressFormProvider,
+  BusinessNameFormProvider
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BusinessName
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BusinessNameView
 
