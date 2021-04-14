@@ -236,7 +236,7 @@
         )),
       Some(
         SummaryListRow(
-            classes = "contact_details_row",
+            classes = "business_name_row",
             key = Key(
                 content = Text(messages("check_answers.yourDetails.businessName"))
             ),
@@ -248,7 +248,7 @@
                     actionItem(
                         href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.businessName).url,
                         content = HtmlContent(linkContent(changeText(answers.businessName))),
-                        visuallyHiddenText = Some(messages("check_answers.yourDetails.contactDetails.accessible"))
+                        visuallyHiddenText = Some(messages("check_answers.yourDetails.businessName.accessible"))
                     )
                 )
             ))
@@ -380,7 +380,7 @@
             ) else None,
             Some(
                 SummaryListRow(
-                    classes = "contact_details_row",
+                    classes = "importer_business_name_row",
                     key = Key(
                         content = Text(messages("check_answers.importer.businessName"))
                     ),
@@ -392,7 +392,7 @@
                             actionItem(
                                 href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerBusinessName).url,
                                 content = HtmlContent(linkContent(changeText(answers.importerBusinessName))),
-                                visuallyHiddenText = Some(messages("check_answers.importer.contactDetails.accessible"))
+                                visuallyHiddenText = Some(messages("check_answers.importer.businessName.accessible"))
                             )
                         )
                     ))

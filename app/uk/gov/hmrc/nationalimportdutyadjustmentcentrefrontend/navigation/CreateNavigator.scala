@@ -80,7 +80,7 @@ class CreateNavigator @Inject() ()
     P(
       ImporterBusinessNamePage,
       makeclaim.routes.ImporterBusinessNameController.onPageLoad,
-      always,
+      isRepresentative,
       importerBusinessNameAnswered
     ),
     P(
