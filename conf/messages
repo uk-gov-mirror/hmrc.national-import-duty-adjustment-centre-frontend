@@ -157,11 +157,12 @@ contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
+businessName.title = What is your business name?
+businessName.name.error.required = Enter your business name
+businessName.name.error.length = Business name must be 40 characters or fewer
+
 address.title = What is your UK correspondence address?
 address.hint = We will use this to send letters about this claim.
-address.name.heading = Full name or business name
-address.name.error.required = Enter a name
-address.name.error.length = Name must be 40 characters or fewer
 address.line1.heading = Building and street
 address.line1.hidden = line 1 of 2
 address.line1.error.required = Enter an address
@@ -178,6 +179,10 @@ address.postcode.error.invalid = Enter a real postcode
 
 importer.has.eori.title = Does the importer have an EORI number?
 importer.has.eori.required = Select yes if the importer has an EORI number
+
+importer.businessName.title = What is the name of the importers business?
+importer.businessName.name.error.required = Enter the importers business name
+importer.businessName.name.error.length = Importers business name must be 40 characters or fewer
 
 importer-details.title = What are the importer’s UK correspondence details?
 importer-details.hint = We may use these details to contact the importer about this claim.
@@ -267,6 +272,8 @@ check_answers.information.representation.Representative_of_importer = Representa
 check_answers.yourDetails.title = Your details
 check_answers.yourDetails.contactDetails = Contact details
 check_answers.yourDetails.contactDetails.accessible = Change your contact details
+check_answers.yourDetails.businessName = Business name
+check_answers.yourDetails.businessName.accessible = Change your business name
 check_answers.yourDetails.yourAddress = Your address
 check_answers.yourDetails.yourAddress.accessible = Change your address
 check_answers.claim.title = About your claim
@@ -300,6 +307,8 @@ check_answers.importer.hasEori.true = Yes
 check_answers.importer.hasEori.false = No
 check_answers.importer.eori = Importer’s EORI
 check_answers.importer.eori.accessible = Change the importer’s Economic Operators Registration and Identification number
+check_answers.importer.businessName = Importer's Business name
+check_answers.importer.businessName.accessible = Change the importer's business name
 check_answers.importer.contactDetails = Importer’s details
 check_answers.importer.contactDetails.accessible = Change the importer’s details
 check_answers.payment.title = Payment information

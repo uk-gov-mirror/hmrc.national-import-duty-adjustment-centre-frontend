@@ -74,7 +74,9 @@ trait TestData {
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", Some("01234567890"))
 
-  val addressAnswer: Address = Address("Name", "Line 1", Some("Line 2"), "City", "WO0 1KE")
+  val businessNameAnswer: BusinessName = BusinessName("Mind API Inc");
+
+  val addressAnswer: Address = Address("Line 1", Some("Line 2"), "City", "WO0 1KE")
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
@@ -82,14 +84,17 @@ trait TestData {
 
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
+  val importerBusinessNameAnswer: ImporterBusinessName = ImporterBusinessName("Unused Imports UK");
+
   val importerContactDetailsAnswer =
-    ImporterContactDetails("Importer Name", "Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
+    ImporterContactDetails("Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
 
   val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
+    businessName = Some(businessNameAnswer),
     claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
     uploadAnotherFile = Some(uploadAnotherFileAnswer),
@@ -101,6 +106,7 @@ trait TestData {
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer),
     importerEori = Some(importerEoriNumberAnswer),
+    importerBusinessName = Some(importerBusinessNameAnswer),
     importerContactDetails = Some(importerContactDetailsAnswer)
   )
 
@@ -109,6 +115,7 @@ trait TestData {
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
+    businessName = Some(businessNameAnswer),
     claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
     uploadAnotherFile = Some(uploadAnotherFileAnswer),

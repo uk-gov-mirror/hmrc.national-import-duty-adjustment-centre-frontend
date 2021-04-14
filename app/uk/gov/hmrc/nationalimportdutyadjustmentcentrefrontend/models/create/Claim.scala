@@ -30,6 +30,7 @@ import scala.util.Try
 case class Claim(
   claimantEori: EoriNumber,
   contactDetails: ContactDetails,
+  businessName: BusinessName,
   claimantAddress: Address,
   representationType: RepresentationType,
   claimType: ClaimType,
@@ -57,6 +58,7 @@ object Claim {
     new Claim(
       claimantEori = claimantEori,
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
+      businessName = userAnswers.businessName.getOrElse(missing(BusinessNamePage)),
       claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
@@ -91,6 +93,7 @@ object Claim {
               if (userAnswers.repayTo.contains(RepayTo.Importer))
                 Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
               else None,
+            businessName = userAnswers.importerBusinessName.getOrElse(missing(ImporterBusinessNamePage)),
             contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))
           )
         )

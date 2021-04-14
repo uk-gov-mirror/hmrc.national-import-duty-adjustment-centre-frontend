@@ -27,6 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 final case class CreateAnswers(
   changePage: Option[String] = None,
   contactDetails: Option[ContactDetails] = None,
+  businessName: Option[BusinessName] = None,
   claimantAddress: Option[Address] = None,
   representationType: Option[RepresentationType] = None,
   claimType: Option[ClaimType] = None,
@@ -35,6 +36,7 @@ final case class CreateAnswers(
   reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
   importerBankDetails: Option[BankDetails] = None,
   representativeBankDetails: Option[BankDetails] = None,
+  importerBusinessName: Option[ImporterBusinessName] = None,
   importerContactDetails: Option[ImporterContactDetails] = None,
   repayTo: Option[RepayTo] = None,
   entryDetails: Option[EntryDetails] = None,

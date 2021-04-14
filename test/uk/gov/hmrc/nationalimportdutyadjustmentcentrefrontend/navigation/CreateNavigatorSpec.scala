@@ -57,8 +57,8 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       }
     }
     "going back" should {
-      "go to contact details page" in {
-        previousPage(answers()) mustBe routes.ContactDetailsController.onPageLoad()
+      "go to business name page" in {
+        previousPage(answers()) mustBe routes.BusinessNameController.onPageLoad()
       }
     }
   }

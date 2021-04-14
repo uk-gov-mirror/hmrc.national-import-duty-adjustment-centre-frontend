@@ -22,6 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Repr
   Representative
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  BusinessName,
   Claim,
   ContactDetails,
   ImporterBeingRepresentedDetails
@@ -40,17 +41,19 @@ object ImporterDetails {
       forRepresentativeApplicant(
         claim.importerBeingRepresentedDetails.getOrElse(throw new MissingAnswersException(ImporterContactDetailsPage))
       )
-    case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.claimantAddress)
+    case Importer =>
+      forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.businessName, claim.claimantAddress)
   }
 
   private def forImporterApplicant(
     claimantEori: EoriNumber,
     contactDetails: ContactDetails,
+    businessName: BusinessName,
     address: create.Address
   ): ImporterDetails =
     new ImporterDetails(
       EORI = Some(claimantEori.number),
-      Name = address.name,
+      Name = businessName.name,
       Address = ImporterAddress(
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,
@@ -65,7 +68,7 @@ object ImporterDetails {
   def forRepresentativeApplicant(importer: ImporterBeingRepresentedDetails): ImporterDetails =
     new ImporterDetails(
       EORI = importer.eoriNumber.map(_.number),
-      Name = importer.contactDetails.name,
+      Name = importer.businessName.name,
       Address = ImporterAddress(
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,

@@ -44,10 +44,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
-    "have label for name" in {
-      view().getElementsByAttributeValue("for", "name") must containMessage("address.name.heading")
-    }
-
     "have label for addresss line 1" in {
       view().getElementsByAttributeValue("for", "addressLine1").text() must include(
         s"${messages("address.line1.heading")} ${messages("address.line1.hidden")}"
@@ -77,7 +73,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
     "have populated fields" in {
       val filledView = view(form.fill(importerContactDetailsAnswer))
 
-      filledView.getElementById("name") must haveValue(importerContactDetailsAnswer.name)
       filledView.getElementById("addressLine1") must haveValue(importerContactDetailsAnswer.addressLine1)
       filledView.getElementById("addressLine2") must haveValue(importerContactDetailsAnswer.addressLine2.getOrElse(""))
       filledView.getElementById("city") must haveValue(importerContactDetailsAnswer.city)
@@ -87,11 +82,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
     "display error" when {
 
       val missingView = view(form.bind(Map("" -> "")))
-
-      "name missing" in {
-        missingView must haveFieldError("name", "address.name.error.required")
-        missingView must havePageError("address.name.error.required")
-      }
 
       "line 1 missing" in {
         missingView must haveFieldError("addressLine1", "address.line1.error.required")

@@ -9,6 +9,9 @@ POST        /claim-type                         uk.gov.hmrc.nationalimportdutyad
 GET         /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onPageLoad()
 POST        /contact-details                    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ContactDetailsController.onSubmit()
 
+GET         /enter-business-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BusinessNameController.onPageLoad()
+POST        /enter-business-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BusinessNameController.onSubmit()
+
 GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
 POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()
 
@@ -37,6 +40,9 @@ POST        /return-summary                     uk.gov.hmrc.nationalimportdutyad
 
 GET         /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onPageLoad()
 POST        /who-to-repay                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepayToController.onSubmit()
+
+GET         /enter-importers-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterBusinessNameController.onPageLoad()
+POST        /enter-importers-name                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterBusinessNameController.onSubmit()
 
 GET         /importer-correspondence-address    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onPageLoad()
 POST        /importer-correspondence-address    uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onSubmit()

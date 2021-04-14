@@ -25,25 +25,6 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 
   val form = new ImporterDetailsFormProvider()()
 
-  ".Name" must {
-
-    val fieldName   = "name"
-    val requiredKey = "address.name.error.required"
-    val lengthKey   = "address.name.error.length"
-    val maxLength   = 40
-
-    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
-  }
-
   ".AddressLine1" must {
 
     val fieldName   = "addressLine1"

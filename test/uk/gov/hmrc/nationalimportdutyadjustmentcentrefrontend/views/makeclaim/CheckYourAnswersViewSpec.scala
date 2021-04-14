@@ -215,13 +215,29 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         )
       }
 
+      "contains business name" in {
+
+        val businessNameRow = yourDetailsSection.getElementsByClass("business_name_row")
+
+        businessNameRow must haveSummaryKey(messages("check_answers.yourDetails.businessName"))
+        businessNameRow must haveSummaryValue(s"${businessNameAnswer.name}")
+
+        businessNameRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.yourDetails.businessName.accessible")}"
+        )
+
+        businessNameRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.businessName)
+        )
+      }
+
       "contains valid address details" in {
 
         val addressDetailsRow = yourDetailsSection.getElementsByClass("your_address_row")
 
         addressDetailsRow must haveSummaryKey(messages("check_answers.yourDetails.yourAddress"))
         addressDetailsRow must haveSummaryValue(
-          s"${addressAnswer.name} ${addressAnswer.addressLine1} ${addressAnswer.addressLine2.get} ${addressAnswer.city} ${addressAnswer.postCode}"
+          s"${addressAnswer.addressLine1} ${addressAnswer.addressLine2.get} ${addressAnswer.city} ${addressAnswer.postCode}"
         )
 
         addressDetailsRow must haveSummaryChangeLinkText(
@@ -263,13 +279,28 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         eoriRow must beEmpty
       }
 
+      "contains importers business name" in {
+
+        val importerBusinessNameRow = importerSection.getElementsByClass("importer_business_name_row")
+
+        importerBusinessNameRow must haveSummaryKey(messages("check_answers.importer.businessName"))
+        importerBusinessNameRow must haveSummaryValue(s"${importerBusinessNameAnswer.name}")
+
+        importerBusinessNameRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("check_answers.importer.businessName.accessible")}"
+        )
+
+        importerBusinessNameRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.importerBusinessName)
+        )
+      }
+
       "contains importer contact details" in {
         val importerDetailsRow = importerSection.getElementsByClass("importer_contact_details_row")
 
         importerDetailsRow must haveSummaryKey(messages("check_answers.importer.contactDetails"))
         importerDetailsRow must haveSummaryValue(
           Seq(
-            importerContactDetailsAnswer.name,
             importerContactDetailsAnswer.addressLine1,
             importerContactDetailsAnswer.addressLine2.getOrElse(""),
             importerContactDetailsAnswer.city,
