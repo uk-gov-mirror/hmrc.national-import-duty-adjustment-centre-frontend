@@ -77,7 +77,12 @@ class CreateNavigator @Inject() ()
       enterImporterEori,
       importerEoriNumberAnswered
     ),
-    P(ImporterBusinessNamePage, makeclaim.routes.ImporterBusinessNameController.onPageLoad, always, importerBusinessNameAnswered),
+    P(
+      ImporterBusinessNamePage,
+      makeclaim.routes.ImporterBusinessNameController.onPageLoad,
+      always,
+      importerBusinessNameAnswered
+    ),
     P(
       ImporterContactDetailsPage,
       makeclaim.routes.ImporterDetailsController.onPageLoad,
@@ -92,53 +97,53 @@ class CreateNavigator @Inject() ()
 
   override protected def pageFor: String => Option[Page] = (pageName: String) => {
     pageName match {
-      case CreatePageNames.representationType => Some(RepresentationTypePage)
-      case CreatePageNames.claimType          => Some(ClaimTypePage)
-      case CreatePageNames.entryDetails       => Some(EntryDetailsPage)
-      case CreatePageNames.itemNumbers        => Some(ItemNumbersPage)
-      case CreatePageNames.claimReason        => Some(ClaimReasonPage)
-      case CreatePageNames.dutyTypes          => Some(ReclaimDutyTypePage)
-      case CreatePageNames.dutyCustoms        => Some(CustomsDutyRepaymentPage)
-      case CreatePageNames.dutyVAT            => Some(ImportVatRepaymentPage)
-      case CreatePageNames.dutyOther          => Some(OtherDutyRepaymentPage)
-      case CreatePageNames.dutySummary        => Some(ReturnAmountSummaryPage)
-      case CreatePageNames.uploadSummary      => Some(UploadPage)
-      case CreatePageNames.contactDetails     => Some(ContactDetailsPage)
-      case CreatePageNames.businessName       => Some(BusinessNamePage)
-      case CreatePageNames.contactAddress     => Some(AddressPage)
-      case CreatePageNames.importerEori       => Some(ImporterEoriNumberPage)
-      case CreatePageNames.importerBusinessName       => Some(ImporterBusinessNamePage)
-      case CreatePageNames.importerDetails    => Some(ImporterContactDetailsPage)
-      case CreatePageNames.repayTo            => Some(RepayToPage)
-      case CreatePageNames.bankDetails        => Some(BankDetailsPage)
-      case CreatePageNames.checkYourAnswers   => Some(CheckYourAnswersPage)
-      case _                                  => None
+      case CreatePageNames.representationType   => Some(RepresentationTypePage)
+      case CreatePageNames.claimType            => Some(ClaimTypePage)
+      case CreatePageNames.entryDetails         => Some(EntryDetailsPage)
+      case CreatePageNames.itemNumbers          => Some(ItemNumbersPage)
+      case CreatePageNames.claimReason          => Some(ClaimReasonPage)
+      case CreatePageNames.dutyTypes            => Some(ReclaimDutyTypePage)
+      case CreatePageNames.dutyCustoms          => Some(CustomsDutyRepaymentPage)
+      case CreatePageNames.dutyVAT              => Some(ImportVatRepaymentPage)
+      case CreatePageNames.dutyOther            => Some(OtherDutyRepaymentPage)
+      case CreatePageNames.dutySummary          => Some(ReturnAmountSummaryPage)
+      case CreatePageNames.uploadSummary        => Some(UploadPage)
+      case CreatePageNames.contactDetails       => Some(ContactDetailsPage)
+      case CreatePageNames.businessName         => Some(BusinessNamePage)
+      case CreatePageNames.contactAddress       => Some(AddressPage)
+      case CreatePageNames.importerEori         => Some(ImporterEoriNumberPage)
+      case CreatePageNames.importerBusinessName => Some(ImporterBusinessNamePage)
+      case CreatePageNames.importerDetails      => Some(ImporterContactDetailsPage)
+      case CreatePageNames.repayTo              => Some(RepayToPage)
+      case CreatePageNames.bankDetails          => Some(BankDetailsPage)
+      case CreatePageNames.checkYourAnswers     => Some(CheckYourAnswersPage)
+      case _                                    => None
     }
   }
 
 }
 
 object CreatePageNames {
-  val representationType = "representation-type"
-  val claimType          = "claim-type"
-  val entryDetails       = "entry-details"
-  val itemNumbers        = "item-numbers"
-  val claimReason        = "claim-reason"
-  val dutyTypes          = "duty-types"
-  val dutyCustoms        = "duty-customs"
-  val dutyVAT            = "duty-vat"
-  val dutyOther          = "duty-other"
-  val dutySummary        = "duty-summary"
-  val uploadSummary      = "uploaded-files"
-  val contactDetails     = "contact-details"
-  val businessName       = "enter-business-name"
-  val contactAddress     = "contact-address"
-  val importerEori       = "importer-eori"
-  val importerBusinessName       = "enter-importers-name"
-  val importerDetails    = "importer-details"
-  val repayTo            = "repay-to"
-  val bankDetails        = "bank-details"
-  val checkYourAnswers   = "check-answers"
+  val representationType   = "representation-type"
+  val claimType            = "claim-type"
+  val entryDetails         = "entry-details"
+  val itemNumbers          = "item-numbers"
+  val claimReason          = "claim-reason"
+  val dutyTypes            = "duty-types"
+  val dutyCustoms          = "duty-customs"
+  val dutyVAT              = "duty-vat"
+  val dutyOther            = "duty-other"
+  val dutySummary          = "duty-summary"
+  val uploadSummary        = "uploaded-files"
+  val contactDetails       = "contact-details"
+  val businessName         = "enter-business-name"
+  val contactAddress       = "contact-address"
+  val importerEori         = "importer-eori"
+  val importerBusinessName = "enter-importers-name"
+  val importerDetails      = "importer-details"
+  val repayTo              = "repay-to"
+  val bankDetails          = "bank-details"
+  val checkYourAnswers     = "check-answers"
 }
 
 protected trait CreateAnswerConditions {
@@ -176,8 +181,9 @@ protected trait CreateHasAnsweredConditions {
   protected val uploadPageAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) => answers.uploads.nonEmpty
 
   protected val contactDetailsAnswered: CreateAnswers => Boolean = _.contactDetails.nonEmpty
-  protected val businessNameAnswered: CreateAnswers => Boolean = _.businessName.nonEmpty
+  protected val businessNameAnswered: CreateAnswers => Boolean   = _.businessName.nonEmpty
   protected val claimantAnswered: CreateAnswers => Boolean       = _.claimantAddress.nonEmpty
+
   protected val importerEoriNumberAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
     answers.isRepresentative && answers.repayTo.contains(RepayTo.Importer) && answers.importerEori.nonEmpty
 

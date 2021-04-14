@@ -32,15 +32,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ImporterBusinessNameController @Inject()(
-                                                identify: IdentifierAction,
-                                                data: CacheDataService,
-                                                formProvider: ImporterBusinessNameFormProvider,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                val navigator: CreateNavigator,
-                                                importerBusinessNameView: ImporterBusinessNameView
-                                         )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
+class ImporterBusinessNameController @Inject() (
+  identify: IdentifierAction,
+  data: CacheDataService,
+  formProvider: ImporterBusinessNameFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  val navigator: CreateNavigator,
+  importerBusinessNameView: ImporterBusinessNameView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = ImporterBusinessNamePage
 
@@ -56,7 +56,9 @@ class ImporterBusinessNameController @Inject()(
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getCreateAnswers map { answers => BadRequest(importerBusinessNameView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers =>
+          BadRequest(importerBusinessNameView(formWithErrors, backLink(answers)))
+        },
       value =>
         data.updateCreateAnswers(answers => answers.copy(importerBusinessName = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))

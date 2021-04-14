@@ -44,10 +44,6 @@ class AddressViewSpec extends UnitViewSpec with TestData {
       view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
-    "have label for name" in {
-      view().getElementsByAttributeValue("for", "name") must containMessage("address.name.heading")
-    }
-
     "have label for addresss line 1" in {
       view().getElementsByAttributeValue("for", "addressLine1").text() must include(
         s"${messages("address.line1.heading")} ${messages("address.line1.hidden")}"
@@ -92,12 +88,6 @@ class AddressViewSpec extends UnitViewSpec with TestData {
         "city"         -> "Bradford",
         "postcode"     -> "BD12CD"
       )
-
-      "name missing" in {
-        val errorView = view(form.bind(answers - "name"))
-        errorView must haveFieldError("name", "address.name.error.required")
-        errorView must havePageError("address.name.error.required")
-      }
 
       "line 1 missing" in {
         val errorView = view(form.bind(answers - "addressLine1"))

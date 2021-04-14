@@ -20,8 +20,23 @@ import java.time.LocalDate
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, BusinessName, Claim, ClaimReason, ContactDetails, DutyPaid, EntryDetails, ImporterBeingRepresentedDetails, ImporterBusinessName, ImporterContactDetails, ItemNumbers, RepayTo, RepresentationType, Address => UkAddress}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, create}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  BankDetails,
+  BusinessName,
+  Claim,
+  ClaimReason,
+  ContactDetails,
+  DutyPaid,
+  EntryDetails,
+  ImporterBeingRepresentedDetails,
+  ImporterBusinessName,
+  ImporterContactDetails,
+  ItemNumbers,
+  RepayTo,
+  RepresentationType,
+  Address => UkAddress
+}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 
 class EISCreateCaseRequestSpec extends UnitSpec with TestData {
 
@@ -55,12 +70,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
         eoriNumber = Some(EoriNumber("GB098765432123")),
         businessName = ImporterBusinessName("Acme Import Co Ltd"),
         contactDetails =
-          ImporterContactDetails(
-            "Importer Address Line 1",
-            Some("Importer Address Line 2"),
-            "Importer City",
-            "IM12CD"
-          )
+          ImporterContactDetails("Importer Address Line 1", Some("Importer Address Line 2"), "Importer City", "IM12CD")
       )
     ),
     bankDetails = BankDetails("account name", "001122", "12345678"),

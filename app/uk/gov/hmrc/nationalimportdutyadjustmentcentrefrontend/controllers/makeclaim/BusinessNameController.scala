@@ -32,15 +32,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class BusinessNameController @Inject()(
-                                        identify: IdentifierAction,
-                                        data: CacheDataService,
-                                        formProvider: BusinessNameFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        val navigator: CreateNavigator,
-                                        businessNameView: BusinessNameView
-                                         )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
+class BusinessNameController @Inject() (
+  identify: IdentifierAction,
+  data: CacheDataService,
+  formProvider: BusinessNameFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  val navigator: CreateNavigator,
+  businessNameView: BusinessNameView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = BusinessNamePage
 

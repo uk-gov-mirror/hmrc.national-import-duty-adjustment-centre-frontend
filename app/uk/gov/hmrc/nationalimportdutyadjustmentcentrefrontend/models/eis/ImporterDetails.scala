@@ -17,10 +17,18 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{Importer, Representative}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BusinessName, Claim, ContactDetails, ImporterBeingRepresentedDetails}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType.{
+  Importer,
+  Representative
+}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  BusinessName,
+  Claim,
+  ContactDetails,
+  ImporterBeingRepresentedDetails
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EoriNumber, create}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 
 case class ImporterDetails(EORI: Option[String], Name: String, Address: ImporterAddress)
@@ -33,7 +41,8 @@ object ImporterDetails {
       forRepresentativeApplicant(
         claim.importerBeingRepresentedDetails.getOrElse(throw new MissingAnswersException(ImporterContactDetailsPage))
       )
-    case Importer => forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.businessName, claim.claimantAddress)
+    case Importer =>
+      forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.businessName, claim.claimantAddress)
   }
 
   private def forImporterApplicant(

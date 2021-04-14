@@ -25,25 +25,25 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Repr
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 final case class CreateAnswers(
-                                changePage: Option[String] = None,
-                                contactDetails: Option[ContactDetails] = None,
-                                businessName: Option[BusinessName] = None,
-                                claimantAddress: Option[Address] = None,
-                                representationType: Option[RepresentationType] = None,
-                                claimType: Option[ClaimType] = None,
-                                claimReason: Option[ClaimReason] = None,
-                                reclaimDutyTypes: Set[ReclaimDutyType] = Set.empty,
-                                reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
-                                importerBankDetails: Option[BankDetails] = None,
-                                representativeBankDetails: Option[BankDetails] = None,
-                                importerBusinessName: Option[ImporterBusinessName] = None,
-                                importerContactDetails: Option[ImporterContactDetails] = None,
-                                repayTo: Option[RepayTo] = None,
-                                entryDetails: Option[EntryDetails] = None,
-                                itemNumbers: Option[ItemNumbers] = None,
-                                uploads: Seq[UploadedFile] = Seq.empty,
-                                uploadAnotherFile: Option[Boolean] = None,
-                                importerEori: Option[EoriNumber] = None
+  changePage: Option[String] = None,
+  contactDetails: Option[ContactDetails] = None,
+  businessName: Option[BusinessName] = None,
+  claimantAddress: Option[Address] = None,
+  representationType: Option[RepresentationType] = None,
+  claimType: Option[ClaimType] = None,
+  claimReason: Option[ClaimReason] = None,
+  reclaimDutyTypes: Set[ReclaimDutyType] = Set.empty,
+  reclaimDutyPayments: Map[String, DutyPaid] = Map.empty,
+  importerBankDetails: Option[BankDetails] = None,
+  representativeBankDetails: Option[BankDetails] = None,
+  importerBusinessName: Option[ImporterBusinessName] = None,
+  importerContactDetails: Option[ImporterContactDetails] = None,
+  repayTo: Option[RepayTo] = None,
+  entryDetails: Option[EntryDetails] = None,
+  itemNumbers: Option[ItemNumbers] = None,
+  uploads: Seq[UploadedFile] = Seq.empty,
+  uploadAnotherFile: Option[Boolean] = None,
+  importerEori: Option[EoriNumber] = None
 ) extends Answers {
 
   val isRepresentative: Boolean = representationType.contains(Representative)

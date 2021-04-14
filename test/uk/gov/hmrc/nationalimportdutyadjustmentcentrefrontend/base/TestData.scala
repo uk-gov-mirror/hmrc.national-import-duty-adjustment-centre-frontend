@@ -123,6 +123,7 @@ trait TestData {
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
+    businessName = Some(businessNameAnswer),
     claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
     uploadAnotherFile = Some(uploadAnotherFileAnswer),
