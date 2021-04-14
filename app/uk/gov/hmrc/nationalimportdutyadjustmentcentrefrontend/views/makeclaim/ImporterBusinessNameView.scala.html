@@ -39,16 +39,15 @@
         @errorSummary(form.errors)
 
         @fieldSet(
-            legend = "importer.businessName.title",
-            hint = Some(Html(messages("businessName.hint")))
+            legend = "importer.businessName.title"
         ) {
 
             @inputText(
                 form = form,
                 id = "name",
                 name = "name",
-                label = "importer.businessName.name.heading",
-                autocomplete = Some("off")
+                label = "",
+                autocomplete = None
             )
         }
 

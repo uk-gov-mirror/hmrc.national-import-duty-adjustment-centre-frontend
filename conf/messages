@@ -153,9 +153,7 @@ contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
-businessName.title = What is your business name
-businessName.hint =
-businessName.name.heading =
+businessName.title = What is your business name?
 businessName.name.error.required = Enter your business name
 businessName.name.error.length = Business name must be 40 characters or fewer
 
@@ -178,9 +176,7 @@ address.postcode.error.invalid = Enter a real postcode
 importer.has.eori.title = Does the importer have an EORI number?
 importer.has.eori.required = Select yes if the importer has an EORI number
 
-importer.businessName.title = What is the name of the importers business
-importer.businessName.hint =
-importer.businessName.name.heading =
+importer.businessName.title = What is the name of the importers business?
 importer.businessName.name.error.required = Enter the importers business name
 importer.businessName.name.error.length = Importers business name must be 40 characters or fewer
 
