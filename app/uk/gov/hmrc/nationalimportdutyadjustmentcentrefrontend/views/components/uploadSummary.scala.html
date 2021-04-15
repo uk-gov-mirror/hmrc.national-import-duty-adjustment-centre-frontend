@@ -25,10 +25,15 @@
     attributes = Map("id" -> "summary"),
     rows = uploads.zipWithIndex.flatMap(doc =>
         Some(SummaryListRow(
-            key = Key(content = Text(doc._1.fileName)),
-            value = Value(content = HtmlContent(govukTag(Tag(
-                content = Text("READY TO SUBMIT")
-            )))),
+            key = Key(
+                content = Text(doc._1.fileName),
+                classes = "govuk-!-width-three-quarters"
+            ),
+            value = Value(
+                content = HtmlContent(govukTag(Tag(
+                    content = Text(messages("upload_documents.status.ready"))))
+                )
+            ),
             classes = s"upload_row_${doc._2 + 1}",
             actions = Some(Actions(
                 items = Seq(

@@ -14,18 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+@()
 
-@this(continueButton: continueButton, uploadSummary: uploadSummary)
-
-@(uploads: Seq[UploadedFile], removeUrl: String => String)(implicit request: Request[_], messages: Messages)
-
-@uploadSummary(uploads, removeUrl, Some(
-    SummaryListRow(
-        key = Key(content = Text(messages("upload_documents.status.in_progress"))),
-        value = Value(content = HtmlContent(uploadSpinner())),
-        actions = None
-    )
-))
-
-<div>@continueButton(disabled = true)</div>
+<span id="nidac-spinner" class="govuk-body upload-spinner"></span>

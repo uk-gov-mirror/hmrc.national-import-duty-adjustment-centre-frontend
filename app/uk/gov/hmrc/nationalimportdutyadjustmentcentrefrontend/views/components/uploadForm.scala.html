@@ -32,9 +32,16 @@
         error: Option[FormError] = None
 )(implicit request: Request[_], messages: Messages)
 
-@uploadSummary(uploads, removeUrl)
+@uploadSummary(uploads, removeUrl, Some(
+    SummaryListRow(
+        key = Key(content = Text(messages("upload_documents.status.in_progress"))),
+        value = Value(content = HtmlContent(uploadSpinner())),
+        classes = "govuk-!-display-none hidden-spinner-row",
+        actions = None
+    )
+))
 
-<form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
+<form id="upload-form" action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
 
     @for(field <- upscanInitiateResponse.formFields) {
         <input type="hidden" name="@field._1" value="@field._2"/>
@@ -45,7 +52,7 @@
         id = "upload-file",
         attributes = Map(
             "accept" -> appConfig.upscan.approvedFileExtensions,
-            "onchange" -> "this.form.submit()"
+            "onchange" -> "javascript:onFileSelect()"
         ),
         label = Label(
             content = Text(messages(if(uploads.isEmpty) "upload_documents.first.label" else "upload_documents.next.label"))

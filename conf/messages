@@ -56,6 +56,7 @@ upload_documents.intro = You can upload as many files as you need to support you
 upload_documents.first.label = Upload your first file
 upload_documents.next.label = Upload another file (optional)
 upload_documents.status.in_progress = Waiting for the file to be scanned
+upload_documents.status.ready = Ready to submit
 upload_documents.non-javascript.continue = Continue
 
 upload_documents.body.document.required.heading = Required supporting documents
