@@ -69,10 +69,7 @@ class AuthenticatedIdentifierAction @Inject() (
 
     } recover {
       case _: InsufficientEnrolments =>
-        Redirect(
-          // TODO - redirect to ECC to enrol for NIDAC (Trader Services)
-          routes.UnauthorisedController.onPageLoad()
-        )
+        Redirect(config.insufficientEnrolmentsUrl)
       case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: AuthorisationException =>

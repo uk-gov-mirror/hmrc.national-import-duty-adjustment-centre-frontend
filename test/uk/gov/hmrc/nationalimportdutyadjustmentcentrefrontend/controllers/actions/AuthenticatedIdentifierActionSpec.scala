@@ -109,11 +109,11 @@ class AuthenticatedIdentifierActionSpec extends UnitSpec with MockitoSugar with 
     }
 
     "user does not have enrolment with EORI" must {
-      "redirect to unauthorised page" in {
+      "redirect to insufficientEnrolments url" in {
         val result: Future[Result] = handleAuthWithEnrolments(enrolmentsWithoutEORI)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(appConfig.insufficientEnrolmentsUrl)
       }
     }
 
