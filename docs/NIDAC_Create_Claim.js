@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.18
+// @version      0.19
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -133,8 +133,11 @@ function completePage() {
         document.getElementById("telephoneNumber").value = "01234567890";
         submit();
     }
-    if (currentPageIs("/create/your-address")) {
+    if (currentPageIs("/create/enter-business-name")) {
         document.getElementById("name").value = "ACME Importers Ltd";
+        submit();
+    }
+    if (currentPageIs("/create/your-address")) {
         document.getElementById("addressLine1").value = "Unit 42";
         document.getElementById("addressLine2").value = "West Industrial Estate";
         document.getElementById("city").value = "Middlewich";
@@ -159,8 +162,11 @@ function completePage() {
         document.getElementById("accountNumber").value = "71584685";
         submit();
     }
-    if (currentPageIs("/create/importer-correspondence-address")) {
+    if (currentPageIs("/create/enter-importers-name")) {
         document.getElementById("name").value = "Representatives Client Importer";
+        submit();
+    }
+    if (currentPageIs("/create/importer-correspondence-address")) {
         document.getElementById("addressLine1").value = "Unit 17";
         document.getElementById("addressLine2").value = "North Industrial Estate";
         document.getElementById("city").value = "Southwich";
