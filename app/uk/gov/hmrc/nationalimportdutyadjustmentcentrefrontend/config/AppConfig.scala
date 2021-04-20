@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
+import play.api.mvc.Request
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
@@ -49,6 +49,20 @@ class AppConfig @Inject() (
   val loginUrl: String         = loadConfig("urls.login")
   val loginContinueUrl: String = loadConfig("urls.loginContinue")
   val signOutUrl: String       = loadConfig("urls.signout")
+
+  private val selfBaseUrl: String = config
+    .getOptional[String]("platform.frontend.host")
+    .getOrElse("http://localhost:8490")
+
+  private val serviceIdentifier = config.get[String]("contact-frontend.serviceId")
+
+  private val authenticatedFeedbackUrl: String = config.get[String]("urls.feedback.authenticatedLink")
+
+  private val unauthenticatedFeedbackUrl: String = config.get[String]("urls.feedback.unauthenticatedLink")
+
+  def betaFeedBackUrl(isAuthenticated: Boolean)(implicit request: Request[_]) =
+    s"${if (isAuthenticated) authenticatedFeedbackUrl
+    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=$selfBaseUrl${request.uri}"
 
   val getEoriUrl: String = loadConfig("urls.external.getEori")
 

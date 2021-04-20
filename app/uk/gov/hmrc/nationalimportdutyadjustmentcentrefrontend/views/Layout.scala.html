@@ -20,12 +20,13 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
-
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import views.html.helper.CSPNonce
 
 @this(
         govukLayout: GovukLayout,
         hmrcStandardHeader: HmrcStandardHeader,
+        standardBetaBanner: StandardBetaBanner,
         head: Head,
         hmrcStandardFooter: HmrcStandardFooter,
         languageSelect: LanguageSelect,
@@ -52,8 +53,10 @@
     )
 }
 
+@isAuthenticated = @{request.isInstanceOf[IdentifierRequest[_]]}
+
 @signOutHref = @{
-    (logout, request.isInstanceOf[IdentifierRequest[_]]) match {
+    (logout, isAuthenticated) match {
         case (true, true) => Some(SignOutController.signOut().url)
         case (true, false) => Some(appConfig.signOutUrl)
         case (false,_) => None
@@ -66,7 +69,7 @@
         serviceUrl = Some(StartController.start().url),
         signOutUrl = signOutHref,
         userResearchBanner = None,
-        phaseBanner = None,
+        phaseBanner = Some(standardBetaBanner(url = appConfig.betaFeedBackUrl(isAuthenticated)).copy(classes = "govuk-!-display-none-print")),
         displayHmrcBanner = false
     )
 }
