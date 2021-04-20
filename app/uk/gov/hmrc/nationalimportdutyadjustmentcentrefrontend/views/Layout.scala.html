@@ -32,6 +32,7 @@
         languageSelect: LanguageSelect,
         govukBackLink: GovukBackLink,
         hmrcScripts: HmrcScripts,
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
         appConfig: AppConfig
 )
 @(      pageTitle: Title,
@@ -79,6 +80,13 @@
     <script src='@controllers.routes.Assets.versioned("javascripts/nidacfrontend.js")'></script>
 }
 
+@content = {
+  @contentBlock
+  <p class="govuk-!-display-none-print nidac-report-technical-issue">
+    @hmrcReportTechnicalIssueHelper()
+  </p>
+}
+
 @govukLayout(
     pageTitle = Some(pageTitle.create),
     headBlock = Some(head(headBlock)),
@@ -86,4 +94,4 @@
     scriptsBlock = Some(scriptsBlock),
     beforeContentBlock = Some(beforeContentBlock),
     footerBlock = Some(hmrcStandardFooter())
-)(contentBlock)
+)(content)

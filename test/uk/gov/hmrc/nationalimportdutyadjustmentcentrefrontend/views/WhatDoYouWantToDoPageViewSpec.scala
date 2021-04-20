@@ -65,6 +65,15 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
       feedbackLink.attr("href") must include("service=national-import-duty-adjustment-centre")
     }
 
+    "have `page not working` link" in {
+      val technicalIssue = view().getElementsByClass("nidac-report-technical-issue")
+      technicalIssue.text() must include("page not working")
+      val link = technicalIssue.first().getElementsByClass("govuk-link")
+
+      link.attr("href") must include("contact/problem_reports_nonjs")
+      link.attr("href") must include("service=national-import-duty-adjustment-centre")
+    }
+
   }
 
   "WhatDoYouWantToDoPage on filled form" should {
