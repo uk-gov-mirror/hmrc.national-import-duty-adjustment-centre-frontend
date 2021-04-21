@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.Request
+import uk.gov.hmrc.hmrcfrontend.views.Utils.urlEncode
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
@@ -62,7 +63,7 @@ class AppConfig @Inject() (
 
   def betaFeedBackUrl(isAuthenticated: Boolean)(implicit request: Request[_]) =
     s"${if (isAuthenticated) authenticatedFeedbackUrl
-    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=$selfBaseUrl${request.uri}"
+    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=${urlEncode(s"$selfBaseUrl${request.uri}")} "
 
   val getEoriUrl: String = loadConfig("urls.external.getEori")
 
