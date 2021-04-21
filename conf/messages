@@ -30,7 +30,7 @@ service.unavailable.paragraph.1 = We are working on updating this service.
 service.unavailable.paragraph.2 = In the meantime you can continue to submit NIDAC claims using the existing method.
 
 representation_type.title = Are you the importer?
-representation_type.error.required = Select if you are the importer or their representative
+representation_type.error.required = Confirm if you are the importer or their representative
 representation_type.Importer = Yes
 representation_type.Representative_of_importer = No, I am a representative of the importer
 
