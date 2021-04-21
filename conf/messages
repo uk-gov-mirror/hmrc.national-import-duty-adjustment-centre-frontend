@@ -73,6 +73,10 @@ upload_documents.body.files.details.heading = What you must upload
 upload_documents.body.files.details.filetypes = Types of file you can upload
 upload_documents.body.files.details.image = Image (.jpeg, .jpg or .png)
 upload_documents.body.files.details.pdf = PDF (.pdf)
+upload_documents.body.files.details.word = MS Word document (.doc or .docx)
+upload_documents.body.files.details.excel = MS Excel spreadsheet (.xls or .xlsx)
+upload_documents.body.files.details.powerpoint = MS PowerPoint (.ppt or .pptx)
+upload_documents.body.files.details.opendoc = Open Document Format (.odt, .ods or .odp)
 
 upload_documents_summary.title.single = You have uploaded 1 file
 upload_documents_summary.title.multiple = You have uploaded {0} files
