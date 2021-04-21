@@ -29,10 +29,10 @@ service.unavailable.title = Sorry, the service is unavailable
 service.unavailable.paragraph.1 = We are working on updating this service.
 service.unavailable.paragraph.2 = In the meantime you can continue to submit NIDAC claims using the existing method.
 
-representation_type.title = Are you the importer or their representative?
-representation_type.error.required = Select if you are the importer or their representative
-representation_type.Importer = I am the importer
-representation_type.Representative_of_importer = I am a representative of the importer
+representation_type.title = Are you the importer?
+representation_type.error.required = Confirm if you are the importer or their representative
+representation_type.Importer = Yes
+representation_type.Representative_of_importer = No, I am a representative of the importer
 
 claim_type.title = What type of claim you are making?
 claim_type.error.required = Select type of claim you are making
@@ -192,10 +192,10 @@ importer.businessName.name.error.length = Importers business name must be 40 cha
 importer-details.title = What are the importer’s UK correspondence details?
 importer-details.hint = We may use these details to contact the importer about this claim.
 
-repay_to.title = Who is to be repaid?
+repay_to.title = Who do you want HMRC to repay?
 repay_to.Importer = Importer
 repay_to.Representative_of_importer = Representative
-repay_to.error.required = Select who is to be repaid
+repay_to.error.required = Select who you want HMRC to repay
 
 bankDetails.title = Enter your UK bank details
 bankDetails.importer.title = Enter the importer’s business bank details
@@ -381,6 +381,6 @@ amend.confirmation.reference = Your reference number<br><strong>{0}</strong>
 what_do_you_want_to_do.title = What do you want to do?
 what_do_you_want_to_do.error.required = Select whether you want to start a new claim or amend an existing claim
 what_do_you_want_to_do.New_Claim = Start a new claim
-what_do_you_want_to_do.hint.New_Claim = If you want to claim for a return of overpaid clearance duty charges, such as import duty or import VAT.
+what_do_you_want_to_do.hint.New_Claim = Claim for a return of overpaid clearance duty charges, such as import duty or import VAT.
 what_do_you_want_to_do.Amend_Claim = Amend an existing claim
-what_do_you_want_to_do.hint.Amend_Claim = If you have already submitted a claim and have a reference number. You can add more information to your claim or upload additional documents.
+what_do_you_want_to_do.hint.Amend_Claim = Use a reference number to add more information or upload additional documents to your claim.
