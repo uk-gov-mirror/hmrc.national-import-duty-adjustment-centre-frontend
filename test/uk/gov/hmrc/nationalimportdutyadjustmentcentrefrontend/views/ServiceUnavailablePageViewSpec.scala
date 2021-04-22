@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ServiceUnavailablePage
 
 class ServiceUnavailablePageViewSpec extends UnitViewSpec {

@@ -16,34 +16,42 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import play.api.data.Form
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
+import scala.concurrent.Future
+
 class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ImporterDetailsView]
-  private val formProvider = new ImporterDetailsFormProvider
+  private val page                 = mock[ImporterDetailsView]
+  private val formProvider         = new ImporterDetailsFormProvider
+  private val addressLookupService = mock[AddressLookupService]
+  val appConfig: AppConfig         = instanceOf[AppConfig]
 
   private def controller =
     new ImporterDetailsController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       formProvider,
+      addressLookupService,
       stubMessagesControllerComponents(),
       navigator,
       page
-    )(executionContext)
+    )(executionContext, appConfig)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -64,11 +72,32 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
 
   "GET" should {
 
-    "display page when cache is empty" in {
+    "redirect to change when cache is empty" in {
       val result = controller.onPageLoad()(fakeGetRequest)
-      status(result) mustBe Status.OK
+      status(result) mustBe Status.SEE_OTHER
 
-      theResponseForm.value mustBe None
+      redirectLocation(result) mustBe Some(routes.ImporterDetailsController.onChange().url)
+    }
+
+    "redirect to address lookup page from change, when cache is empty" in {
+      when(addressLookupService.initialiseJourney(any(), any())(any(), any())).thenReturn(
+        Future.successful(AddressLookupOnRamp("http://localhost/AddressLookupReturnedRedirect"))
+      )
+      val result = controller.onChange()(fakeGetRequest)
+      status(result) mustBe Status.SEE_OTHER
+
+      redirectLocation(result) mustBe Some("http://localhost/AddressLookupReturnedRedirect")
+    }
+
+    "update cache and redirect when address lookup calls update" in {
+      withCacheCreateAnswers(emptyAnswers)
+      when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
+        Future.successful(importerAddressLookupConfirmation)
+      )
+      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      status(result) mustBe Status.SEE_OTHER
+      theUpdatedCreateAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
     }
 
     "display page when cache has answer" in {
@@ -85,6 +114,7 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
     val validRequest = postRequest(
       "addressLine1" -> importerContactDetailsAnswer.addressLine1,
       "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
+      "addressLine3" -> importerContactDetailsAnswer.addressLine3.getOrElse(""),
       "city"         -> importerContactDetailsAnswer.city,
       "postcode"     -> importerContactDetailsAnswer.postCode
     )

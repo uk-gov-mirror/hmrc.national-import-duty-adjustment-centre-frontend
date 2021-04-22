@@ -19,7 +19,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
-case class ImporterContactDetails(addressLine1: String, addressLine2: Option[String], city: String, postCode: String)
+case class ImporterContactDetails(
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String],
+  city: String,
+  postCode: String
+)
 
 object ImporterContactDetails {
   implicit val format: OFormat[ImporterContactDetails] = Json.format[ImporterContactDetails]
@@ -27,9 +33,16 @@ object ImporterContactDetails {
   def apply(
     addressLine1: String,
     addressLine2: Option[String],
+    addressLine3: Option[String],
     city: String,
     postCode: String
   ): ImporterContactDetails =
-    new ImporterContactDetails(addressLine1, addressLine2, city, postCode.stripExternalAndReduceInternalSpaces())
+    new ImporterContactDetails(
+      addressLine1,
+      addressLine2,
+      addressLine3,
+      city,
+      postCode.stripExternalAndReduceInternalSpaces()
+    )
 
 }

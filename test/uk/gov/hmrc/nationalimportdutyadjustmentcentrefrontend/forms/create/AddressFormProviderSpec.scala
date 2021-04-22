@@ -62,6 +62,24 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
     behave like optionalField(form, fieldName)
   }
 
+  ".AddressLine3" must {
+
+    val fieldName = "addressLine3"
+    val lengthKey = "address.line3.error.length"
+    val maxLength = 256
+
+    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like optionalField(form, fieldName)
+  }
+
   ".City" must {
 
     val fieldName   = "city"

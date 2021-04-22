@@ -17,8 +17,12 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{Instant, LocalDate}
-
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{
+  AddressLookupAddress,
+  AddressLookupConfirmation,
+  AddressLookupCountry
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
@@ -76,7 +80,24 @@ trait TestData {
 
   val businessNameAnswer: BusinessName = BusinessName("Mind API Inc");
 
-  val addressAnswer: Address = Address("Line 1", Some("Line 2"), "City", "WO0 1KE")
+  val addressAnswer: Address = Address("Line 1", Some("Line 2"), Some("Line 3"), "City", "WO0 1KE")
+
+  val addressLookupRetrieveId = "id123456"
+
+  val addressLookupConfirmation = AddressLookupConfirmation(
+    "auditRef",
+    Some("id123456"),
+    AddressLookupAddress(
+      List(
+        addressAnswer.addressLine1,
+        addressAnswer.addressLine2.getOrElse(""),
+        addressAnswer.addressLine3.getOrElse(""),
+        addressAnswer.city
+      ),
+      Some(addressAnswer.postCode),
+      AddressLookupCountry("UK", "United Kingdom")
+    )
+  )
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
@@ -87,7 +108,29 @@ trait TestData {
   val importerBusinessNameAnswer: ImporterBusinessName = ImporterBusinessName("Unused Imports UK");
 
   val importerContactDetailsAnswer =
-    ImporterContactDetails("Importer Line 1", Some("Importer Line 2"), "Importer City", "BR0 0KL")
+    ImporterContactDetails(
+      "Importer Line 1",
+      Some("Importer Line 2"),
+      Some("Address Line 3"),
+      "Importer City",
+      "BR0 0KL"
+    )
+
+  val importerAddressLookupConfirmation =
+    AddressLookupConfirmation(
+      "auditRef",
+      Some("id123456"),
+      AddressLookupAddress(
+        List(
+          importerContactDetailsAnswer.addressLine1,
+          importerContactDetailsAnswer.addressLine2.getOrElse(""),
+          importerContactDetailsAnswer.addressLine3.getOrElse(""),
+          importerContactDetailsAnswer.city
+        ),
+        Some(importerContactDetailsAnswer.postCode),
+        AddressLookupCountry("UK", "United Kingdom")
+      )
+    )
 
   val completeAnswers: CreateAnswers = CreateAnswers(
     representationType = Some(representationTypeAnswer),

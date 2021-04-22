@@ -6,6 +6,7 @@
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
 // @match        http*://*/apply-for-return-import-duty-paid-on-deposit-or-guarantee/*
+// @match        http*://*/lookup-address/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 // ==/UserScript==
@@ -142,6 +143,13 @@ function completePage() {
         document.getElementById("addressLine2").value = "West Industrial Estate";
         document.getElementById("city").value = "Middlewich";
         document.getElementById("postcode").value = "MD123KD";
+        submit();
+    }
+    if (currentPageIs(".*/lookup")) {
+        document.getElementById("postcode").value = "AA000AA";
+        submit();
+    }
+    if (currentPageIs(".*/confirm")) {
         submit();
     }
     if (currentPageIs("/create/eori-number")) {

@@ -19,13 +19,15 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{AddressLookupService, CacheDataService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -36,10 +38,11 @@ class AddressController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
   formProvider: AddressFormProvider,
+  addressLookupService: AddressLookupService,
   val controllerComponents: MessagesControllerComponents,
   val navigator: CreateNavigator,
   addressView: AddressView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, implicit val appConfig: AppConfig)
     extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = AddressPage
@@ -48,8 +51,13 @@ class AddressController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
-      val preparedForm = answers.claimantAddress.fold(form)(form.fill)
-      Ok(addressView(preparedForm, backLink(answers)))
+      answers.claimantAddress match {
+        case Some(address) =>
+          val preparedForm = answers.claimantAddress.fold(form)(form.fill)
+          Ok(addressView(preparedForm, backLink(answers)))
+        case _ =>
+          Redirect(controllers.makeclaim.routes.AddressController.onChange())
+      }
     }
   }
 
@@ -62,6 +70,24 @@ class AddressController @Inject() (
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
+  }
+
+  def onChange(): Action[AnyContent] = identify.async { implicit request =>
+    addressLookupService.initialiseJourney(appConfig.yourAddressLookupCallbackUrl, "address.title") map {
+      response => Redirect(response.redirectUrl)
+    }
+  }
+
+  def onUpdate(id: String): Action[AnyContent] = identify.async { implicit request =>
+    data.getCreateAnswers flatMap { answers =>
+      addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
+        val el             = confirmedAddress.extractAddressLines()
+        val updatedAddress = Address(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
+        data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(updatedAddress))) map {
+          _ => Redirect(nextPage(answers))
+        }
+      }
+    }
   }
 
 }

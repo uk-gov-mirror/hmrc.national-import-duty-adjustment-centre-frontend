@@ -124,7 +124,7 @@ trait Generators {
   } yield (validChars :+ invalidChar).mkString
 
   def stringsLongerThan(minLength: Int): Gen[String] = for {
-    maxLength <- (minLength * 2).max(100)
+    maxLength <- (minLength * 2)
     length    <- Gen.chooseNum(minLength + 1, maxLength)
     chars     <- listOfN(length, arbitrary[Char])
   } yield chars.mkString

@@ -19,13 +19,15 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ImporterContactDetailsPage, Page}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{AddressLookupService, CacheDataService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -36,10 +38,11 @@ class ImporterDetailsController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
   formProvider: ImporterDetailsFormProvider,
+  addressLookupService: AddressLookupService,
   val controllerComponents: MessagesControllerComponents,
   val navigator: CreateNavigator,
   detailsView: ImporterDetailsView
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, implicit val appConfig: AppConfig)
     extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = ImporterContactDetailsPage
@@ -48,8 +51,13 @@ class ImporterDetailsController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
-      val preparedForm = answers.importerContactDetails.fold(form)(form.fill)
-      Ok(detailsView(preparedForm, backLink(answers)))
+      answers.importerContactDetails match {
+        case Some(address) =>
+          val preparedForm = answers.importerContactDetails.fold(form)(form.fill)
+          Ok(detailsView(preparedForm, backLink(answers)))
+        case _ =>
+          Redirect(controllers.makeclaim.routes.ImporterDetailsController.onChange())
+      }
     }
   }
 
@@ -62,6 +70,25 @@ class ImporterDetailsController @Inject() (
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
+  }
+
+  def onChange(): Action[AnyContent] = identify.async { implicit request =>
+    addressLookupService.initialiseJourney(appConfig.importerAddressLookupCallbackUrl, "importer-details.title") map {
+      response => Redirect(response.redirectUrl)
+    }
+  }
+
+  def onUpdate(id: String): Action[AnyContent] = identify.async { implicit request =>
+    data.getCreateAnswers flatMap { answers =>
+      addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
+        val el = confirmedAddress.extractAddressLines()
+        val updatedAddress =
+          ImporterContactDetails(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
+        data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(updatedAddress))) map {
+          _ => Redirect(nextPage(answers))
+        }
+      }
+    }
   }
 
 }
