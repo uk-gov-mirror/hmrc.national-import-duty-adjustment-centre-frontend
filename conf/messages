@@ -159,7 +159,7 @@ contactDetails.emailAddress.heading = Email address
 contactDetails.emailAddress.error.required = Enter an email address
 contactDetails.emailAddress.error.invalid = Enter an email address in the correct format, like name@example.com
 contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
-contactDetails.telephoneNumber.heading = UK telephone number
+contactDetails.telephoneNumber.heading = UK telephone number (optional)
 contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
 businessName.title = What is your business name?
