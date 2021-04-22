@@ -57,7 +57,8 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     businessName = BusinessName("Import Network Inc"),
-    claimantAddress = UkAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    claimantAddress =
+      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
@@ -70,7 +71,13 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
         eoriNumber = Some(EoriNumber("GB098765432123")),
         businessName = ImporterBusinessName("Acme Import Co Ltd"),
         contactDetails =
-          ImporterContactDetails("Importer Address Line 1", Some("Importer Address Line 2"), "Importer City", "IM12CD")
+          ImporterContactDetails(
+            "Importer Address Line 1",
+            Some("Importer Address Line 2"),
+            Some("Importer Address Line 3"),
+            "Importer City",
+            "IM12CD"
+          )
       )
     ),
     bankDetails = BankDetails("account name", "001122", "12345678"),
@@ -128,7 +135,8 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     claimantEori = claimantEori,
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     businessName = BusinessName("Acme Import Co Ltd"),
-    claimantAddress = UkAddress("Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
+    claimantAddress =
+      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),

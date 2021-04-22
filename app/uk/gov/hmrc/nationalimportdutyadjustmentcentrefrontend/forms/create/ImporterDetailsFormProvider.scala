@@ -34,6 +34,10 @@ class ImporterDetailsFormProvider @Inject() extends Mappings {
         text()
           .verifying(firstError(maxLength(50, "address.line2.error.length")))
       ),
+      "addressLine3" -> optional(
+        text()
+          .verifying(firstError(maxLength(256, "address.line3.error.length")))
+      ),
       "city" -> text("address.city.error.required")
         .verifying(firstError(maxLength(50, "address.city.error.length"))),
       "postcode" -> text("address.postcode.error.required")
