@@ -19,15 +19,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actio
 import com.google.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, internalId}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, allEnrolments, internalId}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,11 +47,11 @@ class AuthenticatedIdentifierAction @Inject() (
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+      HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(internalId and allEnrolments) {
+    authorised().retrieve(internalId and allEnrolments and affinityGroup) {
 
-      case userInternalId ~ allUsersEnrolments =>
+      case userInternalId ~ allUsersEnrolments ~ affinityGroup =>
         def eoriForEnrolment(enrolmentKey: String) =
           allUsersEnrolments.getEnrolment(enrolmentKey).flatMap(
             enrolment => enrolment.getIdentifier(eoriIdentifier).map(_.value)
@@ -60,12 +61,20 @@ class AuthenticatedIdentifierAction @Inject() (
           throw InsufficientEnrolments("User does not have enrolment with EORI")
         )
 
-        if (config.allowEori(eoriNumber))
-          userInternalId.map(
-            internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))
-          ).getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
-        else
-          Future(Redirect(routes.ServiceUnavailableController.onPageLoad()))
+        affinityGroup match {
+          case Some(Organisation) =>
+            if (config.allowEori(eoriNumber))
+              block(
+                IdentifierRequest(
+                  request,
+                  userInternalId.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id")),
+                  EoriNumber(eoriNumber)
+                )
+              )
+            else
+              Future(Redirect(routes.ServiceUnavailableController.onPageLoad()))
+          case _ => throw UnsupportedAffinityGroup(s"UnsupportedAffinityGroup: $affinityGroup")
+        }
 
     } recover {
       case _: InsufficientEnrolments =>

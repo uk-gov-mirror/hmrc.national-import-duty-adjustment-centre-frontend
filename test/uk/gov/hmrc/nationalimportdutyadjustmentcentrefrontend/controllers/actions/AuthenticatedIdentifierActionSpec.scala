@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions
 
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, spy, when}
 import org.scalatest.BeforeAndAfterEach
@@ -24,8 +25,10 @@ import play.api.Configuration
 import play.api.mvc.{AnyContentAsEmpty, BodyParsers, Result, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, _}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{~, Retrieval}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, allEnrolments, internalId}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
@@ -147,6 +150,29 @@ class AuthenticatedIdentifierActionSpec extends UnitSpec with MockitoSugar with 
         status(result) mustBe OK
       }
     }
+
+    "user with correct enrolments" must {
+      "redirect to unauthorised page when affinity group is Individual" in {
+        val result: Future[Result] = handleAuthWithEnrolmentsAndAffinityGroup(enrolmentsWithEORI, Individual)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+      }
+
+      "redirect to unauthorised page when affinity group is Agent" in {
+        val result: Future[Result] = handleAuthWithEnrolmentsAndAffinityGroup(enrolmentsWithEORI, Agent)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
+      }
+
+      "allow through when affinity group is Organisation" in {
+        val result: Future[Result] = handleAuthWithEnrolmentsAndAffinityGroup(enrolmentsWithEORI, Organisation)
+
+        status(result) mustBe OK
+      }
+
+    }
   }
 
   private def beTheLoginPage =
@@ -162,11 +188,16 @@ class AuthenticatedIdentifierActionSpec extends UnitSpec with MockitoSugar with 
     controller.onPageLoad()(fakeRequest)
   }
 
-  private def handleAuthWithEnrolments(enrolments: Enrolments): Future[Result] = {
+  private def handleAuthWithEnrolments(enrolments: Enrolments): Future[Result] =
+    handleAuthWithEnrolmentsAndAffinityGroup(enrolments, Organisation)
 
-    when(authConnector.authorise(any(), any[Retrieval[~[Option[String], Enrolments]]])(any(), any())).thenReturn(
-      Future.successful(new ~[Option[String], Enrolments](Some("identifier"), enrolments))
-    )
+  private def handleAuthWithEnrolmentsAndAffinityGroup(
+    enrolments: Enrolments,
+    affinity: AffinityGroup
+  ): Future[Result] = {
+    when(
+      authConnector.authorise(any(), ArgumentMatchers.eq(internalId and allEnrolments and affinityGroup))(any(), any())
+    ).thenReturn(Future.successful(new ~(new ~(Some("identifier"), enrolments), Some(affinity))))
 
     val authAction = new AuthenticatedIdentifierAction(authConnector, appConfig, parser)
     val controller = new Harness(authAction)

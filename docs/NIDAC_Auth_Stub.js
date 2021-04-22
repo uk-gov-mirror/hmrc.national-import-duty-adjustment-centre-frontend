@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name     NIDAC Authorisation
 // @namespace  http://tampermonkey.net/
-// @version   0.4
+// @version   0.5
 // @description Authenticates for NIDAC
 // @author    NIDAC Team
 // @match     http*://*/auth-login-stub/gg-sign-in?continue=*apply-for-return-import-duty-paid-on-deposit-or-guarantee*
@@ -11,6 +11,8 @@
 
 (function () {
     'use strict';
+
+    document.getElementById("affinityGroupSelect").selectedIndex = 1;
     
     document.getElementsByName("enrolment[0].name")[0].value = "HMRC-CTS-ORG";
     document.getElementById("input-0-0-name").value = "EORINumber";
